@@ -527,7 +527,7 @@ function TabHintaArvio({mode}){
                 <FloatInput label="Sähköposti" type="email" value={liidi.email} onChange={e=>setLiidi(x=>({...x,email:e.target.value}))}/>
               </div>
               <DarkBtn onClick={sendLiidi} style={{fontSize:16}}>Lähetä pyyntö →</DarkBtn>
-              <p style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:10,textAlign:"center",fontWeight:300}}>KotiOpas saa välityspalkkion onnistuneesta kaupasta.</p>
+              <p style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:10,textAlign:"center",fontWeight:300}}>Asuntoraportti saa välityspalkkion onnistuneesta kaupasta.</p>
             </>
           )}
         </Modal>
@@ -815,7 +815,7 @@ function TabIlmoitus(){
                 <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.6)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Hinta-analyysi</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
                   <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>Pyyntihinta</div><div style={{fontFamily:H,fontSize:28,color:"#FBF3E2"}}>{fmt(result.myyntihinta)} €</div></div>
-                  <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>KotiOpas-arvio</div><div style={{fontFamily:H,fontSize:28,color:C.gold}}>{fmt(result.arvio.todennakoisin)} €</div></div>
+                  <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>Asuntoraportti-arvio</div><div style={{fontFamily:H,fontSize:28,color:C.gold}}>{fmt(result.arvio.todennakoisin)} €</div></div>
                 </div>
                 <div style={{background:Math.abs(result.eroPct)<=5?"rgba(62,92,63,0.2)":"rgba(181,105,60,0.2)",border:`1px solid ${Math.abs(result.eroPct)<=5?C.forest:C.terra}40`,borderRadius:8,padding:"12px 16px",marginBottom:16}}>
                   <div style={{fontFamily:B,fontSize:14,color:Math.abs(result.eroPct)<=5?C.forest:result.eroPct>5?C.terra:C.forest,fontWeight:500,marginBottom:4}}>
@@ -1113,7 +1113,7 @@ export default function App(){
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:48}}>
             <div style={{width:32,height:32,borderRadius:"50%",border:"1.5px solid rgba(201,168,76,0.5)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15}}>🏡</div>
-            <span style={{fontFamily:H,fontSize:16,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>KotiOpas</span>
+            <span style={{fontFamily:H,fontSize:16,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
           </div>
           <div style={{fontFamily:B,fontSize:11,letterSpacing:3,textTransform:"uppercase",color:C.gold,marginBottom:16,fontWeight:500}}>Tervetuloa</div>
           <h1 style={{fontFamily:H,fontSize:44,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,marginBottom:16,letterSpacing:-0.5}}>
@@ -1157,7 +1157,7 @@ export default function App(){
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <div style={{width:28,height:28,borderRadius:"50%",border:"1.5px solid rgba(201,168,76,0.5)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>🏡</div>
-            <span style={{fontFamily:H,fontSize:14,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>KotiOpas</span>
+            <span style={{fontFamily:H,fontSize:14,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
           </div>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
             ← Vaihda
@@ -1193,8 +1193,8 @@ export default function App(){
       </div>
 
       <div style={{borderTop:`1px solid ${C.border}`,padding:"24px",textAlign:"center"}}>
-        <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>KotiOpas</div>
-        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1}}>© 2025 — Asuntokaupan paras apuri</div>
+        <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>Asuntoraportti</div>
+        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1}}>© 2026 — Asuntokaupan paras apuri</div>
       </div>
     </div>
   );
