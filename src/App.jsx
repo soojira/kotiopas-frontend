@@ -1120,7 +1120,7 @@ export default function App(){
             Asuntokaupan<br/><em style={{color:C.gold}}>paras apuri.</em>
           </h1>
           <p style={{fontFamily:B,fontSize:14,color:"rgba(251,243,226,0.5)",lineHeight:1.8,maxWidth:340,fontWeight:300,marginBottom:52}}>
-            Lainelaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin — kaikki yhdessä paikassa.
+            Lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin — kaikki yhdessä paikassa.
           </p>
           <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>Olen…</div>
           <div style={{display:"grid",gap:16}}>
