@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tietosuojaseloste — Asuntoraportti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
+  :root{
+    --paper:#FBF8F3; --cream:#F4EFE6; --ink:#2A2520; --gold:#C9A84C;
+    --stone:#7A7068; --border:#E2D9C8; --dark:#2A1F14;
+    --H:'Cormorant Garamond',Georgia,serif; --B:'Jost','Helvetica Neue',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;background:var(--paper);overflow-x:hidden;}
+  body{font-family:var(--B);color:var(--ink);line-height:1.7;font-weight:300;}
+  .hero{background:linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%);padding:48px 24px 40px;position:relative;overflow:hidden;}
+  .hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+  .ring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,0.1);pointer-events:none;}
+  .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+  .logo-mark{width:28px;height:28px;}
+  .logo-text{font-family:var(--H);font-size:14px;color:rgba(251,243,226,0.6);letter-spacing:3px;font-style:italic;}
+  .kicker{font-family:var(--B);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:500;}
+  h1{font-family:var(--H);font-size:38px;font-weight:500;color:#FBF3E2;line-height:1.1;letter-spacing:-0.5px;}
+  .updated{font-family:var(--B);font-size:12px;color:rgba(251,243,226,0.45);margin-top:14px;font-weight:300;}
+  .content{max-width:760px;margin:0 auto;padding:48px 24px 80px;}
+  h2{font-family:var(--H);font-size:24px;font-weight:600;color:var(--ink);margin:36px 0 12px;font-style:italic;}
+  h2:first-of-type{margin-top:0;}
+  h2 .num{color:var(--gold);font-style:normal;margin-right:8px;}
+  p{margin-bottom:14px;font-size:15px;color:#3A332C;}
+  ul{margin:0 0 16px 20px;}
+  li{margin-bottom:8px;font-size:15px;color:#3A332C;}
+  strong{font-weight:500;color:var(--ink);}
+  .box{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:20px 0;}
+  .box-title{font-family:var(--B);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
+  a{color:#8B6F2E;text-decoration:underline;}
+  .footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;}
+  .footer-logo{font-family:var(--H);font-size:15px;font-style:italic;color:var(--stone);margin-bottom:4px;}
+  .footer-meta{font-family:var(--B);font-size:11px;color:#B8AD9B;letter-spacing:1px;}
+  .divider{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px;margin:8px 0 0;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="ring" style="top:-80px;right:-80px;width:280px;height:280px;"></div>
+  <div class="ring" style="bottom:-100px;left:-60px;width:220px;height:220px;border-color:rgba(201,168,76,0.06);"></div>
+  <div class="hero-inner">
+    <div class="logo-row">
+      <svg class="logo-mark" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#C9A84C" d="M96 0c18.8 15.5 39.9 24 63.2 25.8 6.5.5 11.6 6 11.6 12.6v64.6c0 41.7-25.5 69.9-73.8 86.1-48.3-16.2-73.8-44.4-73.8-86.1V38.4c0-6.6 5.1-12 11.6-12.6C56.1 24 77.2 15.5 96 0z"/>
+        <path fill="#2A1F14" d="M96 15.2c15.6 11.9 33.4 18.5 53 20.1 2.9.2 5.1 2.7 5.1 5.6v61.7c0 33.9-21.6 57.4-58.1 70-36.5-12.6-58.1-36.1-58.1-70V40.9c0-2.9 2.2-5.4 5.1-5.6 19.6-1.6 37.4-8.2 53-20.1z"/>
+        <path fill="#C9A84C" d="M48 76l48-31 48 31v-16L96 43 48 60z"/>
+        <circle fill="#C9A84C" cx="88" cy="79" r="4"/><circle fill="#C9A84C" cx="104" cy="79" r="4"/>
+        <rect fill="#C9A84C" x="56" y="102" width="14" height="28" rx="2"/>
+        <rect fill="#C9A84C" x="84" y="94" width="14" height="36" rx="2"/>
+        <rect fill="#C9A84C" x="112" y="86" width="14" height="44" rx="2"/>
+      </svg>
+      <span class="logo-text">Asuntoraportti</span>
+    </div>
+    <div class="kicker">Tietosuoja</div>
+    <h1>Tietosuojaseloste</h1>
+    <div class="divider" style="width:80px;"></div>
+    <div class="updated">Päivitetty 28.5.2026 · EU:n yleisen tietosuoja-asetuksen (GDPR) mukainen</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <p>Asuntoraportti kunnioittaa yksityisyyttäsi. Tässä selosteessa kerromme selkeästi, mitä tietoja keräämme, miksi, ja mitä oikeuksia sinulla on. Käsittelemme vain ne tiedot, jotka tarvitsemme palvelun tarjoamiseen — emme enempää.</p>
+
+  <h2><span class="num">1</span>Rekisterinpitäjä</h2>
+  <p>Henkilötietojesi rekisterinpitäjä on:</p>
+  <div class="box">
+    <p style="margin-bottom:6px;"><strong>Miss S Tmi</strong></p>
+    <p style="margin-bottom:6px;">Y-tunnus: 3393504-8</p>
+    <p style="margin-bottom:6px;">Helsinki</p>
+    <p style="margin-bottom:0;">Sähköposti: <a href="mailto:info.asuntoraportti@gmail.com">info.asuntoraportti@gmail.com</a></p>
+  </div>
+  <p>Kaikissa tietosuojaan liittyvissä kysymyksissä voit olla yhteydessä yllä olevaan sähköpostiosoitteeseen.</p>
+
+  <h2><span class="num">2</span>Mitä tietoja keräämme</h2>
+  <p>Keräämme vain tiedot, jotka annat itse vapaaehtoisesti täyttäessäsi yhteydenotto- tai arviopyyntölomakkeen:</p>
+  <ul>
+    <li><strong>Nimi</strong> — jotta välittäjä voi ottaa sinuun yhteyttä</li>
+    <li><strong>Puhelinnumero</strong> — yhteydenottoa varten</li>
+    <li><strong>Sähköpostiosoite</strong> — yhteydenottoa ja vahvistusviestiä varten (vapaaehtoinen)</li>
+    <li><strong>Asuntoon liittyvät tiedot</strong> — esimerkiksi sijainti, koko ja arvioitu hinta, jotka annat lomakkeella</li>
+  </ul>
+  <p>Emme kerää arkaluonteisia henkilötietoja emmekä seuraa sinua verkossa kolmansien osapuolten mainosevästeillä.</p>
+
+  <h2><span class="num">3</span>Mihin tietoja käytetään</h2>
+  <p>Käytämme tietojasi seuraaviin tarkoituksiin:</p>
+  <ul>
+    <li>Yhteydenottopyyntösi välittämiseen yhteistyökumppanina toimivalle kiinteistönvälittäjälle</li>
+    <li>Automaattisen vahvistusviestin lähettämiseen sähköpostiisi</li>
+    <li>Palvelun toiminnan varmistamiseen ja parantamiseen</li>
+  </ul>
+  <p>Emme käytä tietojasi automaattiseen päätöksentekoon emmekä profilointiin.</p>
+
+  <h2><span class="num">4</span>Käsittelyn oikeusperuste</h2>
+  <p>Käsittelemme henkilötietojasi <strong>suostumuksesi perusteella</strong> (GDPR 6 art. 1 a). Annat suostumuksesi rastittamalla lomakkeen tietosuojahyväksynnän ennen lähetystä. Voit peruuttaa suostumuksesi milloin tahansa ottamalla yhteyttä meihin.</p>
+
+  <h2><span class="num">5</span>Tietojen luovutus kolmansille</h2>
+  <p>Luovutamme yhteystietosi <strong>kiinteistönvälittäjälle</strong>, kun pyydät yhteydenottoa — tämä on koko palvelun tarkoitus. Emme myy tai luovuta tietojasi muihin tarkoituksiin, kuten markkinointiin kolmansille osapuolille.</p>
+  <p>Käytämme seuraavia luotettavia palveluntarjoajia tietojen käsittelyssä:</p>
+  <ul>
+    <li><strong>Brevo</strong> (Sendinblue SAS) — asiakkuudenhallinta ja vahvistusviestien lähetys. Brevo käsittelee tietoja EU:n tietosuojasäännösten mukaisesti.</li>
+  </ul>
+
+  <h2><span class="num">6</span>Tietojen säilytysaika</h2>
+  <p>Säilytämme tietojasi vain niin kauan kuin on tarpeen yhteydenoton hoitamiseksi. Voit milloin tahansa pyytää tietojesi poistamista, jolloin poistamme ne ilman aiheetonta viivytystä.</p>
+
+  <h2><span class="num">7</span>Tietojen suojaaminen</h2>
+  <p>Tietosi käsitellään suojattujen yhteyksien (HTTPS) kautta. Pääsy tietoihin on rajattu, ja säilytämme ne luotettavissa, tietosuojasäännöksiä noudattavissa järjestelmissä.</p>
+
+  <h2><span class="num">8</span>Sinun oikeutesi</h2>
+  <p>Sinulla on EU:n tietosuoja-asetuksen mukaiset oikeudet:</p>
+  <ul>
+    <li><strong>Tarkastusoikeus</strong> — saat tietää, mitä tietoja sinusta on tallennettu</li>
+    <li><strong>Oikaisuoikeus</strong> — voit pyytää virheellisten tietojen korjaamista</li>
+    <li><strong>Poisto-oikeus</strong> — voit pyytää tietojesi poistamista ("oikeus tulla unohdetuksi")</li>
+    <li><strong>Suostumuksen peruutus</strong> — voit peruuttaa antamasi suostumuksen milloin tahansa</li>
+    <li><strong>Valitusoikeus</strong> — voit tehdä valituksen tietosuojavaltuutetun toimistolle (tietosuoja.fi)</li>
+  </ul>
+  <p>Oikeuksien käyttämiseksi ota yhteyttä: <a href="mailto:info.asuntoraportti@gmail.com">info.asuntoraportti@gmail.com</a></p>
+
+  <h2><span class="num">9</span>Evästeet</h2>
+  <p>Sivusto käyttää vain toiminnan kannalta välttämättömiä evästeitä. Emme käytä seuranta- tai mainosevästeitä ilman suostumustasi.</p>
+
+  <h2><span class="num">10</span>Muutokset tähän selosteeseen</h2>
+  <p>Voimme päivittää tätä selostetta palvelun kehittyessä. Merkittävistä muutoksista ilmoitamme sivustolla. Selosteen yläosassa näkyy aina viimeisin päivityspäivä.</p>
+
+  <div class="box" style="margin-top:36px;">
+    <div class="box-title">Yhteenveto</div>
+    <p style="margin-bottom:0;">Keräämme vain antamasi yhteystiedot, käytämme ne yhteydenoton välittämiseen välittäjälle, emmekä myy tietojasi eteenpäin. Sinulla on aina oikeus tarkastaa, korjata tai poistaa tietosi.</p>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-logo">Asuntoraportti</div>
+  <div class="footer-meta">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+</div>
+
+</body>
+</html>
