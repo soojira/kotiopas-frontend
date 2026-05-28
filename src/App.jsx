@@ -1229,9 +1229,9 @@ export default function App(){
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <img src="/Asuntoraportti_Logo_128.png" alt="Asuntoraportti" width="28" height="28" style={{objectFit:"contain"}}/>
-            <span style={{fontFamily:H,fontSize:14,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <img src="/Asuntoraportti_Logo_128.png" alt="Asuntoraportti" width="44" height="44" style={{objectFit:"contain"}}/>
+            <span style={{fontFamily:H,fontSize:20,color:"rgba(251,243,226,0.8)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
           </div>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
             ← Vaihda
