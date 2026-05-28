@@ -1168,10 +1168,51 @@ const MYYJA_TABS=[
   {id:"sanasto",label:"📖 Sanasto"},
 ];
 
+// Lukee nykyisen tilan URL-hashista, esim. "#ostaja/hinta"
+function lueHash(){
+  const h=(typeof window!=="undefined"?window.location.hash:"").replace(/^#/,"");
+  if(!h) return {mode:null,tab:null};
+  const osat=h.split("/");
+  const m=osat[0]||null;
+  const t=osat[1]||null;
+  if(m!=="ostaja"&&m!=="myyjä"&&m!=="myyja") return {mode:null,tab:null};
+  // "myyja" (ilman ä) sallitaan URL:ssa, muunnetaan sisäiseksi "myyjä"
+  const moded=(m==="myyja")?"myyjä":m;
+  return {mode:moded,tab:t};
+}
+
 export default function App(){
-  const [mode,setMode]=useState(null);
-  const [tab,setTab]=useState("opas");
+  const init=lueHash();
+  const [mode,setMode]=useState(init.mode);
+  const [tab,setTab]=useState(init.tab||"opas");
   const isDesktop=useIsDesktop(900);
+
+  // Päivitä URL-hash kun mode/tab muuttuu (jotta selaimen historia tallentaa tilan)
+  useEffect(()=>{
+    if(typeof window==="undefined") return;
+    let uusi;
+    if(!mode){ uusi=""; }
+    else {
+      const mUrl=(mode==="myyjä")?"myyja":mode; // ä pois URL:sta
+      uusi=`#${mUrl}/${tab}`;
+    }
+    if(window.location.hash!==uusi){
+      // Käytä pushState jotta selaimen takaisin-nuoli toimii
+      window.history.pushState(null,"",uusi||window.location.pathname);
+    }
+  },[mode,tab]);
+
+  // Kuuntele selaimen taakse/eteen-nuolia (popstate)
+  useEffect(()=>{
+    if(typeof window==="undefined") return;
+    const kasittele=()=>{
+      const s=lueHash();
+      setMode(s.mode);
+      setTab(s.tab||"opas");
+    };
+    window.addEventListener("popstate",kasittele);
+    return()=>window.removeEventListener("popstate",kasittele);
+  },[]);
 
   if(!mode){
     return(
@@ -1218,8 +1259,10 @@ export default function App(){
   }
 
   const tabs=mode==="ostaja"?OSTAJA_TABS:MYYJA_TABS;
+  // Varmista että tab on validi tälle modelle (esim. suora hash-linkki voi tuoda väärän)
+  const validiTab=tabs.some(t=>t.id===tab)?tab:tabs[0].id;
   // Leveä layout vain tietyilla välilehdilla joissa on hyötyä kahdesta palstasta
-  const isWide=isDesktop&&(tab==="hinta"||tab==="taloyhtion"||tab==="ilmoitus");
+  const isWide=isDesktop&&(validiTab==="hinta"||validiTab==="taloyhtion"||validiTab==="ilmoitus");
 
   return(
     <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
@@ -1253,20 +1296,20 @@ export default function App(){
       <div style={{background:C.cream,borderBottom:`1px solid ${C.border}`,padding:"14px 16px",overflowX:"auto"}}>
         <div style={{display:"flex",gap:8,minWidth:"max-content",maxWidth:1080,margin:"0 auto"}}>
           {tabs.map(t=>(
-            <Pill key={t.id} active={tab===t.id} onClick={()=>setTab(t.id)}>{t.label}</Pill>
+            <Pill key={t.id} active={validiTab===t.id} onClick={()=>setTab(t.id)}>{t.label}</Pill>
           ))}
         </div>
       </div>
 
       <div style={{maxWidth:isWide?1080:560,margin:"0 auto",padding:isWide?"40px 24px 80px":"32px 20px 80px"}}>
-        {mode==="ostaja"&&tab==="opas"&&<TabOstopolku/>}
-        {mode==="ostaja"&&tab==="laskin"&&<TabLainalaskin/>}
-        {mode==="ostaja"&&tab==="ilmoitus"&&<TabIlmoitus/>}
-        {tab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
-        {mode==="myyjä"&&tab==="kulut"&&<TabMyyntikulut/>}
-        {tab==="taloyhtion"&&<TabTaloyhtion/>}
-        {tab==="tarkistus"&&<TabTarkistus mode={mode}/>}
-        {tab==="sanasto"&&<TabSanasto/>}
+        {mode==="ostaja"&&validiTab==="opas"&&<TabOstopolku/>}
+        {mode==="ostaja"&&validiTab==="laskin"&&<TabLainalaskin/>}
+        {mode==="ostaja"&&validiTab==="ilmoitus"&&<TabIlmoitus/>}
+        {validiTab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
+        {mode==="myyjä"&&validiTab==="kulut"&&<TabMyyntikulut/>}
+        {validiTab==="taloyhtion"&&<TabTaloyhtion/>}
+        {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
+        {validiTab==="sanasto"&&<TabSanasto/>}
       </div>
 
       <div style={{borderTop:`1px solid ${C.border}`,padding:"24px",textAlign:"center"}}>
