@@ -8,6 +8,13 @@
     <meta name="description" content="Asuntoraportti — asuntokaupan paras apuri. Lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin yhdessä paikassa." />
     <meta name="theme-color" content="#2A1F14" />
 
+    <!-- iOS PWA-tuki: kun käyttäjä lisää sivun aloitusnäyttöön, se avautuu ilman Safarin palkkeja -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Asuntoraportti" />
+    <link rel="manifest" href="/manifest.json" />
+
     <meta property="og:title" content="Asuntoraportti — Asuntokaupan paras apuri" />
     <meta property="og:description" content="Lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin — kaikki yhdessä paikassa." />
     <meta property="og:image" content="/Asuntoraportti_OG_1200.png" />
@@ -20,18 +27,24 @@
     <meta name="twitter:image" content="/Asuntoraportti_OG_1200.png" />
 
     <style>
-      html, body { background: #2A1F14; }
-      body {
-        width: 100%;
+      html, body {
+        background: #2A1F14;
         margin: 0;
         padding: 0;
+      }
+      body {
+        width: 100%;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        min-height: 100vh;
+        min-height: 100dvh;
       }
       #root {
         width: 100%;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
       }
     </style>
 
