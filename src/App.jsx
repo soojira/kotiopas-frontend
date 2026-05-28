@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Responsiivisuus-hook: tunnistaa onko nakytto leveä (tietokone) vai kapea (puhelin)
 function useIsDesktop(breakpoint=900){
@@ -1186,19 +1186,28 @@ export default function App(){
   const [mode,setMode]=useState(init.mode);
   const [tab,setTab]=useState(init.tab||"opas");
   const isDesktop=useIsDesktop(900);
+  const ekaAjo=useRef(true);
 
   // Päivitä URL-hash kun mode/tab muuttuu (jotta selaimen historia tallentaa tilan)
   useEffect(()=>{
     if(typeof window==="undefined") return;
     let uusi;
-    if(!mode){ uusi=""; }
+    if(!mode){ uusi=window.location.pathname; }
     else {
       const mUrl=(mode==="myyjä")?"myyja":mode; // ä pois URL:sta
       uusi=`#${mUrl}/${tab}`;
     }
-    if(window.location.hash!==uusi){
-      // Käytä pushState jotta selaimen takaisin-nuoli toimii
-      window.history.pushState(null,"",uusi||window.location.pathname);
+    if(ekaAjo.current){
+      // Ensimmäinen lataus: korvaa nykyinen merkintä (ei lisää historiaa,
+      // jotta selaimen takaisin palaa edelliselle sivustolle vasta lopuksi)
+      ekaAjo.current=false;
+      const nyt=window.location.hash||window.location.pathname;
+      if(nyt!==uusi) window.history.replaceState(null,"",uusi);
+      return;
+    }
+    // Käyttäjän toiminta: lisää uusi historiamerkintä → takaisin-nuoli toimii
+    if((window.location.hash||window.location.pathname)!==uusi){
+      window.history.pushState(null,"",uusi);
     }
   },[mode,tab]);
 
