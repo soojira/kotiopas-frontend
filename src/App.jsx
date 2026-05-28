@@ -28,13 +28,13 @@ const B="'Jost','Helvetica Neue',sans-serif";
 const GLOBAL=`
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
+  html,body,#root{width:100%;min-height:100%;margin:0;padding:0;background:#FBF8F3;overflow-x:hidden;}
   input::placeholder{color:transparent;}
   select option{background:#F4EFE6;}
   input[type=number]::-webkit-inner-spin-button{opacity:0;}
   ::-webkit-scrollbar{width:4px;}
   ::-webkit-scrollbar-track{background:#F4EFE6;}
   ::-webkit-scrollbar-thumb{background:#E2D9C8;border-radius:2px;}
-  html,body{width:100%;overflow-x:hidden;}
 `;
 
 function fmt(n){return Math.round(n||0).toLocaleString("fi-FI");}
