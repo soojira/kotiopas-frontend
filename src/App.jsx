@@ -28,9 +28,9 @@ const B="'Jost','Helvetica Neue',sans-serif";
 const GLOBAL=`
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{background:#2A1F14;}
-  body{width:100%;margin:0;padding:0;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
-  #root{width:100%;min-height:100vh;min-height:100dvh;margin:0;padding:0;background:#FBF8F3;overflow-x:hidden;}
+  html{background:#FBF8F3;}
+  body{width:100%;margin:0;padding:0;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#FBF8F3;}
+  #root{width:100%;margin:0;padding:0;overflow-x:hidden;background:#FBF8F3;}
   input::placeholder{color:transparent;}
   select option{background:#F4EFE6;}
   input[type=number]::-webkit-inner-spin-button{opacity:0;}
@@ -1224,6 +1224,18 @@ export default function App(){
     window.addEventListener("popstate",kasittele);
     return()=>window.removeEventListener("popstate",kasittele);
   },[]);
+
+  // Saumaton mobiilitausta: body-väri seuraa näkymää.
+  // Etusivu = tumma (hero täyttää koko ruudun). Välilehti = kermainen
+  // (footer-alaosa jatkuu saumattomasti osoiterivin alueelle).
+  // Yläreunan tilapalkin värin hoitaa theme-color (tumma) + heron safe-area-padding.
+  useEffect(()=>{
+    if(typeof window==="undefined") return;
+    const vari = mode ? "#FBF8F3" : "#2A1F14";
+    document.body.style.background = vari;
+    const root=document.getElementById("root");
+    if(root) root.style.background = vari;
+  },[mode]);
 
   if(!mode){
     return(
