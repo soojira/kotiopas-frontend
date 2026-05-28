@@ -1228,20 +1228,22 @@ export default function App(){
       <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"36px 24px 44px"}}>
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-          <div style={{display:"flex",alignItems:"center",gap:12}}>
-            <img src="/Asuntoraportti_Logo_128.png" alt="Asuntoraportti" width="44" height="44" style={{objectFit:"contain"}}/>
-            <span style={{fontFamily:H,fontSize:20,color:"rgba(251,243,226,0.8)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
-          </div>
+        <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
             ← Vaihda
           </button>
         </div>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:24}}>
+          <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="72" height="72" style={{objectFit:"contain",marginBottom:8}}/>
+          <span style={{fontFamily:H,fontSize:24,color:"rgba(251,243,226,0.85)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
+        </div>
+        <div style={{display:"flex",justifyContent:"center"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:8,background:mode==="ostaja"?"rgba(62,92,63,0.25)":"rgba(181,105,60,0.25)",border:`1px solid ${mode==="ostaja"?"rgba(62,92,63,0.5)":"rgba(181,105,60,0.5)"}`,borderRadius:20,padding:"5px 14px",marginBottom:14}}>
           <span style={{fontSize:14}}>{mode==="ostaja"?"🏠":"🔑"}</span>
           <span style={{fontFamily:B,fontSize:12,color:mode==="ostaja"?"#A8D5B5":"#E8B08A",fontWeight:500,letterSpacing:1}}>{mode==="ostaja"?"OSTAJA":"MYYJÄ"}</span>
         </div>
-        <h1 style={{fontFamily:H,fontSize:34,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,letterSpacing:-0.5}}>
+        </div>
+        <h1 style={{fontFamily:H,fontSize:34,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,letterSpacing:-0.5,textAlign:"center"}}>
           {mode==="ostaja"?"Löydä unelmiesi":"Myy asuntosi"}
           <br/><em style={{color:C.gold}}>{mode==="ostaja"?"koti.":"parhaaseen hintaan."}</em>
         </h1>
