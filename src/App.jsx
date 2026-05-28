@@ -1241,6 +1241,8 @@ export default function App(){
     return(
       <div style={{background:"#2A1F14",minHeight:"100vh",fontFamily:B}}>
         <style>{GLOBAL}</style>
+        {/* Tumma overlay tilapalkin alueelle (iOS safe-area-top) */}
+        <div aria-hidden="true" style={{position:"fixed",top:0,left:0,right:0,height:"env(safe-area-inset-top)",background:"#2A1F14",zIndex:1000,pointerEvents:"none"}}/>
         <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(52px + env(safe-area-inset-top)) 28px calc(60px + env(safe-area-inset-bottom))",minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
@@ -1290,6 +1292,9 @@ export default function App(){
   return(
     <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
       <style>{GLOBAL}</style>
+
+      {/* Tumma overlay tilapalkin alueelle (iOS safe-area-top), jotta hero jatkuu saumattomasti notch/Dynamic Island -alueelle */}
+      <div aria-hidden="true" style={{position:"fixed",top:0,left:0,right:0,height:"env(safe-area-inset-top)",background:"#2A1F14",zIndex:1000,pointerEvents:"none"}}/>
 
       <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(36px + env(safe-area-inset-top)) 24px 44px"}}>
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
