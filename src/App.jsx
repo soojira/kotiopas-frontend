@@ -1177,10 +1177,10 @@ export default function App(){
     return(
       <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
         <style>{GLOBAL}</style>
-        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"52px 28px 60px",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:isDesktop?"center":"stretch"}}>
+        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"52px 28px 60px",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
-          <div style={{width:"100%",maxWidth:isDesktop?620:"none",display:"flex",flexDirection:"column",alignItems:isDesktop?"center":"stretch",textAlign:isDesktop?"center":"left"}}>
+          <div style={{width:"100%",maxWidth:isDesktop?620:420,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:48}}>
             <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="80" height="80" style={{marginBottom:10,objectFit:"contain"}}/>
             <span style={{fontFamily:H,fontSize:18,color:"rgba(251,243,226,0.85)",letterSpacing:4,fontStyle:"italic",fontWeight:500}}>Asuntoraportti</span>
