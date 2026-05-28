@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/Asuntoraportti_Logo_32.png" />
     <link rel="apple-touch-icon" href="/Asuntoraportti_Logo_256.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Asuntoraportti — asuntokaupan paras apuri. Lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin yhdessä paikassa." />
     <meta name="theme-color" content="#2A1F14" />
 
@@ -20,14 +20,15 @@
     <meta name="twitter:image" content="/Asuntoraportti_OG_1200.png" />
 
     <style>
-      html, body, #root {
+      html { background: #2A1F14; }
+      body, #root {
         width: 100%;
         min-height: 100vh;
         margin: 0;
         padding: 0;
         background: #FBF8F3;
       }
-      body { overflow-x: hidden; }
+      body { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
     </style>
 
     <title>Asuntoraportti — Asuntokaupan paras apuri</title>
