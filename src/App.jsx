@@ -1282,7 +1282,7 @@ export default function App(){
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
-            ← Vaihda
+            🏠 Etusivu
           </button>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:24}}>
