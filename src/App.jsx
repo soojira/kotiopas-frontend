@@ -1161,18 +1161,7 @@ export default function App(){
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:48}}>
-            <svg width="68" height="80" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" style={{marginBottom:10}}>
-              <path fill="#C9A84C" d="M96 0c18.8 15.5 39.9 24 63.2 25.8 6.5.5 11.6 6 11.6 12.6v64.6c0 41.7-25.5 69.9-73.8 86.1-48.3-16.2-73.8-44.4-73.8-86.1V38.4c0-6.6 5.1-12 11.6-12.6C56.1 24 77.2 15.5 96 0z"/>
-              <path fill="#2A1F14" d="M96 15.2c15.6 11.9 33.4 18.5 53 20.1 2.9.2 5.1 2.7 5.1 5.6v61.7c0 33.9-21.6 57.4-58.1 70-36.5-12.6-58.1-36.1-58.1-70V40.9c0-2.9 2.2-5.4 5.1-5.6 19.6-1.6 37.4-8.2 53-20.1z"/>
-              <path fill="#C9A84C" d="M48 76l48-31 48 31v-16L96 43 48 60z"/>
-              <rect fill="#C9A84C" x="132" y="54" width="8" height="14" rx="1.5"/>
-              <circle fill="#C9A84C" cx="88" cy="79" r="4"/>
-              <circle fill="#C9A84C" cx="104" cy="79" r="4"/>
-              <rect fill="#C9A84C" x="56" y="102" width="14" height="28" rx="2"/>
-              <rect fill="#C9A84C" x="84" y="94" width="14" height="36" rx="2"/>
-              <rect fill="#C9A84C" x="112" y="86" width="14" height="44" rx="2"/>
-              <path fill="#C9A84C" d="M96 142a8 8 0 1 1 8-8c0 2.8-1.4 5.2-3.6 6.6v9.4h-8.8v-9.4c-2.2-1.4-3.6-3.8-3.6-6.6a8 8 0 0 1 8-8z"/>
-            </svg>
+            <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="80" height="80" style={{marginBottom:10,objectFit:"contain"}}/>
             <span style={{fontFamily:H,fontSize:18,color:"rgba(251,243,226,0.85)",letterSpacing:4,fontStyle:"italic",fontWeight:500}}>Asuntoraportti</span>
           </div>
           <div style={{fontFamily:B,fontSize:11,letterSpacing:3,textTransform:"uppercase",color:C.gold,marginBottom:16,fontWeight:500}}>Tervetuloa</div>
@@ -1216,16 +1205,7 @@ export default function App(){
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <svg width="24" height="28" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#C9A84C" d="M96 0c18.8 15.5 39.9 24 63.2 25.8 6.5.5 11.6 6 11.6 12.6v64.6c0 41.7-25.5 69.9-73.8 86.1-48.3-16.2-73.8-44.4-73.8-86.1V38.4c0-6.6 5.1-12 11.6-12.6C56.1 24 77.2 15.5 96 0z"/>
-              <path fill="#2A1F14" d="M96 15.2c15.6 11.9 33.4 18.5 53 20.1 2.9.2 5.1 2.7 5.1 5.6v61.7c0 33.9-21.6 57.4-58.1 70-36.5-12.6-58.1-36.1-58.1-70V40.9c0-2.9 2.2-5.4 5.1-5.6 19.6-1.6 37.4-8.2 53-20.1z"/>
-              <path fill="#C9A84C" d="M48 76l48-31 48 31v-16L96 43 48 60z"/>
-              <circle fill="#C9A84C" cx="88" cy="79" r="4"/>
-              <circle fill="#C9A84C" cx="104" cy="79" r="4"/>
-              <rect fill="#C9A84C" x="56" y="102" width="14" height="28" rx="2"/>
-              <rect fill="#C9A84C" x="84" y="94" width="14" height="36" rx="2"/>
-              <rect fill="#C9A84C" x="112" y="86" width="14" height="44" rx="2"/>
-            </svg>
+            <img src="/Asuntoraportti_Logo_128.png" alt="Asuntoraportti" width="28" height="28" style={{objectFit:"contain"}}/>
             <span style={{fontFamily:H,fontSize:14,color:"rgba(251,243,226,0.6)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
           </div>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
