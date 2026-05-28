@@ -591,7 +591,7 @@ function TabHintaArvio({mode,isDesktop}){
               </div>
               <label style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:14,cursor:"pointer",padding:"8px 0"}}>
                 <input type="checkbox" checked={gdpr} onChange={e=>setGdpr(e.target.checked)} style={{marginTop:3,cursor:"pointer",accentColor:C.gold}}/>
-                <span style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.6,fontWeight:300}}>Hyväksyn, että yhteystietoni välitetään välityspalveluun. Tietojani käsitellään tietosuojaselosteen mukaisesti, eikä niitä jaeta kolmansille osapuolille markkinointitarkoituksiin.</span>
+                <span style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.6,fontWeight:300}}>Hyväksyn, että yhteystietoni välitetään välityspalveluun. Tietojani käsitellään <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{color:C.gold,textDecoration:"underline"}}>tietosuojaselosteen</a> mukaisesti, eikä niitä jaeta kolmansille osapuolille markkinointitarkoituksiin.</span>
               </label>
               {liidiError&&(<div style={{fontFamily:B,fontSize:12,color:"#c44",background:"rgba(196,68,68,0.1)",padding:"8px 12px",borderRadius:6,marginBottom:12,fontWeight:300}}>{liidiError}</div>)}
               <DarkBtn onClick={sendLiidi} disabled={sending} style={{fontSize:16,opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>{sending?"⏳ Lähetetään...":"Lähetä pyyntö →"}</DarkBtn>
@@ -1269,7 +1269,8 @@ export default function App(){
 
       <div style={{borderTop:`1px solid ${C.border}`,padding:"24px",textAlign:"center"}}>
         <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>Asuntoraportti</div>
-        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1}}>© 2026 — Asuntokaupan paras apuri</div>
+        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1,marginBottom:10}}>© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+        <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>Tietosuojaseloste</a>
       </div>
     </div>
   );
