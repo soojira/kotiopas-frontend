@@ -20,15 +20,22 @@
     <meta name="twitter:image" content="/Asuntoraportti_OG_1200.png" />
 
     <style>
-      html { background: #2A1F14; }
-      body, #root {
+      html, body { background: #2A1F14; }
+      body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      #root {
         width: 100%;
         min-height: 100vh;
+        min-height: 100dvh;
         margin: 0;
         padding: 0;
         background: #FBF8F3;
       }
-      body { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
     </style>
 
     <title>Asuntoraportti — Asuntokaupan paras apuri</title>
