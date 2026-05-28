@@ -1225,13 +1225,15 @@ export default function App(){
     return()=>window.removeEventListener("popstate",kasittele);
   },[]);
 
-  // Saumaton mobiilitausta: body-väri seuraa näkymää.
-  // Etusivu = tumma (hero täyttää koko ruudun). Välilehti = kermainen
-  // (footer-alaosa jatkuu saumattomasti osoiterivin alueelle).
-  // Yläreunan tilapalkin värin hoitaa theme-color (tumma) + heron safe-area-padding.
+  // Saumaton mobiilitausta:
+  // - Etusivulla: body saa LINEAR-GRADIENTIN joka matchaa heron yläreuna (#2A1F14) ja alareuna (#1E3020)
+  //   → tilapalkki tumma, osoiterivi vihreänsävyinen, molemmat saumattomia heron kanssa.
+  // - Välilehdellä: body on TUMMA (matchaa heron yläreuna). Alaosaan on erillinen fixed kermainen täyttäjä (footer).
   useEffect(()=>{
     if(typeof window==="undefined") return;
-    const vari = mode ? "#FBF8F3" : "#2A1F14";
+    const vari = mode
+      ? "#2A1F14"
+      : "linear-gradient(180deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)";
     document.body.style.background = vari;
     const root=document.getElementById("root");
     if(root) root.style.background = vari;
@@ -1241,7 +1243,7 @@ export default function App(){
     return(
       <div style={{background:"#2A1F14",minHeight:"100vh",fontFamily:B}}>
         <style>{GLOBAL}</style>
-        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",marginTop:"calc(-1 * env(safe-area-inset-top))",marginBottom:"calc(-1 * env(safe-area-inset-bottom))",padding:"calc(52px + 2 * env(safe-area-inset-top)) 28px calc(60px + 2 * env(safe-area-inset-bottom))",minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(52px + env(safe-area-inset-top)) 28px calc(60px + env(safe-area-inset-bottom))",minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
           <div style={{width:"100%",maxWidth:isDesktop?620:420,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
@@ -1291,7 +1293,10 @@ export default function App(){
     <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
       <style>{GLOBAL}</style>
 
-      <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",marginTop:"calc(-1 * env(safe-area-inset-top))",padding:"calc(36px + 2 * env(safe-area-inset-top)) 24px 44px"}}>
+      {/* Fixed kermainen alapalkki-täyttäjä: peittää iOS Safarin osoiterivin alueen (safe-area-bottom) kermaisella, jotta footer jatkuu saumattomasti */}
+      <div aria-hidden="true" style={{position:"fixed",bottom:0,left:0,right:0,height:"env(safe-area-inset-bottom)",background:C.paper,zIndex:1000,pointerEvents:"none"}}/>
+
+      <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(36px + env(safe-area-inset-top)) 24px 44px"}}>
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
@@ -1335,7 +1340,7 @@ export default function App(){
         {validiTab==="sanasto"&&<TabSanasto/>}
       </div>
 
-      <div style={{background:C.paper,borderTop:`1px solid ${C.border}`,marginBottom:"calc(-1 * env(safe-area-inset-bottom))",padding:"24px 24px calc(24px + 2 * env(safe-area-inset-bottom))",textAlign:"center"}}>
+      <div style={{background:C.paper,borderTop:`1px solid ${C.border}`,padding:"24px 24px calc(24px + env(safe-area-inset-bottom))",textAlign:"center"}}>
         <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>Asuntoraportti</div>
         <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1,marginBottom:10}}>© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
         <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>Tietosuojaseloste</a>
