@@ -28,9 +28,9 @@ const B="'Jost','Helvetica Neue',sans-serif";
 const GLOBAL=`
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
-  html{background:#2A1F14;}
-  body,#root{width:100%;min-height:100vh;margin:0;padding:0;background:#FBF8F3;overflow-x:hidden;}
-  body{-webkit-overflow-scrolling:touch;}
+  html,body{background:#2A1F14;}
+  body{width:100%;margin:0;padding:0;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  #root{width:100%;min-height:100vh;min-height:100dvh;margin:0;padding:0;background:#FBF8F3;overflow-x:hidden;}
   input::placeholder{color:transparent;}
   select option{background:#F4EFE6;}
   input[type=number]::-webkit-inner-spin-button{opacity:0;}
