@@ -1,4 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+// Responsiivisuus-hook: tunnistaa onko nakytto leveä (tietokone) vai kapea (puhelin)
+function useIsDesktop(breakpoint=900){
+  const [isDesktop,setIsDesktop]=useState(
+    typeof window!=="undefined" ? window.innerWidth>=breakpoint : false
+  );
+  useEffect(()=>{
+    const check=()=>setIsDesktop(window.innerWidth>=breakpoint);
+    check();
+    window.addEventListener("resize",check);
+    return()=>window.removeEventListener("resize",check);
+  },[breakpoint]);
+  return isDesktop;
+}
 
 const C = {
   paper:"#FBF8F3", cream:"#F4EFE6", warm:"#EDE5D8", linen:"#E2D9C8",
@@ -20,6 +34,7 @@ const GLOBAL=`
   ::-webkit-scrollbar{width:4px;}
   ::-webkit-scrollbar-track{background:#F4EFE6;}
   ::-webkit-scrollbar-thumb{background:#E2D9C8;border-radius:2px;}
+  html,body{width:100%;overflow-x:hidden;}
 `;
 
 function fmt(n){return Math.round(n||0).toLocaleString("fi-FI");}
@@ -327,7 +342,7 @@ function TabLainalaskin(){
   );
 }
 
-function TabHintaArvio({mode}){
+function TabHintaArvio({mode,isDesktop}){
   const isSeller=mode==="myyjä";
   const [form,setForm]=useState({postinumero:"",alue:"",tyyppi:"Kerrostaloasunto",koko:"",huoneet:"2h+k",rakVuosi:"",kerros:"",kunto:"Hyvä (hyväkuntoinen)",taloyhtiölaina:"",lisatiedot:""});
   const [result,setResult]=useState(null);
@@ -424,6 +439,8 @@ function TabHintaArvio({mode}){
         {isSeller?"Selvitä asuntosi arvo ennen myyntiä — ilmaiseksi":"Arvioi asunnon arvo ennen ostotarjousta"}
         {" · "}{registered?"Rajattomat arviot ✓":used?"Rekisteröidy jatkaaksesi":"1 ilmainen arvio"}
       </div>
+      <div style={{display:isDesktop&&result?"grid":"block",gridTemplateColumns:isDesktop&&result?"minmax(0,420px) minmax(0,1fr)":"none",gap:isDesktop&&result?32:0,alignItems:"start"}}>
+      <div>
       <div style={{display:"grid",gap:10,marginBottom:20}}>
         <SectionHead num="I" title="Sijainti"/>
         <div style={{display:"grid",gridTemplateColumns:"130px 1fr",gap:10}}>
@@ -452,9 +469,10 @@ function TabHintaArvio({mode}){
         <FloatInput label="Lisätiedot (parveke, sauna, hissi…)" value={form.lisatiedot} onChange={e=>set("lisatiedot",e.target.value)}/>
       </div>
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
-      <DarkBtn onClick={laske} style={{marginBottom:result?28:0}} disabled={loading}>
+      <DarkBtn onClick={laske} style={{marginBottom:result&&!isDesktop?28:0}} disabled={loading}>
         {loading?"⏳ Lasketaan...":(isSeller?"Selvitä myyntihinta →":"Laske hinta-arvio →")}
       </DarkBtn>
+      </div>
       {result&&(
         <div>
           <div style={{height:2,background:`linear-gradient(90deg,transparent,${C.gold},${C.clay},transparent)`,borderRadius:2}}/>
@@ -536,6 +554,7 @@ function TabHintaArvio({mode}){
           )}
         </div>
       )}
+      </div>
       {regModal&&(
         <Modal onClose={()=>setRegModal(false)}>
           <GoldLine/>
@@ -1152,27 +1171,29 @@ const MYYJA_TABS=[
 export default function App(){
   const [mode,setMode]=useState(null);
   const [tab,setTab]=useState("opas");
+  const isDesktop=useIsDesktop(900);
 
   if(!mode){
     return(
       <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
         <style>{GLOBAL}</style>
-        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"52px 28px 60px",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+        <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"52px 28px 60px",minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:isDesktop?"center":"stretch"}}>
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
+          <div style={{width:"100%",maxWidth:isDesktop?620:"none",display:"flex",flexDirection:"column",alignItems:isDesktop?"center":"stretch",textAlign:isDesktop?"center":"left"}}>
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:48}}>
             <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="80" height="80" style={{marginBottom:10,objectFit:"contain"}}/>
             <span style={{fontFamily:H,fontSize:18,color:"rgba(251,243,226,0.85)",letterSpacing:4,fontStyle:"italic",fontWeight:500}}>Asuntoraportti</span>
           </div>
           <div style={{fontFamily:B,fontSize:11,letterSpacing:3,textTransform:"uppercase",color:C.gold,marginBottom:16,fontWeight:500}}>Tervetuloa</div>
-          <h1 style={{fontFamily:H,fontSize:44,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,marginBottom:16,letterSpacing:-0.5}}>
+          <h1 style={{fontFamily:H,fontSize:isDesktop?52:44,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,marginBottom:16,letterSpacing:-0.5}}>
             Asuntokaupan<br/><em style={{color:C.gold}}>paras apuri.</em>
           </h1>
-          <p style={{fontFamily:B,fontSize:14,color:"rgba(251,243,226,0.5)",lineHeight:1.8,maxWidth:340,fontWeight:300,marginBottom:52}}>
+          <p style={{fontFamily:B,fontSize:isDesktop?16:14,color:"rgba(251,243,226,0.5)",lineHeight:1.8,maxWidth:isDesktop?460:340,fontWeight:300,marginBottom:52}}>
             Lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin — kaikki yhdessä paikassa.
           </p>
           <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>Olen…</div>
-          <div style={{display:"grid",gap:16}}>
+          <div style={{display:"grid",gap:16,width:"100%",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr"}}>
             {[
               {m:"ostaja",e:"🏠",t:"Asunnon ostaja",d:"Lainalaskin, hinta-arvio, ostopolku ja tarkistuslista"},
               {m:"myyjä",e:"🔑",t:"Asunnon myyjä",d:"Myyntihinta-arvio, myyntikululaskin ja myyjän tarkistuslista"},
@@ -1190,12 +1211,15 @@ export default function App(){
               </button>
             ))}
           </div>
+          </div>
         </div>
       </div>
     );
   }
 
   const tabs=mode==="ostaja"?OSTAJA_TABS:MYYJA_TABS;
+  // Leveä layout vain tietyilla välilehdilla joissa on hyötyä kahdesta palstasta
+  const isWide=isDesktop&&(tab==="hinta"||tab==="taloyhtion"||tab==="ilmoitus");
 
   return(
     <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
@@ -1203,6 +1227,7 @@ export default function App(){
 
       <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"36px 24px 44px"}}>
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
+        <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <img src="/Asuntoraportti_Logo_128.png" alt="Asuntoraportti" width="28" height="28" style={{objectFit:"contain"}}/>
@@ -1220,21 +1245,22 @@ export default function App(){
           {mode==="ostaja"?"Löydä unelmiesi":"Myy asuntosi"}
           <br/><em style={{color:C.gold}}>{mode==="ostaja"?"koti.":"parhaaseen hintaan."}</em>
         </h1>
+        </div>
       </div>
 
       <div style={{background:C.cream,borderBottom:`1px solid ${C.border}`,padding:"14px 16px",overflowX:"auto"}}>
-        <div style={{display:"flex",gap:8,minWidth:"max-content"}}>
+        <div style={{display:"flex",gap:8,minWidth:"max-content",maxWidth:1080,margin:"0 auto"}}>
           {tabs.map(t=>(
             <Pill key={t.id} active={tab===t.id} onClick={()=>setTab(t.id)}>{t.label}</Pill>
           ))}
         </div>
       </div>
 
-      <div style={{maxWidth:560,margin:"0 auto",padding:"32px 20px 80px"}}>
+      <div style={{maxWidth:isWide?1080:560,margin:"0 auto",padding:isWide?"40px 24px 80px":"32px 20px 80px"}}>
         {mode==="ostaja"&&tab==="opas"&&<TabOstopolku/>}
         {mode==="ostaja"&&tab==="laskin"&&<TabLainalaskin/>}
         {mode==="ostaja"&&tab==="ilmoitus"&&<TabIlmoitus/>}
-        {tab==="hinta"&&<TabHintaArvio mode={mode}/>}
+        {tab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
         {mode==="myyjä"&&tab==="kulut"&&<TabMyyntikulut/>}
         {tab==="taloyhtion"&&<TabTaloyhtion/>}
         {tab==="tarkistus"&&<TabTarkistus mode={mode}/>}
