@@ -960,193 +960,228 @@ function TabIlmoitus(){
   );
 }
 
+// ── Asuntoraportin tekstin renderöinti ───────────────────────────────────────
+// Claude palauttaa analyysin selkokielisenä tekstinä (mahdollisesti markdownia).
+// Tämä kevyt renderöijä muuntaa otsikot, lihavoinnit ja luettelot brändin
+// mukaisiksi elementeiksi — ilman ulkoisia kirjastoja.
+function renderInline(teksti){
+  const osat=String(teksti).split(/(\*\*[^*]+\*\*)/g);
+  return osat.map((osa,i)=>{
+    if(/^\*\*[^*]+\*\*$/.test(osa)){
+      return <strong key={i} style={{color:C.ink,fontWeight:600}}>{osa.slice(2,-2)}</strong>;
+    }
+    return <span key={i}>{osa}</span>;
+  });
+}
+
+function RaporttiText({text}){
+  const rivit=String(text).split("\n");
+  const elementit=[];
+  let lista=[];
+  const purgeLista=avain=>{
+    if(lista.length){
+      const nykyinen=lista.slice();
+      elementit.push(
+        <ul key={"ul-"+avain} style={{margin:"4px 0 14px",paddingLeft:22}}>
+          {nykyinen.map((it,i)=>(
+            <li key={i} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.7,marginBottom:6,fontWeight:300}}>{renderInline(it)}</li>
+          ))}
+        </ul>
+      );
+      lista=[];
+    }
+  };
+  rivit.forEach((raaka,idx)=>{
+    const t=raaka.trim();
+    if(!t){ purgeLista(idx); return; }
+    const h1=t.match(/^#\s+(.*)/);
+    const h2=t.match(/^##\s+(.*)/);
+    const h3=t.match(/^###\s+(.*)/);
+    const bullet=t.match(/^[-*•]\s+(.*)/);
+    if(h3||h2||h1){
+      purgeLista(idx);
+      const sisalto=h3?h3[1]:h2?h2[1]:h1[1];
+      const koko=h1?24:h2?20:17;
+      elementit.push(
+        <div key={idx} style={{fontFamily:H,fontSize:koko,fontStyle:"italic",color:C.ink,margin:"20px 0 8px",lineHeight:1.25}}>{renderInline(sisalto)}</div>
+      );
+    } else if(bullet){
+      lista.push(bullet[1]);
+    } else {
+      purgeLista(idx);
+      elementit.push(
+        <p key={idx} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.75,marginBottom:12,fontWeight:300}}>{renderInline(t)}</p>
+      );
+    }
+  });
+  purgeLista("loppu");
+  return <div>{elementit}</div>;
+}
+
+// ── Asuntoanalyysi: lataa taloyhtiön paperit (PDF), AI tekee Asuntoraportin ───
+// Paperit lähetetään backendin /api/analyysi -endpointtiin (multipart, kenttä
+// "tiedostot"). Mitään ei tallenneta — paperit luetaan muistissa ja heitetään
+// heti pois. Tulos näkyy ruudulla selkokielisenä.
 function TabTaloyhtion(){
-  const [pdf,setPdf]=useState(null);
-  const [pdfName,setPdfName]=useState("");
-  const [form,setForm]=useState({nimi:"",vuosi:"",hoito:"",rahavastike:"",lainat:"",remontti:"",tuleva:"",asunnot:"",muu:""});
-  const [result,setResult]=useState(null);
+  const [files,setFiles]=useState([]);
+  const [analyysi,setAnalyysi]=useState(null);
+  const [malli,setMalli]=useState(null);
   const [error,setError]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [loadStep,setLoadStep]=useState(0);
   const [dragging,setDragging]=useState(false);
-  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
 
-  function handleFile(file){
-    if(!file||file.type!=="application/pdf"){setError("Lataa PDF-tiedosto.");return;}
-    setPdfName(file.name);
-    const reader=new FileReader();
-    reader.onload=e=>setPdf(e.target.result.split(",")[1]);
-    reader.readAsDataURL(file);
-    setError(null);
-  }
+  const fmtKoko=b=>b>=1048576?`${(b/1048576).toFixed(1)} MB`:`${Math.round(b/1024)} kB`;
 
-  function analysoi(){
-    const hoito=parseFloat(form.hoito)||0;
-    const raha=parseFloat(form.rahavastike)||0;
-    const lainat=parseFloat(form.lainat)||0;
-    const vuosi=parseInt(form.vuosi)||1980;
-    const asunnot=parseInt(form.asunnot)||10;
-    const lainaPerAsunto=asunnot>0?lainat/asunnot:0;
-    const ika=2025-vuosi;
-
-    let pisteet=100;
-    const hyvat=[],huolet=[],kysymykset=[];
-
-    if(ika>50){pisteet-=20;huolet.push(`Vanha rakennus (${vuosi}) — suuri putkiremonttiriski lähivuosina`);kysymykset.push("Onko putkiremontti suunniteltu tai tehty?");}
-    else if(ika>30){pisteet-=10;huolet.push(`Rakennus vuodelta ${vuosi} — tarkista linjasaneerauksen tilanne`);kysymykset.push("Milloin viimeisin suuri remontti on tehty?");}
-    else{hyvat.push(`Suhteellisen uusi rakennus (${vuosi}) — vähän kulumaa`);}
-
-    if(hoito>6){pisteet-=15;huolet.push(`Korkea hoitovastike ${hoito} €/m² — taloyhtiön kulut ovat suuret`);}
-    else if(hoito>4){pisteet-=5;huolet.push(`Hoitovastike ${hoito} €/m²/kk on hieman yli keskitason`);}
-    else if(hoito>0){hyvat.push(`Hoitovastike ${hoito} €/m²/kk on kohtuullinen`);}
-
-    if(lainaPerAsunto>50000){pisteet-=20;huolet.push(`Taloyhtiölainaa ${fmt(lainaPerAsunto)} €/asunto — erittäin korkea`);}
-    else if(lainaPerAsunto>25000){pisteet-=10;huolet.push(`Taloyhtiölainaa ${fmt(lainaPerAsunto)} €/asunto — huomioitava`);}
-    else if(lainat>0){hyvat.push(`Taloyhtiölaina kohtuullinen (${fmt(lainaPerAsunto)} €/asunto)`);}
-    else{hyvat.push("Ei merkittävää taloyhtiölainaa — talous vakaalla pohjalla");}
-
-    if(raha>4){pisteet-=10;huolet.push(`Rahoitusvastike ${raha} €/m²/kk on korkea — lainaa paljon`);}
-    else if(raha>0){kysymykset.push("Milloin taloyhtiölaina on maksettu pois?");}
-
-    const tuleva=(form.tuleva||"").toLowerCase();
-    if(tuleva.includes("putki")||tuleva.includes("linjasaneer")){pisteet-=20;huolet.push("Putkiremontti tulossa — iso kustannus, tyypillisesti 20 000–40 000 €/asunto");kysymykset.push("Mikä on putkiremontin arvioitu kustannus asuntoa kohden?");}
-    if(tuleva.includes("julkisivu")){pisteet-=10;huolet.push("Julkisivuremontti suunniteltu — tarkista kustannusarvio");kysymykset.push("Onko julkisivuremontin rahoitus selvitetty?");}
-    if(tuleva.includes("katto")){pisteet-=8;huolet.push("Kattoremontti tulossa — tarkista aikataulua ja rahoitussuunnitelmaa");}
-    if(tuleva.includes("hissi")){pisteet-=5;huolet.push("Hissin asennus tai uusiminen suunnitteilla");}
-    if(!tuleva&&!form.tuleva){kysymykset.push("Onko taloyhtiöllä voimassa oleva PTS (pitkän tähtäimen suunnitelma)?");}
-    else if(!tuleva.includes("putki")&&ika>40){kysymykset.push("Onko putkiremontti harkinnassa seuraavan 10 vuoden aikana?");}
-
-    if(pdf){hyvat.push("Isännöitsijäntodistus analysoitu — kattavampi arvio");}
-
-    pisteet=Math.max(0,Math.min(100,pisteet));
-    const arvosana=pisteet>=85?"A":pisteet>=70?"B":pisteet>=50?"C":"D";
-    const arvosanaSelite={A:"Erinomainen",B:"Hyvä",C:"Tyydyttävä",D:"Heikko"}[arvosana];
-    const suositus=pisteet>=70?"Osta harkiten":"Harkitse tarkasti";
-    const suositusVari=pisteet>=70?C.forest:pisteet>=50?C.clay:C.terra;
-
-    kysymykset.push("Onko taloyhtiöllä riittävä korjausrahasto?");
-    if(asunnot<10)kysymykset.push("Pienessä taloyhtiössä — miten kulut jaetaan jos asunto on tyhjillään?");
-
-    setResult({
-      pisteet,arvosana,arvosanaSelite,suositus,suositusVari,
-      hyvat:hyvat.slice(0,4),huolet:huolet.slice(0,4),
-      kysymykset:kysymykset.slice(0,4),
-      hasPdf:!!pdf,
-      yhteenveto:pisteet>=85
-        ?`Taloyhtiö vaikuttaa erinomaiselta. Talous on vakaalla pohjalla ja remonttiriski on alhainen.`
-        :pisteet>=70
-        ?`Taloyhtiö on kohtuullisessa kunnossa. Muutama huomioitava asia, mutta kokonaisuus on hallinnassa.`
-        :pisteet>=50
-        ?`Taloyhtiössä on merkittäviä huomioita jotka voivat vaikuttaa asumiskustannuksiin. Pyydä lisätietoja.`
-        :`Taloyhtiössä on vakavia riskitekijöitä. Harkitse tarkasti ennen ostopäätöstä.`,
+  function addFiles(fileList){
+    const arr=Array.from(fileList||[]);
+    if(arr.length===0)return;
+    const pdfit=[];
+    let virhe=null;
+    for(const f of arr){
+      const onPdf=f.type==="application/pdf"||f.name.toLowerCase().endsWith(".pdf");
+      if(!onPdf){virhe="Vain PDF-tiedostot kelpaavat — muut jätettiin pois.";continue;}
+      if(f.size>15*1024*1024){virhe=`"${f.name}" on liian suuri (yli 15 MB).`;continue;}
+      pdfit.push(f);
+    }
+    setFiles(prev=>{
+      const avaimet=new Set(prev.map(f=>f.name+"|"+f.size));
+      const uudet=pdfit.filter(f=>!avaimet.has(f.name+"|"+f.size));
+      const yhd=[...prev,...uudet];
+      if(yhd.length>10){virhe="Enintään 10 tiedostoa kerralla.";return yhd.slice(0,10);}
+      return yhd;
     });
+    setError(virhe);
   }
 
-  const gradeColor={A:C.forest,B:"#5A8A3F",C:C.clay,D:C.terra};
+  function poistaFile(idx){
+    setFiles(prev=>prev.filter((_,i)=>i!==idx));
+  }
+
+  function nollaa(){
+    setFiles([]);setAnalyysi(null);setMalli(null);setError(null);setLoadStep(0);
+  }
+
+  async function analysoi(){
+    if(files.length===0){setError("Lataa vähintään yksi PDF-tiedosto.");return;}
+    setError(null);setAnalyysi(null);setLoading(true);setLoadStep(1);
+    const t1=setTimeout(()=>setLoadStep(2),1800);
+    const t2=setTimeout(()=>setLoadStep(3),7000);
+    try{
+      const fd=new FormData();
+      files.forEach(f=>fd.append("tiedostot",f));
+      // HUOM: ei aseteta Content-Type-otsikkoa — selain lisää sen automaattisesti
+      // oikealla multipart-rajalla (boundary).
+      const res=await fetch(`${BACKEND_URL}/api/analyysi`,{method:"POST",body:fd});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok||!data.ok){
+        throw new Error(data.error||`Analyysi epäonnistui (${res.status})`);
+      }
+      setAnalyysi(data.analyysi);
+      setMalli(data.malli||null);
+    }catch(e){
+      console.error("Analyysi-virhe:",e);
+      setError(e.message||"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
+    }finally{
+      clearTimeout(t1);clearTimeout(t2);
+      setLoading(false);setLoadStep(0);
+    }
+  }
+
+  const steps=["📄 Luetaan papereita...","🧠 Analysoidaan sisältöä...","📝 Kootaan Asuntoraporttia..."];
 
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Taloyhtiöanalyysi</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Lataa isännöitsijäntodistus tai syötä tiedot — saat riskianalyysin ja arvosanan</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Asuntoanalyysi</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>
+        Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, PTS…) — saat selkokielisen Asuntoraportin
+      </div>
 
+      {/* Tietosuoja-lupaus */}
+      <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
+        <span style={{fontSize:13,flexShrink:0,marginTop:1}}>🔒</span>
+        <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
+          <span style={{color:C.ink,fontWeight:500}}>Papereita ei tallenneta.</span> Ne luetaan analyysiä varten ja heitetään heti pois — mitään ei jää talteen.
+        </div>
+      </div>
+
+      {/* Latausalue */}
       <div
         onDragOver={e=>{e.preventDefault();setDragging(true);}}
         onDragLeave={()=>setDragging(false)}
-        onDrop={e=>{e.preventDefault();setDragging(false);handleFile(e.dataTransfer.files[0]);}}
-        onClick={()=>document.getElementById("ty-pdf").click()}
-        style={{border:`2px dashed ${dragging?C.clay:pdf?C.forest:C.border}`,borderRadius:14,padding:"28px 20px",textAlign:"center",cursor:"pointer",background:pdf?C.forestDim:dragging?C.clayDim:C.cream,transition:"all 0.2s",marginBottom:20}}>
-        <input id="ty-pdf" type="file" accept=".pdf" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
-        <div style={{fontSize:32,marginBottom:10}}>{pdf?"✅":"📄"}</div>
-        <div style={{fontFamily:H,fontSize:17,fontStyle:"italic",color:pdf?C.forest:C.ink,marginBottom:4}}>
-          {pdf?pdfName:"Lataa isännöitsijäntodistus"}
+        onDrop={e=>{e.preventDefault();setDragging(false);addFiles(e.dataTransfer.files);}}
+        onClick={()=>document.getElementById("asuntoanalyysi-pdf").click()}
+        style={{border:`2px dashed ${dragging?C.clay:files.length?C.forest:C.border}`,borderRadius:14,padding:"28px 20px",textAlign:"center",cursor:"pointer",background:files.length?C.forestDim:dragging?C.clayDim:C.cream,transition:"all 0.2s",marginBottom:16}}>
+        <input id="asuntoanalyysi-pdf" type="file" accept=".pdf" multiple style={{display:"none"}} onChange={e=>{addFiles(e.target.files);e.target.value="";}}/>
+        <div style={{fontSize:32,marginBottom:10}}>{files.length?"✅":"📄"}</div>
+        <div style={{fontFamily:H,fontSize:17,fontStyle:"italic",color:files.length?C.forest:C.ink,marginBottom:4}}>
+          {files.length?`${files.length} tiedosto${files.length===1?"":"a"} valittu`:"Lataa taloyhtiön paperit"}
         </div>
         <div style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300}}>
-          {pdf?"PDF ladattu — analyysi huomioi dokumentin":"PDF-tiedosto · vedä tähän tai klikkaa"}
+          {files.length?"Klikkaa lisätäksesi tai vedä lisää PDF:iä":"PDF-tiedostot · vedä tähän tai klikkaa · voit lisätä useita"}
         </div>
       </div>
 
-      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
-        <div style={{flex:1,height:1,background:C.linen}}/>
-        <span style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:1}}>TAI SYÖTÄ KÄSIN</span>
-        <div style={{flex:1,height:1,background:C.linen}}/>
-      </div>
-
-      <div style={{display:"grid",gap:10,marginBottom:20}}>
-        <FloatInput label="Taloyhtiön nimi" value={form.nimi} onChange={e=>set("nimi",e.target.value)}/>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Rakennusvuosi" type="number" value={form.vuosi} onChange={e=>set("vuosi",e.target.value)}/>
-          <FloatInput label="Asuntojen lkm" type="number" value={form.asunnot} onChange={e=>set("asunnot",e.target.value)}/>
+      {/* Valitut tiedostot */}
+      {files.length>0&&(
+        <div style={{marginBottom:16}}>
+          {files.map((f,i)=>(
+            <div key={f.name+f.size} style={{display:"flex",alignItems:"center",gap:10,background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:8}}>
+              <span style={{fontSize:16,flexShrink:0}}>📄</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontFamily:B,fontSize:13,color:C.ink,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.name}</div>
+                <div style={{fontFamily:B,fontSize:11,color:C.stone,fontWeight:300}}>{fmtKoko(f.size)}</div>
+              </div>
+              <button onClick={e=>{e.stopPropagation();poistaFile(i);}} style={{background:"none",border:"none",color:C.stone,fontSize:18,cursor:"pointer",lineHeight:1,flexShrink:0,padding:"0 4px"}} aria-label="Poista">×</button>
+            </div>
+          ))}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Hoitovastike (€/m²/kk)" type="number" value={form.hoito} onChange={e=>set("hoito",e.target.value)}/>
-          <FloatInput label="Rahoitusvastike (€/m²/kk)" type="number" value={form.rahavastike} onChange={e=>set("rahavastike",e.target.value)}/>
-        </div>
-        <FloatInput label="Taloyhtiölainat yhteensä (€)" type="number" value={form.lainat} onChange={e=>set("lainat",e.target.value)}/>
-        <FloatInput label="Viimeisin suuri remontti" value={form.remontti} onChange={e=>set("remontti",e.target.value)}/>
-        <FloatInput label="Tulevat remontit (PTS)" value={form.tuleva} onChange={e=>set("tuleva",e.target.value)}/>
-        <FloatInput label="Muuta huomioitavaa" value={form.muu} onChange={e=>set("muu",e.target.value)}/>
-      </div>
+      )}
 
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
-      <DarkBtn onClick={analysoi} style={{marginBottom:result?28:0}}>
-        Analysoi taloyhtiö →
+      <DarkBtn onClick={analysoi} style={{marginBottom:analyysi?28:0,opacity:loading?0.6:1,cursor:loading?"wait":"pointer"}} disabled={loading}>
+        {loading?"⏳ Analysoidaan...":"Analysoi →"}
       </DarkBtn>
 
-      {result&&(
+      {/* Latausanimaatio */}
+      {loading&&(
+        <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 20px",marginTop:16,marginBottom:16}}>
+          {steps.map((s,i)=>(
+            <div key={i} style={{fontFamily:B,fontSize:13,marginBottom:10,display:"flex",alignItems:"center",gap:10}}>
+              <div style={{width:20,height:20,borderRadius:"50%",background:loadStep>i?C.forest:loadStep===i+1?C.clay:C.linen,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"background 0.3s"}}>
+                {loadStep>i&&<span style={{color:"white",fontSize:10}}>✓</span>}
+                {loadStep===i+1&&<span style={{fontSize:10}}>⏳</span>}
+              </div>
+              <span style={{color:loadStep>i?C.forest:loadStep===i+1?C.ink:C.stone,fontWeight:loadStep===i+1?500:300}}>{s}</span>
+            </div>
+          ))}
+          <div style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:6,fontWeight:300,fontStyle:"italic"}}>Tämä voi kestää 10–60 sekuntia paperien määrästä riippuen.</div>
+        </div>
+      )}
+
+      {/* Tulos: Asuntoraportti */}
+      {analyysi&&(
         <div>
           <div style={{height:2,background:`linear-gradient(90deg,transparent,${C.gold},${C.clay},transparent)`,borderRadius:2}}/>
-
-          <DarkCard style={{padding:"28px 24px",marginBottom:16,marginTop:0}}>
-            <div style={{display:"flex",alignItems:"center",gap:20,marginBottom:20}}>
-              <div style={{width:72,height:72,borderRadius:"50%",border:`2px solid ${gradeColor[result.arvosana]}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <span style={{fontFamily:H,fontSize:44,fontWeight:600,color:gradeColor[result.arvosana],lineHeight:1}}>{result.arvosana}</span>
-              </div>
-              <div>
-                <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.6)",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Kokonaisarvosana</div>
-                <div style={{fontFamily:H,fontSize:22,fontStyle:"italic",color:"#FBF3E2",marginBottom:4}}>{result.arvosanaSelite}</div>
-                <div style={{fontFamily:B,fontSize:12,color:"rgba(251,243,226,0.45)",fontWeight:300}}>{result.pisteet}/100 pistettä{result.hasPdf?" · PDF analysoitu":""}</div>
-              </div>
+          <div style={{background:C.paper,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 22px",marginBottom:16}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+              <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>Asuntoraportti</span>
+              <div style={{height:1,flex:1,background:`linear-gradient(90deg,${C.linen},transparent)`}}/>
             </div>
+            <RaporttiText text={analyysi}/>
+          </div>
 
-            <div style={{background:"rgba(255,255,255,0.07)",borderRadius:20,height:8,overflow:"hidden",marginBottom:16}}>
-              <div style={{width:`${result.pisteet}%`,height:"100%",background:`linear-gradient(90deg,${gradeColor[result.arvosana]},${C.gold})`,borderRadius:20,transition:"width 1s ease"}}/>
-            </div>
-
-            <div style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.65)",lineHeight:1.7,fontWeight:300,marginBottom:16}}>{result.yhteenveto}</div>
-
-            <div style={{background:`rgba(${result.pisteet>=70?"62,92,63":"181,105,60"},0.2)`,border:`1px solid rgba(${result.pisteet>=70?"62,92,63":"181,105,60"},0.4)`,borderRadius:8,padding:"10px 16px",display:"flex",alignItems:"center",gap:10}}>
-              <span style={{fontSize:16}}>{result.pisteet>=70?"✓":"⚠"}</span>
-              <span style={{fontFamily:B,fontSize:13,color:result.suositusVari===C.forest?"#A8D5B5":result.suositusVari===C.clay?"#E8C99A":"#E8B08A",fontWeight:500}}>{result.suositus}</span>
-            </div>
-          </DarkCard>
-
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-            <div style={{background:C.forestDim,border:`1px solid ${C.forest}20`,borderRadius:12,padding:"16px"}}>
-              <div style={{fontFamily:B,fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:C.forest,marginBottom:10,fontWeight:600}}>Positiivista</div>
-              {result.hyvat.length>0
-                ?result.hyvat.map((v,i)=><div key={i} style={{fontFamily:B,fontSize:12,color:C.ink,marginBottom:7,display:"flex",gap:7,lineHeight:1.5}}><span style={{color:C.forest,flexShrink:0}}>✓</span>{v}</div>)
-                :<div style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300}}>Syötä taloyhtiön tiedot tarkemman analyysin saamiseksi.</div>
-              }
-            </div>
-            <div style={{background:C.clayDim,border:`1px solid ${C.clay}25`,borderRadius:12,padding:"16px"}}>
-              <div style={{fontFamily:B,fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:C.terra,marginBottom:10,fontWeight:600}}>Huolenaiheet</div>
-              {result.huolet.length>0
-                ?result.huolet.map((v,i)=><div key={i} style={{fontFamily:B,fontSize:12,color:C.ink,marginBottom:7,display:"flex",gap:7,lineHeight:1.5}}><span style={{color:C.clay,flexShrink:0}}>⚠</span>{v}</div>)
-                :<div style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300}}>Ei merkittäviä huolenaiheita syötetyillä tiedoilla.</div>
-              }
+          <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
+            <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
+            <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
+              Asuntoraportti on tekoälyn tuottama tiivistelmä papereistasi. Se ei ole juridinen tai sijoitusneuvonta — tarkista olennaiset tiedot aina alkuperäisistä asiakirjoista.
             </div>
           </div>
 
-          <div style={{background:C.goldDim,border:`1px solid ${C.gold}30`,borderRadius:12,padding:"18px 20px",marginBottom:16}}>
-            <div style={{fontFamily:H,fontSize:16,fontStyle:"italic",color:C.ink,marginBottom:12}}>Kysy isännöitsijältä</div>
-            {result.kysymykset.map((q,i)=>(
-              <div key={i} style={{display:"flex",gap:10,marginBottom:10,alignItems:"flex-start"}}>
-                <div style={{width:20,height:20,borderRadius:"50%",background:C.gold,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>
-                  <span style={{fontFamily:B,fontSize:10,fontWeight:700,color:"white"}}>{i+1}</span>
-                </div>
-                <div style={{fontFamily:B,fontSize:13,color:C.ink,lineHeight:1.6,fontWeight:300}}>{q}</div>
-              </div>
-            ))}
-          </div>
+          <button onClick={nollaa} style={{width:"100%",background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"14px 0",fontFamily:B,fontSize:13,letterSpacing:1,cursor:"pointer",borderRadius:10}}>
+            Tee uusi analyysi
+          </button>
         </div>
       )}
     </div>
@@ -1158,14 +1193,14 @@ const OSTAJA_TABS=[
   {id:"laskin",label:"🏦 Lainalaskin"},
   {id:"ilmoitus",label:"🔗 Tarjousapuri"},
   {id:"hinta",label:"✦ Hinta-arvio"},
-  {id:"taloyhtion",label:"🏢 Taloyhtiö"},
+  {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
   {id:"tarkistus",label:"☑ Tarkistuslista"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
 const MYYJA_TABS=[
   {id:"hinta",label:"✦ Myyntihinta-arvio"},
   {id:"kulut",label:"💰 Myyntikulut"},
-  {id:"taloyhtion",label:"🏢 Taloyhtiö"},
+  {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
   {id:"tarkistus",label:"☑ Myyjän lista"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
