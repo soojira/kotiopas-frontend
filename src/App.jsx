@@ -974,6 +974,19 @@ function renderInline(teksti){
   });
 }
 
+// Tunnistaa markdown-taulukon rivin: "| solu | solu |"
+function onTaulukkoRivi(t){
+  return t.startsWith("|") && t.endsWith("|") && t.length>2;
+}
+// Erotinrivi taulukon otsikon alla: "|---|:--:|---|"
+function onErotinRivi(t){
+  return /^\|[\s:|-]+\|$/.test(t) && t.includes("-");
+}
+function jaaSolut(t){
+  // Poista alku- ja loppuputket, jaa | -merkillä
+  return t.replace(/^\|/,"").replace(/\|$/,"").split("|").map(s=>s.trim());
+}
+
 function RaporttiText({text}){
   const rivit=String(text).split("\n");
   const elementit=[];
@@ -991,9 +1004,54 @@ function RaporttiText({text}){
       lista=[];
     }
   };
-  rivit.forEach((raaka,idx)=>{
-    const t=raaka.trim();
-    if(!t){ purgeLista(idx); return; }
+
+  for(let idx=0; idx<rivit.length; idx++){
+    const t=rivit[idx].trim();
+    if(!t){ purgeLista(idx); continue; }
+
+    // ── Taulukko ──────────────────────────────────────────────
+    if(onTaulukkoRivi(t)){
+      purgeLista(idx);
+      // Kerää kaikki peräkkäiset taulukkorivit
+      const taulukkoRivit=[];
+      let j=idx;
+      while(j<rivit.length && onTaulukkoRivi(rivit[j].trim())){
+        taulukkoRivit.push(rivit[j].trim());
+        j++;
+      }
+      idx=j-1; // hyppää taulukon yli (for-silmukka kasvattaa vielä +1)
+
+      // Ensimmäinen rivi = otsikko, mahdollinen erotinrivi ohitetaan
+      const otsikkoSolut=jaaSolut(taulukkoRivit[0]);
+      let dataAlku=1;
+      if(taulukkoRivit[1] && onErotinRivi(taulukkoRivit[1])) dataAlku=2;
+      const dataRivit=taulukkoRivit.slice(dataAlku).map(jaaSolut);
+
+      elementit.push(
+        <div key={"taulu-"+idx} style={{overflowX:"auto",margin:"8px 0 16px"}}>
+          <table style={{width:"100%",borderCollapse:"collapse",fontFamily:B,fontSize:13}}>
+            <thead>
+              <tr>
+                {otsikkoSolut.map((solu,i)=>(
+                  <th key={i} style={{textAlign:"left",padding:"9px 12px",background:C.cream,color:C.stone,fontWeight:600,fontSize:10,letterSpacing:1,textTransform:"uppercase",borderBottom:`2px solid ${C.clay}`}}>{renderInline(solu)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {dataRivit.map((rivi,ri)=>(
+                <tr key={ri} style={{background:ri%2===0?C.paper:C.cream}}>
+                  {rivi.map((solu,ci)=>(
+                    <td key={ci} style={{padding:"9px 12px",color:C.ink,lineHeight:1.5,fontWeight:300,borderBottom:`1px solid ${C.linen}`,verticalAlign:"top"}}>{renderInline(solu)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      continue;
+    }
+
     const h1=t.match(/^#\s+(.*)/);
     const h2=t.match(/^##\s+(.*)/);
     const h3=t.match(/^###\s+(.*)/);
@@ -1013,7 +1071,7 @@ function RaporttiText({text}){
         <p key={idx} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.75,marginBottom:12,fontWeight:300}}>{renderInline(t)}</p>
       );
     }
-  });
+  }
   purgeLista("loppu");
   return <div>{elementit}</div>;
 }
