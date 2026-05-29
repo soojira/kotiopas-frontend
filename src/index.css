@@ -26,14 +26,20 @@ body {
   padding: 0;
 }
 
-/* Saumaton tausta: tumma ylhaalla -> vihrea alhaalla, pysyy paikallaan ruudussa */
+/* Saumaton tausta: seuraa sivun omaa savya - ruskea ylhaalla -> vihrea alhaalla.
+   Pysyy paikallaan ruudussa, joten ylareuna on aina ruskea ja alareuna aina vihrea. */
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, #2A1F14 0%, #2A1F14 55%, #3E5C3F 100%);
+  background: linear-gradient(
+    to bottom,
+    #302418 0%,
+    #302418 12%,
+    #3C2D1A 35%,
+    #342E1B 65%,
+    #2B2F1E 82%,
+    #313526 100%
+  );
 }
