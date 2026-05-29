@@ -1021,32 +1021,26 @@ function RaporttiText({text}){
       }
       idx=j-1; // hyppää taulukon yli (for-silmukka kasvattaa vielä +1)
 
-      // Ensimmäinen rivi = otsikko, mahdollinen erotinrivi ohitetaan
-      const otsikkoSolut=jaaSolut(taulukkoRivit[0]);
+      // Ensimmäinen rivi = otsikko (ei näytetä rivilistassa), erotinrivi ohitetaan
       let dataAlku=1;
       if(taulukkoRivit[1] && onErotinRivi(taulukkoRivit[1])) dataAlku=2;
       const dataRivit=taulukkoRivit.slice(dataAlku).map(jaaSolut);
 
+      // Kaksisarakkeinen taulukko (Asia | Tieto) → siisti rivilista.
+      // Useampisarakkeinen → renderöidään riveinä, sarakkeet yhdistettynä.
       elementit.push(
-        <div key={"taulu-"+idx} style={{overflowX:"auto",margin:"8px 0 16px"}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontFamily:B,fontSize:13}}>
-            <thead>
-              <tr>
-                {otsikkoSolut.map((solu,i)=>(
-                  <th key={i} style={{textAlign:"left",padding:"9px 12px",background:C.cream,color:C.stone,fontWeight:600,fontSize:10,letterSpacing:1,textTransform:"uppercase",borderBottom:`2px solid ${C.clay}`}}>{renderInline(solu)}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {dataRivit.map((rivi,ri)=>(
-                <tr key={ri} style={{background:ri%2===0?C.paper:C.cream}}>
-                  {rivi.map((solu,ci)=>(
-                    <td key={ci} style={{padding:"9px 12px",color:C.ink,lineHeight:1.5,fontWeight:300,borderBottom:`1px solid ${C.linen}`,verticalAlign:"top"}}>{renderInline(solu)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div key={"taulu-"+idx} style={{background:C.cream,borderRadius:10,padding:"6px 16px",margin:"8px 0 16px"}}>
+          {dataRivit.map((rivi,ri)=>{
+            const viimeinen=ri===dataRivit.length-1;
+            const nimi=rivi[0]||"";
+            const arvo=rivi.slice(1).filter(Boolean).join(" · ");
+            return(
+              <div key={ri} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:14,padding:"11px 0",borderBottom:viimeinen?"none":`1px solid ${C.linen}`}}>
+                <span style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,flexShrink:0}}>{renderInline(nimi)}</span>
+                <span style={{fontFamily:B,fontSize:13,color:C.ink,textAlign:"right"}}>{renderInline(arvo)}</span>
+              </div>
+            );
+          })}
         </div>
       );
       continue;
