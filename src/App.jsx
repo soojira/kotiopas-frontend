@@ -1175,7 +1175,7 @@ function TabTaloyhtion(){
           <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
             <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
             <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-              Asuntoraportti on tekoälyn tuottama tiivistelmä papereistasi. Se ei ole juridinen tai sijoitusneuvonta — tarkista olennaiset tiedot aina alkuperäisistä asiakirjoista.
+              Tämän raportin on koonnut tekoäly lataamistasi taloyhtiön papereista. Se auttaa sinua ymmärtämään olennaisen nopeasti ja selkokielellä, mutta ei korvaa alkuperäisiä asiakirjoja eikä asiantuntijan arviota. Tekoäly voi tehdä virheitä tai tulkita tietoa väärin — tarkista tärkeät tiedot aina alkuperäisistä papereista ja isännöitsijältä ennen ostopäätöstä. Asuntoraportti ei ole juridinen neuvonta, sijoitusneuvonta eikä virallinen arvio asunnon arvosta.
             </div>
           </div>
 
