@@ -1115,6 +1115,7 @@ function TabTaloyhtion(){
   const [files,setFiles]=useState([]);
   const [analyysi,setAnalyysi]=useState(null);
   const [malli,setMalli]=useState(null);
+  const [skannatut,setSkannatut]=useState([]);
   const [error,setError]=useState(null);
   const [loading,setLoading]=useState(false);
   const [loadStep,setLoadStep]=useState(0);
@@ -1148,12 +1149,12 @@ function TabTaloyhtion(){
   }
 
   function nollaa(){
-    setFiles([]);setAnalyysi(null);setMalli(null);setError(null);setLoadStep(0);
+    setFiles([]);setAnalyysi(null);setMalli(null);setSkannatut([]);setError(null);setLoadStep(0);
   }
 
   async function analysoi(){
     if(files.length===0){setError("Lataa vähintään yksi PDF-tiedosto.");return;}
-    setError(null);setAnalyysi(null);setLoading(true);setLoadStep(1);
+    setError(null);setAnalyysi(null);setSkannatut([]);setLoading(true);setLoadStep(1);
     const t1=setTimeout(()=>setLoadStep(2),1800);
     const t2=setTimeout(()=>setLoadStep(3),7000);
     try{
@@ -1168,6 +1169,7 @@ function TabTaloyhtion(){
       }
       setAnalyysi(data.analyysi);
       setMalli(data.malli||null);
+      setSkannatut(Array.isArray(data.skannatut)?data.skannatut:[]);
     }catch(e){
       console.error("Analyysi-virhe:",e);
       setError(e.message||"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
@@ -1229,9 +1231,16 @@ function TabTaloyhtion(){
 
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
-      <DarkBtn onClick={analysoi} style={{marginBottom:analyysi?28:0,opacity:loading?0.6:1,cursor:loading?"wait":"pointer"}} disabled={loading}>
-        {loading?"⏳ Analysoidaan...":"Analysoi →"}
-      </DarkBtn>
+      {skannatut.length>0&&(
+        <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:10,padding:"12px 16px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
+          <span style={{fontSize:14,flexShrink:0,marginTop:1}}>🔍</span>
+          <div style={{fontFamily:B,fontSize:12,color:C.ink,lineHeight:1.55,fontWeight:300}}>
+            <span style={{fontWeight:500}}>Nämä tiedostot olivat skannattuja, ja teksti luettiin kuvasta:</span>
+            <span style={{display:"block",marginTop:4,color:C.forest}}>{skannatut.join(", ")}</span>
+            <span style={{display:"block",marginTop:6}}>Skannatun dokumentin luku voi olla hieman epätarkempaa — tarkista tärkeät luvut alkuperäisistä papereista.</span>
+          </div>
+        </div>
+      )}
 
       {/* Latausanimaatio */}
       {loading&&(
