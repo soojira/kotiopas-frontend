@@ -1242,6 +1242,10 @@ function TabTaloyhtion(){
         </div>
       )}
 
+      <DarkBtn onClick={analysoi} style={{marginBottom:analyysi?28:0,opacity:loading?0.6:1,cursor:loading?"wait":"pointer"}} disabled={loading}>
+        {loading?"⏳ Analysoidaan...":"Analysoi →"}
+      </DarkBtn>
+
       {/* Latausanimaatio */}
       {loading&&(
         <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 20px",marginTop:16,marginBottom:16}}>
