@@ -636,7 +636,8 @@ function TabTarkistus({mode}){
   );
 }
 
-// ── Maksuton myyntikonsultaatio: myyjän liidikanava (lähettää /api/liidi → Brevo) ──
+// ── Pyydä ilmainen arviokäynti: myyjän liidikanava (lähettää /api/liidi → Brevo) ──
+// Välittäjäkumppani tekee maksuttoman arviokäynnin ja jättää tarjouksen.
 function TabKonsultaatio(){
   const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",asunto:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
@@ -658,7 +659,7 @@ function TabKonsultaatio(){
           email:liidi.email||"",
           asunto:liidi.asunto||"",
           hinta:null,
-          tyyppi:"myyja-konsultaatio",
+          tyyppi:"myyja-arviokaynti",
           lisatieto:liidi.viesti||"",
           gdpr:true
         })
@@ -670,16 +671,16 @@ function TabKonsultaatio(){
         setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");
       }
     }catch(err){
-      console.error("Konsultaatio-liidi-virhe:",err);
+      console.error("Arviokäynti-liidi-virhe:",err);
       setError("Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
     }finally{
       setSending(false);
     }
   }
   const hyodyt=[
-    {e:"💶",t:"Autamme hinnoittelussa",d:"Et jää arvailemaan paljonko asunnostasi voi saada."},
-    {e:"🧭",t:"Neuvomme myyntitavan valinnassa",d:"Löydät sinulle sopivimman tavan myydä."},
-    {e:"🤝",t:"Tuemme koko prosessin ajan",d:"Et jää yksin missään vaiheessa."},
+    {e:"🏠",t:"Ilmainen arviokäynti",d:"Luotettava välittäjä käy arvioimassa asuntosi paikan päällä — maksutta."},
+    {e:"💶",t:"Hinta-arvio ja tarjous",d:"Saat tietää paljonko asunnostasi voi saada ja mitä myynti maksaa."},
+    {e:"🤝",t:"Ei sitoumuksia",d:"Arviokäynti ei velvoita mihinkään — päätät itse haluatko edetä."},
   ];
   if(sent){
     return(
@@ -688,7 +689,7 @@ function TabKonsultaatio(){
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:14,padding:"24px 20px",marginTop:16,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:22,flexShrink:0}}>✅</span>
           <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>
-            Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja autamme asuntosi myynnissä eteenpäin — rauhassa ja ilman kiirettä.
+            Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme sinulle sopivan ajan maksuttomalle arviokäynnille — rauhassa ja ilman kiirettä.
           </div>
         </div>
       </div>
@@ -696,7 +697,7 @@ function TabKonsultaatio(){
   }
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Maksuton myyntikonsultaatio</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Pyydä ilmainen arviokäynti</div>
       <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Vähemmän stressiä, sujuvampi myynti — autamme sinua.</div>
 
       <div style={{display:"grid",gap:12,marginBottom:24}}>
@@ -712,7 +713,7 @@ function TabKonsultaatio(){
       </div>
 
       <div style={{fontFamily:B,fontSize:14,color:C.ink,marginBottom:16,fontWeight:300,lineHeight:1.6}}>
-        Jätä yhteystietosi, niin otamme sinuun yhteyttä ja autamme alkuun. Maksutonta eikä sido mihinkään.
+        Jätä yhteystietosi, niin järjestämme sinulle maksuttoman arviokäynnin luotettavan välittäjän kanssa. Ei sido mihinkään.
       </div>
 
       <div style={{display:"grid",gap:10,marginBottom:16}}>
@@ -735,7 +736,7 @@ function TabKonsultaatio(){
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
-        {sending?"⏳ Lähetetään...":"Pyydä maksuton konsultaatio →"}
+        {sending?"⏳ Lähetetään...":"Pyydä ilmainen arviokäynti →"}
       </DarkBtn>
     </div>
   );
@@ -1402,7 +1403,7 @@ const OSTAJA_TABS=[
 const MYYJA_TABS=[
   {id:"hinta",label:"✦ Myyntihinta-arvio"},
   {id:"kulut",label:"💰 Myyntikulut"},
-  {id:"konsultaatio",label:"💬 Myyntikonsultaatio"},
+  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti"},
   {id:"tarkistus",label:"☑ Myyjän lista"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
