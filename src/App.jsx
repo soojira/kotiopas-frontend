@@ -1392,17 +1392,13 @@ function TabTaloyhtion(){
 }
 
 const OSTAJA_TABS=[
-  {id:"opas",label:"🗺 Ostopolku"},
-  {id:"ilmoitus",label:"🔗 Tarjousapuri"},
   {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
-  {id:"tarkistus",label:"☑ Tarkistuslista"},
+  {id:"opas",label:"🗺 Ostopolku"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
 const MYYJA_TABS=[
-  {id:"hinta",label:"✦ Myyntihinta-arvio"},
-  {id:"kulut",label:"💰 Myyntikulut"},
   {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti"},
-  {id:"tarkistus",label:"☑ Myyjän lista"},
+  {id:"kulut",label:"💰 Myyntikulut"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
 
@@ -1497,10 +1493,10 @@ export default function App(){
           <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>Olen…</div>
           <div style={{display:"grid",gap:16,width:"100%",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr"}}>
             {[
-              {m:"ostaja",e:"🏠",t:"Asunnon ostaja",d:"Lainalaskin, hinta-arvio, ostopolku ja tarkistuslista"},
-              {m:"myyjä",e:"🔑",t:"Asunnon myyjä",d:"Myyntihinta-arvio, myyntikululaskin ja myyjän tarkistuslista"},
+              {m:"ostaja",e:"🏠",t:"Asunnon ostaja",d:"Asuntoanalyysi papereista, ostopolku ja sanasto"},
+              {m:"myyjä",e:"🔑",t:"Asunnon myyjä",d:"Ilmainen arviokäynti, myyntikululaskin ja sanasto"},
             ].map(opt=>(
-              <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"opas":"hinta");}}
+              <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"taloyhtion":"konsultaatio");}}
                 style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:16,padding:"22px 24px",cursor:"pointer",textAlign:"left",transition:"all 0.2s",display:"flex",alignItems:"center",gap:18}}
                 onMouseEnter={e=>{e.currentTarget.style.background="rgba(201,168,76,0.1)";e.currentTarget.style.borderColor="rgba(201,168,76,0.4)";}}
                 onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.04)";e.currentTarget.style.borderColor="rgba(201,168,76,0.2)";}}>
