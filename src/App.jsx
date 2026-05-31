@@ -964,7 +964,7 @@ function TabIlmoitus(){
             {result.t.sijainti&&<div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:14,fontWeight:300}}>📍 {result.t.sijainti}</div>}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
               {[
-                {l:"Pyyntihinta",v:result.myyntihinta?`${fmt(result.myyntihinta)} €`:"—",hi:true},
+                {l:"Velaton hinta",v:result.myyntihinta?`${fmt(result.myyntihinta)} €`:"—",hi:true},
                 {l:"Koko",v:result.t.koko?`${result.t.koko} m²`:"—"},
                 {l:"Huoneet",v:result.t.huoneet||"—"},
                 {l:"Rak.vuosi",v:result.t.vuosi||"—"},
@@ -985,7 +985,7 @@ function TabIlmoitus(){
               <DarkCard style={{padding:"24px 20px",marginBottom:16,marginTop:0}}>
                 <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.6)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Hinta-analyysi</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
-                  <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>Pyyntihinta</div><div style={{fontFamily:H,fontSize:28,color:"#FBF3E2"}}>{fmt(result.myyntihinta)} €</div></div>
+                  <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>Velaton hinta</div><div style={{fontFamily:H,fontSize:28,color:"#FBF3E2"}}>{fmt(result.myyntihinta)} €</div></div>
                   <div><div style={{fontFamily:B,fontSize:10,color:"rgba(251,243,226,0.35)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>Asuntoraportti-arvio</div><div style={{fontFamily:H,fontSize:28,color:C.gold}}>{fmt(result.arvio.todennakoisin)} €</div></div>
                 </div>
                 <div style={{background:Math.abs(result.eroPct)<=5?"rgba(62,92,63,0.2)":"rgba(181,105,60,0.2)",border:`1px solid ${Math.abs(result.eroPct)<=5?C.forest:C.terra}40`,borderRadius:8,padding:"12px 16px",marginBottom:16}}>
