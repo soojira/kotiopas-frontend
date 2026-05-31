@@ -1297,7 +1297,6 @@ const OSTAJA_TABS=[
 const MYYJA_TABS=[
   {id:"hinta",label:"✦ Myyntihinta-arvio"},
   {id:"kulut",label:"💰 Myyntikulut"},
-  {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
   {id:"tarkistus",label:"☑ Myyjän lista"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
@@ -1467,7 +1466,7 @@ export default function App(){
         {mode==="ostaja"&&validiTab==="ilmoitus"&&<TabIlmoitus/>}
         {validiTab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
         {mode==="myyjä"&&validiTab==="kulut"&&<TabMyyntikulut/>}
-        {validiTab==="taloyhtion"&&<TabTaloyhtion/>}
+        {mode==="ostaja"&&validiTab==="taloyhtion"&&<TabTaloyhtion/>}
         {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
         {validiTab==="sanasto"&&<TabSanasto/>}
       </div>
