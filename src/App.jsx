@@ -1393,7 +1393,6 @@ function TabTaloyhtion(){
 
 const OSTAJA_TABS=[
   {id:"opas",label:"🗺 Ostopolku"},
-  {id:"laskin",label:"🏦 Lainalaskin"},
   {id:"ilmoitus",label:"🔗 Tarjousapuri"},
   {id:"hinta",label:"✦ Hinta-arvio"},
   {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
@@ -1569,7 +1568,6 @@ export default function App(){
 
       <div style={{maxWidth:isWide?1080:560,margin:"0 auto",padding:isWide?"40px 24px 80px":"32px 20px 80px"}}>
         {mode==="ostaja"&&validiTab==="opas"&&<TabOstopolku/>}
-        {mode==="ostaja"&&validiTab==="laskin"&&<TabLainalaskin/>}
         {mode==="ostaja"&&validiTab==="ilmoitus"&&<TabIlmoitus/>}
         {validiTab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
         {mode==="myyjä"&&validiTab==="kulut"&&<TabMyyntikulut/>}
