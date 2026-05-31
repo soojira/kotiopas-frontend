@@ -1536,8 +1536,9 @@ export default function App(){
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
-          <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer"}}>
-            🏠 Etusivu
+          <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
+            Etusivu
           </button>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:24}}>
