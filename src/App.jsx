@@ -217,7 +217,6 @@ function laskeArvio(form){
   const m2=Math.round(b*af*cf*sf);
   const tod=Math.round(m2*koko/1000)*1000;
   const vai=Math.round(tod*0.06/1000)*1000;
-  const laina=parseFloat(form.taloyhtiölaina)||0;
   const vahvuudet=[],riskit=[];
   if(vuosi>=2000)vahvuudet.push("Moderni rakennus, vähemmän kulumaa");
   else riskit.push(`Rakennus ${vuosi} — putkiremontti voi olla edessä`);
@@ -225,11 +224,10 @@ function laskeArvio(form){
   else riskit.push("Kunto laskee arvoa — harkitse pintaremonttia ennen myyntiä");
   if(koko>=50)vahvuudet.push("Toimiva koko laajalle ostajakunnalle");
   else riskit.push("Pieni koko rajaa ostajakuntaa");
-  if(laina>30000)riskit.push(`Yhtiölaina ${fmt(laina)} € huomioitava hinnassa`);
   if(form.lisatiedot?.toLowerCase().includes("parveke"))vahvuudet.push("Parveke — houkutteleva myyntiargumentti");
   if(form.lisatiedot?.toLowerCase().includes("hissi"))vahvuudet.push("Hissi — iso plussa ylemmissä kerroksissa");
   return{
-    arvio_min:tod-vai,arvio_max:tod+vai,todennakoisin:tod,laina,
+    arvio_min:tod-vai,arvio_max:tod+vai,todennakoisin:tod,
     hinta_per_m2:m2,alueen_keskim_m2:b,
     hintakehitys:[
       {vuosi:"2021",hinta:Math.round(b*1.05)},{vuosi:"2022",hinta:Math.round(b*1.08)},
@@ -237,9 +235,7 @@ function laskeArvio(form){
       {vuosi:"2025",hinta:b},
     ],
     vahvuudet:vahvuudet.slice(0,3),riskit:riskit.slice(0,3),
-    vinkki:laina>0
-      ?`Velaton hinta on ${fmt(tod+laina)} € kun yhtiölaina ${fmt(laina)} € lasketaan mukaan. Muista huomioida tämä tarjouksessa.`
-      :"Pyydä isännöitsijäntodistus ennen tarjousta — se kertoo tulevista remonteista ja yhtiön veloista.",
+    vinkki:"Pyydä isännöitsijäntodistus ennen tarjousta — se kertoo tulevista remonteista ja yhtiön veloista.",
   };
 }
 
@@ -346,7 +342,7 @@ function TabLainalaskin(){
 
 function TabHintaArvio({mode,isDesktop}){
   const isSeller=mode==="myyjä";
-  const [form,setForm]=useState({postinumero:"",alue:"",tyyppi:"Kerrostaloasunto",koko:"",huoneet:"2h+k",rakVuosi:"",kerros:"",kunto:"Hyvä (hyväkuntoinen)",taloyhtiölaina:"",lisatiedot:""});
+  const [form,setForm]=useState({postinumero:"",alue:"",tyyppi:"Kerrostaloasunto",koko:"",huoneet:"2h+k",rakVuosi:"",kerros:"",kunto:"Hyvä (hyväkuntoinen)",lisatiedot:""});
   const [result,setResult]=useState(null);
   const [error,setError]=useState(null);
   const [loading,setLoading]=useState(false);
@@ -466,8 +462,7 @@ function TabHintaArvio({mode,isDesktop}){
         <FloatSelect label="Kunto" value={form.kunto} onChange={e=>set("kunto",e.target.value)}>
           {["Erinomainen (täysin remontoitu)","Hyvä (hyväkuntoinen)","Tyydyttävä (pintaremontti tarpeen)","Välttävä (perusremontti tarpeen)"].map(v=><option key={v}>{v}</option>)}
         </FloatSelect>
-        <SectionHead num="III" title="Talous"/>
-        <FloatInput label="Taloyhtiölaina / oma osuus (€)" type="number" value={form.taloyhtiölaina} onChange={e=>set("taloyhtiölaina",e.target.value)}/>
+        <SectionHead num="III" title="Lisätiedot"/>
         <FloatInput label="Lisätiedot (parveke, sauna, hissi…)" value={form.lisatiedot} onChange={e=>set("lisatiedot",e.target.value)}/>
       </div>
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
