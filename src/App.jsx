@@ -1500,7 +1500,11 @@ export default function App(){
                 style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:16,padding:"22px 24px",cursor:"pointer",textAlign:"left",transition:"all 0.2s",display:"flex",alignItems:"center",gap:18}}
                 onMouseEnter={e=>{e.currentTarget.style.background="rgba(201,168,76,0.1)";e.currentTarget.style.borderColor="rgba(201,168,76,0.4)";}}
                 onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.04)";e.currentTarget.style.borderColor="rgba(201,168,76,0.2)";}}>
-                <div style={{width:52,height:52,borderRadius:"50%",background:"rgba(201,168,76,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{opt.e}</div>
+                <div style={{width:52,height:52,borderRadius:"50%",background:"rgba(201,168,76,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>
+                  {opt.m==="ostaja"
+                    ? <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
+                    : opt.e}
+                </div>
                 <div>
                   <div style={{fontFamily:H,fontSize:22,fontStyle:"italic",color:"#FBF3E2",marginBottom:4}}>{opt.t}</div>
                   <div style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.45)",fontWeight:300,lineHeight:1.5}}>{opt.d}</div>
