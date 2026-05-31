@@ -636,6 +636,111 @@ function TabTarkistus({mode}){
   );
 }
 
+// ── Maksuton myyntikonsultaatio: myyjän liidikanava (lähettää /api/liidi → Brevo) ──
+function TabKonsultaatio(){
+  const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",asunto:"",viesti:""});
+  const [gdpr,setGdpr]=useState(false);
+  const [sent,setSent]=useState(false);
+  const [sending,setSending]=useState(false);
+  const [error,setError]=useState(null);
+  const set=(k,v)=>setLiidi(x=>({...x,[k]:v}));
+  async function laheta(){
+    if(!liidi.nimi||!liidi.puhelin){setError("Nimi ja puhelin ovat pakollisia.");return;}
+    if(!gdpr){setError("Hyväksy tietosuojakäytäntö ennen lähetystä.");return;}
+    setError(null);setSending(true);
+    try{
+      const r=await fetch("https://kotiopas-backend.onrender.com/api/liidi",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          nimi:liidi.nimi,
+          puhelin:liidi.puhelin,
+          email:liidi.email||"",
+          asunto:liidi.asunto||"",
+          hinta:null,
+          tyyppi:"myyja-konsultaatio",
+          lisatieto:liidi.viesti||"",
+          gdpr:true
+        })
+      });
+      const data=await r.json();
+      if(data.ok){
+        setSent(true);
+      }else{
+        setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");
+      }
+    }catch(err){
+      console.error("Konsultaatio-liidi-virhe:",err);
+      setError("Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
+    }finally{
+      setSending(false);
+    }
+  }
+  const hyodyt=[
+    {e:"💶",t:"Autamme hinnoittelussa",d:"Et jää arvailemaan paljonko asunnostasi voi saada."},
+    {e:"🧭",t:"Neuvomme myyntitavan valinnassa",d:"Löydät sinulle sopivimman tavan myydä."},
+    {e:"🤝",t:"Tuemme koko prosessin ajan",d:"Et jää yksin missään vaiheessa."},
+  ];
+  if(sent){
+    return(
+      <div>
+        <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Kiitos yhteydenotosta!</div>
+        <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:14,padding:"24px 20px",marginTop:16,display:"flex",gap:12,alignItems:"flex-start"}}>
+          <span style={{fontSize:22,flexShrink:0}}>✅</span>
+          <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>
+            Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja autamme asuntosi myynnissä eteenpäin — rauhassa ja ilman kiirettä.
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return(
+    <div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Maksuton myyntikonsultaatio</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Vähemmän stressiä, sujuvampi myynti — autamme sinua.</div>
+
+      <div style={{display:"grid",gap:12,marginBottom:24}}>
+        {hyodyt.map((h,i)=>(
+          <div key={i} style={{background:C.cream,borderRadius:12,padding:"16px 18px",display:"flex",gap:14,alignItems:"flex-start"}}>
+            <span style={{fontSize:22,flexShrink:0}}>{h.e}</span>
+            <div>
+              <div style={{fontFamily:B,fontSize:14,color:C.ink,fontWeight:500,marginBottom:3}}>{h.t}</div>
+              <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.55}}>{h.d}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{fontFamily:B,fontSize:14,color:C.ink,marginBottom:16,fontWeight:300,lineHeight:1.6}}>
+        Jätä yhteystietosi, niin otamme sinuun yhteyttä ja autamme alkuun. Maksutonta eikä sido mihinkään.
+      </div>
+
+      <div style={{display:"grid",gap:10,marginBottom:16}}>
+        <FloatInput label="Nimi *" value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <FloatInput label="Puhelin *" type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
+          <FloatInput label="Sähköposti" type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
+        </div>
+        <FloatInput label="Asunto (alue, koko) — vapaaehtoinen" value={liidi.asunto} onChange={e=>set("asunto",e.target.value)}/>
+        <FloatInput label="Kerro lyhyesti tilanteestasi — vapaaehtoinen" value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
+      </div>
+
+      <label style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:16,cursor:"pointer"}}>
+        <input type="checkbox" checked={gdpr} onChange={e=>setGdpr(e.target.checked)} style={{marginTop:3,cursor:"pointer",accentColor:C.gold}}/>
+        <span style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300,lineHeight:1.5}}>
+          Hyväksyn, että minuun saa olla yhteydessä antamillani tiedoilla, ja että tietojani käsitellään tietosuojaselosteen mukaisesti.
+        </span>
+      </label>
+
+      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
+
+      <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
+        {sending?"⏳ Lähetetään...":"Pyydä maksuton konsultaatio →"}
+      </DarkBtn>
+    </div>
+  );
+}
+
 function TabMyyntikulut(){
   const [hinta,setHinta]=useState("280000");
   const [ostoHinta,setOstoHinta]=useState("250000");
@@ -1297,6 +1402,7 @@ const OSTAJA_TABS=[
 const MYYJA_TABS=[
   {id:"hinta",label:"✦ Myyntihinta-arvio"},
   {id:"kulut",label:"💰 Myyntikulut"},
+  {id:"konsultaatio",label:"💬 Myyntikonsultaatio"},
   {id:"tarkistus",label:"☑ Myyjän lista"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
@@ -1466,6 +1572,7 @@ export default function App(){
         {mode==="ostaja"&&validiTab==="ilmoitus"&&<TabIlmoitus/>}
         {validiTab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
         {mode==="myyjä"&&validiTab==="kulut"&&<TabMyyntikulut/>}
+        {mode==="myyjä"&&validiTab==="konsultaatio"&&<TabKonsultaatio/>}
         {mode==="ostaja"&&validiTab==="taloyhtion"&&<TabTaloyhtion/>}
         {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
         {validiTab==="sanasto"&&<TabSanasto/>}
