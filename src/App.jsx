@@ -1547,7 +1547,9 @@ export default function App(){
         </div>
         <div style={{display:"flex",justifyContent:"center"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:8,background:mode==="ostaja"?"rgba(62,92,63,0.25)":"rgba(181,105,60,0.25)",border:`1px solid ${mode==="ostaja"?"rgba(62,92,63,0.5)":"rgba(181,105,60,0.5)"}`,borderRadius:20,padding:"5px 14px",marginBottom:14}}>
-          <span style={{fontSize:14}}>{mode==="ostaja"?"🏠":"🔑"}</span>
+          {mode==="ostaja"
+            ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
+            : <span style={{fontSize:14}}>🔑</span>}
           <span style={{fontFamily:B,fontSize:12,color:mode==="ostaja"?"#A8D5B5":"#E8B08A",fontWeight:500,letterSpacing:1}}>{mode==="ostaja"?"OSTAJA":"MYYJÄ"}</span>
         </div>
         </div>
