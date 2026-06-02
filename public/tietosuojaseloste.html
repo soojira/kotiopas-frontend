@@ -1,143 +1,114 @@
-<!doctype html>
-<html lang="fi">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<meta name="theme-color" content="#2A1F14"/>
-<title>Tietosuojaseloste — Asuntoraportti</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
-  :root{
-    --paper:#FBF8F3; --cream:#F4EFE6; --ink:#2A2520; --gold:#C9A84C;
-    --stone:#7A7068; --border:#E2D9C8; --dark:#2A1F14;
-    --H:'Cormorant Garamond',Georgia,serif; --B:'Jost','Helvetica Neue',sans-serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{width:100%;background:var(--paper);overflow-x:hidden;}
-  body{width:100%;background:#2A1F14;overflow-x:hidden;font-family:var(--B);color:var(--ink);line-height:1.7;font-weight:300;}
-  .wrap{background:var(--paper);min-height:100vh;min-height:100dvh;}
-  .hero{background:linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%);padding:calc(48px + env(safe-area-inset-top)) 24px 40px;position:relative;overflow:hidden;}
-  .hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;}
-  .ring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,0.1);pointer-events:none;}
-  .logo-row{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:24px;}
-  .logo-mark{width:72px;height:72px;object-fit:contain;}
-  .logo-text{font-family:var(--H);font-size:24px;color:rgba(251,243,226,0.85);letter-spacing:3px;font-style:italic;}
-  .kicker{font-family:var(--B);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:500;}
-  h1{font-family:var(--H);font-size:38px;font-weight:500;color:#FBF3E2;line-height:1.1;letter-spacing:-0.5px;}
-  .updated{font-family:var(--B);font-size:12px;color:rgba(251,243,226,0.45);margin-top:14px;font-weight:300;}
-  .content{max-width:760px;margin:0 auto;padding:48px 24px 80px;}
-  h2{font-family:var(--H);font-size:24px;font-weight:600;color:var(--ink);margin:36px 0 12px;font-style:italic;}
-  h2:first-of-type{margin-top:0;}
-  h2 .num{color:var(--gold);font-style:normal;margin-right:8px;}
-  p{margin-bottom:14px;font-size:15px;color:#3A332C;}
-  ul{margin:0 0 16px 20px;}
-  li{margin-bottom:8px;font-size:15px;color:#3A332C;}
-  strong{font-weight:500;color:var(--ink);}
-  .box{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:20px 0;}
-  .box-title{font-family:var(--B);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px;}
-  a{color:#8B6F2E;text-decoration:underline;}
-  .footer{background:var(--paper);border-top:1px solid var(--border);padding:28px 24px calc(28px + env(safe-area-inset-bottom));text-align:center;}
-  .footer-logo{font-family:var(--H);font-size:15px;font-style:italic;color:var(--stone);margin-bottom:4px;}
-  .footer-meta{font-family:var(--B);font-size:11px;color:#B8AD9B;letter-spacing:1px;}
-  .divider{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px;margin:8px 0 0;}
-</style>
-</head>
-<body>
-<div class="wrap">
+# Tietosuojaseloste
 
-<div class="hero">
-  <div class="ring" style="top:-80px;right:-80px;width:280px;height:280px;"></div>
-  <div class="ring" style="bottom:-100px;left:-60px;width:220px;height:220px;border-color:rgba(201,168,76,0.06);"></div>
-  <div class="hero-inner">
-    <div class="logo-row">
-      <img class="logo-mark" src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="72" height="72"/>
-      <span class="logo-text">Asuntoraportti</span>
-    </div>
-    <div class="kicker">Tietosuoja</div>
-    <h1>Tietosuojaseloste</h1>
-    <div class="divider" style="width:80px;"></div>
-    <div class="updated">Päivitetty 28.5.2026 · EU:n yleisen tietosuoja-asetuksen (GDPR) mukainen</div>
-  </div>
-</div>
+**Palvelu:** asuntoraportti.fi
+**Laadittu:** 2.6.2026
+**Viimeksi päivitetty:** 2.6.2026
 
-<div class="content">
+Tämä tietosuojaseloste kuvaa, miten asuntoraportti.fi-palvelussa kerätään, käsitellään ja suojataan henkilötietoja. Käsittely tapahtuu EU:n yleisen tietosuoja-asetuksen (GDPR) mukaisesti.
 
-  <p>Asuntoraportti kunnioittaa yksityisyyttäsi. Tässä selosteessa kerromme selkeästi, mitä tietoja keräämme, miksi, ja mitä oikeuksia sinulla on. Käsittelemme vain ne tiedot, jotka tarvitsemme palvelun tarjoamiseen — emme enempää.</p>
+---
 
-  <h2><span class="num">1</span>Rekisterinpitäjä</h2>
-  <p>Henkilötietojesi rekisterinpitäjä on:</p>
-  <div class="box">
-    <p style="margin-bottom:6px;"><strong>Miss S Tmi</strong></p>
-    <p style="margin-bottom:6px;">Y-tunnus: 3393504-8</p>
-    <p style="margin-bottom:6px;">Helsinki</p>
-    <p style="margin-bottom:0;">Sähköposti: <a href="mailto:info.asuntoraportti@gmail.com">info.asuntoraportti@gmail.com</a></p>
-  </div>
-  <p>Kaikissa tietosuojaan liittyvissä kysymyksissä voit olla yhteydessä yllä olevaan sähköpostiosoitteeseen.</p>
+## 1. Rekisterinpitäjä
 
-  <h2><span class="num">2</span>Mitä tietoja keräämme</h2>
-  <p>Keräämme vain tiedot, jotka annat itse vapaaehtoisesti täyttäessäsi yhteydenotto- tai arviopyyntölomakkeen:</p>
-  <ul>
-    <li><strong>Nimi</strong> — jotta välittäjä voi ottaa sinuun yhteyttä</li>
-    <li><strong>Puhelinnumero</strong> — yhteydenottoa varten</li>
-    <li><strong>Sähköpostiosoite</strong> — yhteydenottoa ja vahvistusviestiä varten (vapaaehtoinen)</li>
-    <li><strong>Asuntoon liittyvät tiedot</strong> — esimerkiksi sijainti, koko ja arvioitu hinta, jotka annat lomakkeella</li>
-  </ul>
-  <p>Emme kerää arkaluonteisia henkilötietoja emmekä seuraa sinua verkossa kolmansien osapuolten mainosevästeillä.</p>
+Miss S Tmi
+Y-tunnus: 3393504-8
+Helsinki
+Sähköposti: info@asuntoraportti.fi
 
-  <h2><span class="num">3</span>Mihin tietoja käytetään</h2>
-  <p>Käytämme tietojasi seuraaviin tarkoituksiin:</p>
-  <ul>
-    <li>Yhteydenottopyyntösi välittämiseen yhteistyökumppanina toimivalle kiinteistönvälittäjälle</li>
-    <li>Automaattisen vahvistusviestin lähettämiseen sähköpostiisi</li>
-    <li>Palvelun toiminnan varmistamiseen ja parantamiseen</li>
-  </ul>
-  <p>Emme käytä tietojasi automaattiseen päätöksentekoon emmekä profilointiin.</p>
+Rekisterinpitäjä vastaa tällä sivustolla kerättyjen henkilötietojen käsittelystä.
 
-  <h2><span class="num">4</span>Käsittelyn oikeusperuste</h2>
-  <p>Käsittelemme henkilötietojasi <strong>suostumuksesi perusteella</strong> (GDPR 6 art. 1 a). Annat suostumuksesi rastittamalla lomakkeen tietosuojahyväksynnän ennen lähetystä. Voit peruuttaa suostumuksesi milloin tahansa ottamalla yhteyttä meihin.</p>
+---
 
-  <h2><span class="num">5</span>Tietojen luovutus kolmansille</h2>
-  <p>Luovutamme yhteystietosi <strong>kiinteistönvälittäjälle</strong>, kun pyydät yhteydenottoa — tämä on koko palvelun tarkoitus. Emme myy tai luovuta tietojasi muihin tarkoituksiin, kuten markkinointiin kolmansille osapuolille.</p>
-  <p>Käytämme seuraavia luotettavia palveluntarjoajia tietojen käsittelyssä:</p>
-  <ul>
-    <li><strong>Brevo</strong> (Sendinblue SAS) — asiakkuudenhallinta ja vahvistusviestien lähetys. Brevo käsittelee tietoja EU:n tietosuojasäännösten mukaisesti.</li>
-  </ul>
+## 2. Mitä tietoja keräämme ja mihin tarkoitukseen
 
-  <h2><span class="num">6</span>Tietojen säilytysaika</h2>
-  <p>Säilytämme tietojasi vain niin kauan kuin on tarpeen yhteydenoton hoitamiseksi. Voit milloin tahansa pyytää tietojesi poistamista, jolloin poistamme ne ilman aiheetonta viivytystä.</p>
+Keräämme henkilötietoja vain siltä osin kuin se on tarpeen palvelun tarjoamiseksi. Tiedot kerätään seuraavissa tilanteissa:
 
-  <h2><span class="num">7</span>Tietojen suojaaminen</h2>
-  <p>Tietosi käsitellään suojattujen yhteyksien (HTTPS) kautta. Pääsy tietoihin on rajattu, ja säilytämme ne luotettavissa, tietosuojasäännöksiä noudattavissa järjestelmissä.</p>
+### 2.1 Yhteydenotto- ja palvelupyynnöt (esim. arviokäynti ja arviolausunto)
 
-  <h2><span class="num">8</span>Sinun oikeutesi</h2>
-  <p>Sinulla on EU:n tietosuoja-asetuksen mukaiset oikeudet:</p>
-  <ul>
-    <li><strong>Tarkastusoikeus</strong> — saat tietää, mitä tietoja sinusta on tallennettu</li>
-    <li><strong>Oikaisuoikeus</strong> — voit pyytää virheellisten tietojen korjaamista</li>
-    <li><strong>Poisto-oikeus</strong> — voit pyytää tietojesi poistamista ("oikeus tulla unohdetuksi")</li>
-    <li><strong>Suostumuksen peruutus</strong> — voit peruuttaa antamasi suostumuksen milloin tahansa</li>
-    <li><strong>Valitusoikeus</strong> — voit tehdä valituksen tietosuojavaltuutetun toimistolle (tietosuoja.fi)</li>
-  </ul>
-  <p>Oikeuksien käyttämiseksi ota yhteyttä: <a href="mailto:info.asuntoraportti@gmail.com">info.asuntoraportti@gmail.com</a></p>
+Kun jätät yhteydenottopyynnön (esimerkiksi pyydät ilmaista arviokäyntiä tai kirjallista arviolausuntoa), keräämme antamasi tiedot:
 
-  <h2><span class="num">9</span>Evästeet</h2>
-  <p>Sivusto käyttää vain toiminnan kannalta välttämättömiä evästeitä. Emme käytä seuranta- tai mainosevästeitä ilman suostumustasi.</p>
+- Nimi
+- Puhelinnumero
+- Sähköpostiosoite
+- Asunnon tiedot (osoite, postinumero, kaupunki, asuntotyyppi, koko)
+- Mahdolliset vapaaehtoiset lisätiedot
 
-  <h2><span class="num">10</span>Muutokset tähän selosteeseen</h2>
-  <p>Voimme päivittää tätä selostetta palvelun kehittyessä. Merkittävistä muutoksista ilmoitamme sivustolla. Selosteen yläosassa näkyy aina viimeisin päivityspäivä.</p>
+**Käyttötarkoitus:** sinuun yhteyden ottaminen ja pyytämäsi palvelun (kuten arviokäynnin tai arviolausunnon) järjestäminen.
 
-  <div class="box" style="margin-top:36px;">
-    <div class="box-title">Yhteenveto</div>
-    <p style="margin-bottom:0;">Keräämme vain antamasi yhteystiedot, käytämme ne yhteydenoton välittämiseen välittäjälle, emmekä myy tietojasi eteenpäin. Sinulla on aina oikeus tarkastaa, korjata tai poistaa tietosi.</p>
-  </div>
+**Käsittelyn oikeusperuste:** suostumuksesi sekä toimenpiteet, joita teet ennen mahdollista sopimusta (GDPR 6 art. 1 a ja b kohta).
 
-</div>
+### 2.2 Asuntoanalyysi (ladatut asiakirjat)
 
-<div class="footer">
-  <div class="footer-logo">Asuntoraportti</div>
-  <div class="footer-meta">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
-</div>
+Asuntoanalyysi-toiminnossa voit ladata taloyhtiön asiakirjoja (kuten isännöitsijäntodistuksen) saadaksesi niistä selkokielisen analyysin.
 
-</div>
-</body>
-</html>
+**Tärkeää: emme tallenna ladattuja asiakirjoja.** Tiedostot käsitellään väliaikaisesti palvelimen muistissa analyysin tekemiseksi ja poistetaan välittömästi sen jälkeen. Asiakirjoja tai niiden sisältöä ei tallenneta tietokantaan eikä säilytetä analyysin valmistumisen jälkeen.
+
+**Käyttötarkoitus:** pyytämäsi analyysin tuottaminen.
+
+**Käsittelyn oikeusperuste:** suostumuksesi (GDPR 6 art. 1 a kohta).
+
+---
+
+## 3. Tietojen säilytysaika
+
+- **Yhteydenottopyyntöjen tiedot:** säilytämme tietoja niin kauan kuin se on tarpeen yhteydenpitoa ja pyytämäsi palvelun järjestämistä varten, minkä jälkeen ne poistetaan tai anonymisoidaan. Voit milloin tahansa pyytää tietojesi poistamista.
+- **Asuntoanalyysin asiakirjat:** ei säilytetä lainkaan (ks. kohta 2.2).
+
+---
+
+## 4. Tietojen luovutukset ja käsittelijät
+
+Emme myy emmekä vuokraa henkilötietojasi kolmansille osapuolille.
+
+Käytämme palvelun toteuttamiseen seuraavia luotettavia palveluntarjoajia (henkilötietojen käsittelijöitä), jotka käsittelevät tietoja puolestamme:
+
+- **Brevo** (Sendinblue SAS) – yhteydenottopyyntöjen tietojen tallennus ja asiakasviestintä.
+- **Anthropic** – Asuntoanalyysissä ladattujen asiakirjojen sisällön analysointi tekoälyn avulla. Sisältö käsitellään analyysin tuottamiseksi eikä sitä tallenneta pysyvästi.
+- **Render** ja **Vercel** – palvelun tekninen ylläpito ja käyttöympäristö.
+
+Lisäksi, jos pyydät palvelua kuten arviokäyntiä tai arviolausuntoa, välitämme antamasi yhteys- ja asuntotiedot yhteistyökumppanina toimivalle kiinteistönvälittäjälle pyytämäsi palvelun toteuttamiseksi.
+
+Tietoja voidaan luovuttaa viranomaisille, jos laki sitä edellyttää.
+
+---
+
+## 5. Tietojen siirto EU:n ulkopuolelle
+
+Osa käyttämistämme palveluntarjoajista voi käsitellä tietoja EU/ETA-alueen ulkopuolella. Tällöin huolehdimme, että siirrot tapahtuvat tietosuojalainsäädännön edellyttämin suojatoimin (esimerkiksi Euroopan komission hyväksymin vakiolausekkein).
+
+---
+
+## 6. Tietojen suojaaminen
+
+Käsittelemme henkilötietoja huolellisesti ja suojaamme ne asianmukaisin teknisin ja organisatorisin toimin. Tietoihin on pääsy vain niillä, jotka tarvitsevat niitä tehtäviensä hoitamiseen. Tiedonsiirto selaimen ja palvelimen välillä on salattu.
+
+---
+
+## 7. Sinun oikeutesi
+
+Sinulla on oikeus:
+
+- Saada tietää, mitä henkilötietoja sinusta käsittelemme
+- Pyytää tietojesi oikaisua tai poistamista
+- Rajoittaa tai vastustaa tietojesi käsittelyä
+- Peruuttaa antamasi suostumus milloin tahansa
+- Saada tietosi siirretyksi järjestelmästä toiseen soveltuvin osin
+- Tehdä valitus tietosuojaviranomaiselle (tietosuojavaltuutetun toimisto, tietosuoja.fi)
+
+Voit käyttää oikeuksiasi ottamalla yhteyttä: info@asuntoraportti.fi
+
+---
+
+## 8. Evästeet
+
+Palvelu pyrkii käyttämään mahdollisimman vähän evästeitä. Jos otamme käyttöön analytiikka- tai muita evästeitä, päivitämme tämän selosteen ja pyydämme tarvittaessa suostumuksesi.
+
+---
+
+## 9. Muutokset tähän selosteeseen
+
+Voimme päivittää tätä tietosuojaselostetta toiminnan tai lainsäädännön muuttuessa. Ajantasainen versio on aina saatavilla tällä sivulla, ja merkitsemme viimeisimmän päivityspäivän selosteen alkuun.
+
+---
+
+*Kysymykset tietosuojasta: info@asuntoraportti.fi*
