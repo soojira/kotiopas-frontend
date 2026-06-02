@@ -901,7 +901,7 @@ function TabLisapalvelut(){
     },
     {
       id:"kauppakirja",
-      kortti:{e:"📝",t:"Kauppakirjan laatiminen",d:"Apua asunnon kauppakirjan laatimiseen kaupanteon yhteydessä."},
+      kortti:{e:"📝",t:"Kauppakirjan laatiminen",d:"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen."},
       otsikko:"Kauppakirjan laatiminen",
       alaotsikko:"Oletko itsemyyjä ja tarvitset apua kauppakirjan laatimisessa? Autamme.",
       hyodyt:[
