@@ -767,7 +767,9 @@ function TabKonsultaatio(){
 // ── Kirjallinen arviolausunto pankkiin: myyjän/omistajan liidikanava ──────────
 // Välittäjäkumppani tekee kirjallisen arviolausunnon esim. lainaa tai vakuutta
 // varten. Lähettää /api/liidi → Brevo, tunniste "myyja-arviolausunto".
-function TabArviolausunto(){
+// ── Yleiskäyttöinen liidilomake (käytetään arviolausunnolle ja kauppakirjalle) ──
+// Parametrit määräävät otsikon, hyödyt, Brevo-tunnisteen ja tekstit.
+function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappiTeksti,kiitosViesti,naytaTyyppiKoko=true,onBack}){
   const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",katuosoite:"",postinumero:"",kaupunki:"",tyyppi:"",koko:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
   const [sent,setSent]=useState(false);
@@ -780,7 +782,6 @@ function TabArviolausunto(){
     if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError("Täytä katuosoite, postinumero ja kaupunki.");return;}
     if(!gdpr){setError("Hyväksy tietosuojakäytäntö ennen lähetystä.");return;}
     setError(null);setSending(true);
-    // Kootaan asunnon tiedot yhteen luettavaan muotoon Brevon ASUNTO-kenttään
     const asuntoTiedot=[
       `${liidi.katuosoite}, ${liidi.postinumero} ${liidi.kaupunki}`,
       liidi.tyyppi||null,
@@ -796,45 +797,35 @@ function TabArviolausunto(){
           email:liidi.email,
           asunto:asuntoTiedot,
           hinta:null,
-          tyyppi:"myyja-arviolausunto",
+          tyyppi:brevoTyyppi,
           lisatieto:liidi.viesti||"",
           gdpr:true
         })
       });
       const data=await r.json();
-      if(data.ok){
-        setSent(true);
-      }else{
-        setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");
-      }
+      if(data.ok){setSent(true);}else{setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");}
     }catch(err){
-      console.error("Arviolausunto-liidi-virhe:",err);
+      console.error("Liidi-virhe:",err);
       setError("Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
-    }finally{
-      setSending(false);
-    }
+    }finally{setSending(false);}
   }
-  const hyodyt=[
-    {e:"📄",t:"Kirjallinen arviolausunto",d:"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille."},
-    {e:"🏦",t:"Lainaa tai vakuutta varten",d:"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä."},
-  ];
   if(sent){
     return(
       <div>
         <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Kiitos yhteydenotosta!</div>
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:14,padding:"24px 20px",marginTop:16,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:22,flexShrink:0}}>✅</span>
-          <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>
-            Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kirjallisen arviolausunnon laatimisesta.
-          </div>
+          <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>{kiitosViesti}</div>
         </div>
+        {onBack&&<button onClick={onBack} style={{marginTop:18,background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline"}}>← Takaisin lisäpalveluihin</button>}
       </div>
     );
   }
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Arviolausunto pankkiin</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.</div>
+      {onBack&&<button onClick={onBack} style={{background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline",marginBottom:16,padding:0}}>← Takaisin lisäpalveluihin</button>}
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{otsikko}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{alaotsikko}</div>
 
       <div style={{display:"grid",gap:12,marginBottom:24}}>
         {hyodyt.map((h,i)=>(
@@ -848,10 +839,6 @@ function TabArviolausunto(){
         ))}
       </div>
 
-      <div style={{fontFamily:B,fontSize:14,color:C.ink,marginBottom:16,fontWeight:300,lineHeight:1.6}}>
-        Jätä yhteystietosi ja asunnon perustiedot, niin otamme yhteyttä ja sovimme kirjallisen arviolausunnon laatimisesta.
-      </div>
-
       <div style={{display:"grid",gap:10,marginBottom:16}}>
         <FloatInput label="Nimi *" value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
@@ -863,17 +850,19 @@ function TabArviolausunto(){
           <FloatInput label="Postinumero *" value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
           <FloatInput label="Kaupunki *" value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatSelect label="Asuntotyyppi" value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
-            <option value="">Valitse…</option>
-            <option value="Kerrostalo">Kerrostalo</option>
-            <option value="Rivitalo">Rivitalo</option>
-            <option value="Omakotitalo">Omakotitalo</option>
-            <option value="Paritalo">Paritalo</option>
-          </FloatSelect>
-          <FloatInput label="Koko (m²)" type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
-        </div>
-        <FloatInput label="Lisätietoa — mihin tarvitset lausunnon (vapaaehtoinen)" value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
+        {naytaTyyppiKoko&&(
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <FloatSelect label="Asuntotyyppi" value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
+              <option value="">Valitse…</option>
+              <option value="Kerrostalo">Kerrostalo</option>
+              <option value="Rivitalo">Rivitalo</option>
+              <option value="Omakotitalo">Omakotitalo</option>
+              <option value="Paritalo">Paritalo</option>
+            </FloatSelect>
+            <FloatInput label="Koko (m²)" type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
+          </div>
+        )}
+        <FloatInput label={lisatietoLabel} value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
       </div>
 
       <label style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:16,cursor:"pointer"}}>
@@ -886,11 +875,74 @@ function TabArviolausunto(){
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
-        {sending?"⏳ Lähetetään...":"Pyydä arviolausunto →"}
+        {sending?"⏳ Lähetetään...":nappiTeksti}
       </DarkBtn>
     </div>
   );
 }
+
+// ── Lisäpalvelut: kokoaa erikoispalvelut (arviolausunto, kauppakirja) ──
+function TabLisapalvelut(){
+  const [valittu,setValittu]=useState(null); // null = korttinäkymä, muuten palvelun id
+  const palvelut=[
+    {
+      id:"arviolausunto",
+      kortti:{e:"📄",t:"Arviolausunto pankkiin",d:"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten."},
+      otsikko:"Arviolausunto pankkiin",
+      alaotsikko:"Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.",
+      hyodyt:[
+        {e:"📄",t:"Kirjallinen arviolausunto",d:"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille."},
+        {e:"🏦",t:"Lainaa tai vakuutta varten",d:"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä."},
+      ],
+      brevoTyyppi:"myyja-arviolausunto",
+      lisatietoLabel:"Lisätietoa — mihin tarvitset lausunnon (vapaaehtoinen)",
+      nappiTeksti:"Pyydä arviolausunto →",
+      kiitosViesti:"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kirjallisen arviolausunnon laatimisesta.",
+    },
+    {
+      id:"kauppakirja",
+      kortti:{e:"📝",t:"Kauppakirjan teko",d:"Apua asunnon kauppakirjan laatimiseen kaupanteon yhteydessä."},
+      otsikko:"Kauppakirjan teko",
+      alaotsikko:"Tarvitsetko apua asunnon kauppakirjan laatimiseen? Autamme.",
+      hyodyt:[
+        {e:"📝",t:"Asiantunteva kauppakirja",d:"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti."},
+        {e:"🤝",t:"Tueksi kaupantekoon",d:"Hyödyllinen erityisesti yksityiskaupassa, jossa kauppaa ei hoida välittäjä — saat ammattilaisen varmistamaan asiakirjat."},
+      ],
+      brevoTyyppi:"myyja-kauppakirja",
+      naytaTyyppiKoko:false,
+      lisatietoLabel:"Lisätietoa kaupasta (vapaaehtoinen)",
+      nappiTeksti:"Pyydä apua kauppakirjaan →",
+      kiitosViesti:"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kauppakirjan laatimisesta.",
+    },
+  ];
+  if(valittu){
+    const p=palvelut.find(x=>x.id===valittu);
+    return <LiidiLomake {...p} onBack={()=>setValittu(null)}/>;
+  }
+  return(
+    <div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Lisäpalvelut</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Asiantuntijan palveluita asunnon omistajalle — valitse mitä tarvitset.</div>
+      <div style={{display:"grid",gap:14}}>
+        {palvelut.map(p=>(
+          <button key={p.id} onClick={()=>setValittu(p.id)}
+            style={{textAlign:"left",background:C.cream,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 22px",cursor:"pointer",display:"flex",gap:16,alignItems:"center",transition:"all 0.2s"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=C.gold;e.currentTarget.style.background=C.goldDim;}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background=C.cream;}}>
+            <span style={{fontSize:28,flexShrink:0}}>{p.kortti.e}</span>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:B,fontSize:16,color:C.ink,fontWeight:500,marginBottom:3}}>{p.kortti.t}</div>
+              <div style={{fontFamily:B,fontSize:13.5,color:C.stone,fontWeight:300,lineHeight:1.5}}>{p.kortti.d}</div>
+            </div>
+            <span style={{color:C.gold,fontSize:20,flexShrink:0}}>→</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
 
 function TabMyyntikulut(){
   const [hinta,setHinta]=useState("280000");
@@ -1548,7 +1600,7 @@ const OSTAJA_TABS=[
 ];
 const MYYJA_TABS=[
   {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti"},
-  {id:"arviolausunto",label:"📄 Arviolausunto pankkiin"},
+  {id:"lisapalvelut",label:"✨ Lisäpalvelut"},
   {id:"kulut",label:"💰 Myyntikulut"},
   {id:"sanasto",label:"📖 Sanasto"},
 ];
@@ -1725,7 +1777,7 @@ export default function App(){
         {mode==="myyjä"&&validiTab==="hinta"&&<TabHintaArvio mode={mode} isDesktop={isDesktop}/>}
         {mode==="myyjä"&&validiTab==="kulut"&&<TabMyyntikulut/>}
         {mode==="myyjä"&&validiTab==="konsultaatio"&&<TabKonsultaatio/>}
-        {mode==="myyjä"&&validiTab==="arviolausunto"&&<TabArviolausunto/>}
+        {mode==="myyjä"&&validiTab==="lisapalvelut"&&<TabLisapalvelut/>}
         {mode==="ostaja"&&validiTab==="taloyhtion"&&<TabTaloyhtion/>}
         {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
         {validiTab==="sanasto"&&<TabSanasto/>}
