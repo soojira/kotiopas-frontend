@@ -639,7 +639,7 @@ function TabTarkistus({mode}){
 // ── Pyydä ilmainen arviokäynti: myyjän liidikanava (lähettää /api/liidi → Brevo) ──
 // Välittäjäkumppani tekee maksuttoman arviokäynnin ja jättää tarjouksen.
 function TabKonsultaatio(){
-  const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",asunto:"",viesti:""});
+  const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",katuosoite:"",postinumero:"",kaupunki:"",tyyppi:"",koko:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
   const [sent,setSent]=useState(false);
   const [sending,setSending]=useState(false);
@@ -647,8 +647,16 @@ function TabKonsultaatio(){
   const set=(k,v)=>setLiidi(x=>({...x,[k]:v}));
   async function laheta(){
     if(!liidi.nimi||!liidi.puhelin){setError("Nimi ja puhelin ovat pakollisia.");return;}
+    if(!liidi.email){setError("Sähköposti on pakollinen.");return;}
+    if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError("Täytä katuosoite, postinumero ja kaupunki.");return;}
     if(!gdpr){setError("Hyväksy tietosuojakäytäntö ennen lähetystä.");return;}
     setError(null);setSending(true);
+    // Kootaan asunnon tiedot yhteen luettavaan muotoon Brevon ASUNTO-kenttään
+    const asuntoTiedot=[
+      `${liidi.katuosoite}, ${liidi.postinumero} ${liidi.kaupunki}`,
+      liidi.tyyppi||null,
+      liidi.koko?`${liidi.koko} m²`:null,
+    ].filter(Boolean).join(" · ");
     try{
       const r=await fetch("https://kotiopas-backend.onrender.com/api/liidi",{
         method:"POST",
@@ -656,8 +664,8 @@ function TabKonsultaatio(){
         body:JSON.stringify({
           nimi:liidi.nimi,
           puhelin:liidi.puhelin,
-          email:liidi.email||"",
-          asunto:liidi.asunto||"",
+          email:liidi.email,
+          asunto:asuntoTiedot,
           hinta:null,
           tyyppi:"myyja-arviokaynti",
           lisatieto:liidi.viesti||"",
@@ -720,9 +728,23 @@ function TabKonsultaatio(){
         <FloatInput label="Nimi *" value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           <FloatInput label="Puhelin *" type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
-          <FloatInput label="Sähköposti" type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
+          <FloatInput label="Sähköposti *" type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
         </div>
-        <FloatInput label="Asunto (alue, koko) — vapaaehtoinen" value={liidi.asunto} onChange={e=>set("asunto",e.target.value)}/>
+        <FloatInput label="Katuosoite *" value={liidi.katuosoite} onChange={e=>set("katuosoite",e.target.value)}/>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <FloatInput label="Postinumero *" value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
+          <FloatInput label="Kaupunki *" value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <FloatSelect label="Asuntotyyppi" value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
+            <option value="">Valitse…</option>
+            <option value="Kerrostalo">Kerrostalo</option>
+            <option value="Rivitalo">Rivitalo</option>
+            <option value="Omakotitalo">Omakotitalo</option>
+            <option value="Paritalo">Paritalo</option>
+          </FloatSelect>
+          <FloatInput label="Koko (m²)" type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
+        </div>
         <FloatInput label="Kerro lyhyesti tilanteestasi — vapaaehtoinen" value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
       </div>
 
