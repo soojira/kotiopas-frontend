@@ -280,25 +280,26 @@ function laskeArvio(form){
 }
 
 function TabOstopolku(){
+  const lang=useLang();
   const steps=[
-    {t:"Talouden kartoitus",d:"Selvitä nettotulosi, menosi ja säästöt. Laske kuinka paljon voit lainata."},
-    {t:"Lainatarjoukset",d:"Pyydä tarjoukset vähintään 3 pankista. Vertaile marginaaleja. ASP-säästäjä saa edullisemman koron."},
-    {t:"Asuntojen etsintä",d:"Käy läpi Etuovi ja Oikotie. Listaa kriteerit tärkeysjärjestykseen."},
-    {t:"Näytöt ja asiakirjat",d:"Tutki isännöitsijäntodistus, tilinpäätös ja remonttisuunnitelmat ennen tarjousta."},
-    {t:"Tarjous ja neuvottelu",d:"Tee kirjallinen tarjous. Hintaa saa usein alennettua 2–5%."},
-    {t:"Lainapäätös",d:"Vie pankkiin kauppakirjaluonnos. Päätös syntyy muutamassa päivässä."},
-    {t:"Kaupan allekirjoitus",d:"Kirjallinen kauppa välittäjällä. Muista varainsiirtovero (2% osake, 4% kiinteistö)."},
-    {t:"Avainten luovutus",d:"Tarkista asunto, tee muuttoilmoitus DVV:lle ja hanki kotivakuutus."},
+    {t:t(lang,"Talouden kartoitus","Assess your finances"),d:t(lang,"Selvitä nettotulosi, menosi ja säästöt. Laske kuinka paljon voit lainata.","Work out your net income, expenses and savings. Calculate how much you can borrow.")},
+    {t:t(lang,"Lainatarjoukset","Loan offers"),d:t(lang,"Pyydä tarjoukset vähintään 3 pankista. Vertaile marginaaleja. ASP-säästäjä saa edullisemman koron.","Request offers from at least 3 banks. Compare margins. ASP savers get a lower rate.")},
+    {t:t(lang,"Asuntojen etsintä","Search for homes"),d:t(lang,"Käy läpi Etuovi ja Oikotie. Listaa kriteerit tärkeysjärjestykseen.","Browse Etuovi and Oikotie. List your criteria in order of importance.")},
+    {t:t(lang,"Näytöt ja asiakirjat","Viewings and documents"),d:t(lang,"Tutki isännöitsijäntodistus, tilinpäätös ja remonttisuunnitelmat ennen tarjousta.","Study the property manager's certificate, financial statements and renovation plans before making an offer.")},
+    {t:t(lang,"Tarjous ja neuvottelu","Offer and negotiation"),d:t(lang,"Tee kirjallinen tarjous. Hintaa saa usein alennettua 2–5%.","Make a written offer. The price can often be lowered by 2–5%.")},
+    {t:t(lang,"Lainapäätös","Loan decision"),d:t(lang,"Vie pankkiin kauppakirjaluonnos. Päätös syntyy muutamassa päivässä.","Take a draft deed of sale to the bank. The decision comes within a few days.")},
+    {t:t(lang,"Kaupan allekirjoitus","Signing the deal"),d:t(lang,"Kirjallinen kauppa välittäjällä. Muista varainsiirtovero (2% osake, 4% kiinteistö).","A written sale at the agent's. Remember the transfer tax (2% shares, 4% real property).")},
+    {t:t(lang,"Avainten luovutus","Handover of keys"),d:t(lang,"Tarkista asunto, tee muuttoilmoitus DVV:lle ja hanki kotivakuutus.","Inspect the home, file a notice of move with the DVV, and get home insurance.")},
   ];
   const [cur,setCur]=useState(-1);
   const done=cur+1;
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Ostopolku</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>Tyypillinen prosessi kestää 2–4 kuukautta</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Ostopolku","Buying path")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>{t(lang,"Tyypillinen prosessi kestää 2–4 kuukautta","The typical process takes 2–4 months")}</div>
       <div style={{marginBottom:24}}>
         <div style={{display:"flex",justifyContent:"space-between",fontFamily:B,fontSize:11,color:C.stone,marginBottom:6}}>
-          <span>Edistyminen</span><span>{done}/{steps.length}</span>
+          <span>{t(lang,"Edistyminen","Progress")}</span><span>{done}/{steps.length}</span>
         </div>
         <div style={{height:4,background:C.linen,borderRadius:2,overflow:"hidden"}}>
           <div style={{width:`${Math.round(done/steps.length*100)}%`,height:"100%",background:`linear-gradient(90deg,${C.forest},${C.clay})`,borderRadius:2,transition:"width 0.4s"}}/>
@@ -314,7 +315,7 @@ function TabOstopolku(){
               <div style={{fontFamily:H,fontSize:16,fontStyle:"italic",color:isDone?C.stone:C.ink,marginBottom:3,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
                 {s.t}
                 <span style={{fontFamily:B,fontSize:10,background:isDone?C.forestDim:isNext?C.clayDim:C.cream,color:isDone?C.forest:isNext?C.terra:C.stone,border:`1px solid ${isDone?C.forest+"30":isNext?C.clay+"40":C.border}`,borderRadius:20,padding:"2px 10px",letterSpacing:1}}>
-                  {isDone?"✓ Tehty":isNext?"Käynnissä":`Vaihe ${i+1}`}
+                  {isDone?t(lang,"✓ Tehty","✓ Done"):isNext?t(lang,"Käynnissä","In progress"):t(lang,`Vaihe ${i+1}`,`Step ${i+1}`)}
                 </span>
               </div>
               <div style={{fontFamily:B,fontSize:13,color:C.stone,lineHeight:1.65,fontWeight:300}}>{s.d}</div>
@@ -323,8 +324,8 @@ function TabOstopolku(){
         })}
       </div>
       <div style={{display:"flex",gap:12,marginTop:8}}>
-        <DarkBtn onClick={()=>setCur(c=>Math.min(c+1,steps.length-1))} style={{width:"auto",padding:"13px 24px",fontSize:15}}>Merkitse tehty →</DarkBtn>
-        <button onClick={()=>setCur(-1)} style={{background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"13px 20px",fontFamily:B,fontSize:12,cursor:"pointer",borderRadius:10}}>Nollaa</button>
+        <DarkBtn onClick={()=>setCur(c=>Math.min(c+1,steps.length-1))} style={{width:"auto",padding:"13px 24px",fontSize:15}}>{t(lang,"Merkitse tehty →","Mark as done →")}</DarkBtn>
+        <button onClick={()=>setCur(-1)} style={{background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"13px 20px",fontFamily:B,fontSize:12,cursor:"pointer",borderRadius:10}}>{t(lang,"Nollaa","Reset")}</button>
       </div>
     </div>
   );
@@ -1042,27 +1043,28 @@ function TabMyyntikulut(){
 }
 
 function TabSanasto(){
+  const lang=useLang();
   const terms=[
-    {t:"Isännöitsijäntodistus",d:"Taloyhtiön virallinen dokumentti: osakkeiden tiedot, yhtiön velat, tehdyt ja tulevat remontit sekä vastike."},
-    {t:"Taloyhtiölaina",d:"Taloyhtiön ottama laina jaettuna osakkaiden kesken. Velaton hinta = myyntihinta + oma osuus lainasta."},
-    {t:"Hoitovastike",d:"Kuukausimaksu taloyhtiön juokseviin kuluihin: lämmitys, siivous, hallinto, vakuutukset."},
-    {t:"ASP-laina",d:"Asuntosäästöpalkkiojärjestelmä alle 44-vuotiaille ensiasunnon ostajille — valtion korkotuki ja alhaisempi marginaali."},
-    {t:"Varainsiirtovero",d:"Ostajalta perittävä vero. Osakehuoneistosta 2%, kiinteistöstä 4%. Ensiasunnon ostaja usein verovapaa."},
-    {t:"Luovutusvoittovero",d:"Myyjältä perittävä 30% vero myyntivoitosta. Verovapaa jos asunto on ollut omassa asuinkäytössä yli 2 vuotta."},
-    {t:"PTS",d:"Pitkän tähtäimen suunnitelma — taloyhtiön 5–10 vuoden tuleva remonttiohjelma."},
-    {t:"Välittäjäpalkkio",d:"Kiinteistönvälittäjän palkkio, tyypillisesti 2–4% myyntihinnasta. Myyjä maksaa yleensä."},
-    {t:"Euribor + marginaali",d:"Asuntolainan korko = Euribor (viitekorko) + pankin marginaali. Marginaali on neuvoteltavissa."},
-    {t:"Energiatodistus",d:"Virallinen A–G luokitus asunnon energiatehokkuudesta. Pakollinen myynti-ilmoituksessa."},
+    {t:t(lang,"Isännöitsijäntodistus","Property manager's certificate (isännöitsijäntodistus)"),d:t(lang,"Taloyhtiön virallinen dokumentti: osakkeiden tiedot, yhtiön velat, tehdyt ja tulevat remontit sekä vastike.","The housing company's official document: share details, company debts, completed and upcoming renovations, and the maintenance charge.")},
+    {t:t(lang,"Taloyhtiölaina","Housing company loan"),d:t(lang,"Taloyhtiön ottama laina jaettuna osakkaiden kesken. Velaton hinta = myyntihinta + oma osuus lainasta.","A loan taken by the housing company, divided among the shareholders. Debt-free price = sale price + your share of the loan.")},
+    {t:t(lang,"Hoitovastike","Maintenance charge (hoitovastike)"),d:t(lang,"Kuukausimaksu taloyhtiön juokseviin kuluihin: lämmitys, siivous, hallinto, vakuutukset.","A monthly fee for the housing company's running costs: heating, cleaning, administration, insurance.")},
+    {t:t(lang,"ASP-laina","ASP loan (first-home savings)"),d:t(lang,"Asuntosäästöpalkkiojärjestelmä alle 44-vuotiaille ensiasunnon ostajille — valtion korkotuki ja alhaisempi marginaali.","A home-savings bonus scheme for first-home buyers under 44 — state interest subsidy and a lower margin.")},
+    {t:t(lang,"Varainsiirtovero","Transfer tax (varainsiirtovero)"),d:t(lang,"Ostajalta perittävä vero. Osakehuoneistosta 2%, kiinteistöstä 4%. Ensiasunnon ostaja usein verovapaa.","A tax paid by the buyer. 2% for shares in a housing company, 4% for real property. First-home buyers are often exempt.")},
+    {t:t(lang,"Luovutusvoittovero","Capital gains tax"),d:t(lang,"Myyjältä perittävä 30% vero myyntivoitosta. Verovapaa jos asunto on ollut omassa asuinkäytössä yli 2 vuotta.","A 30% tax on the seller's profit. Exempt if the home has been your own residence for over 2 years.")},
+    {t:t(lang,"PTS","Long-term plan (PTS)"),d:t(lang,"Pitkän tähtäimen suunnitelma — taloyhtiön 5–10 vuoden tuleva remonttiohjelma.","A long-term plan — the housing company's 5–10 year upcoming renovation programme.")},
+    {t:t(lang,"Välittäjäpalkkio","Agent's commission"),d:t(lang,"Kiinteistönvälittäjän palkkio, tyypillisesti 2–4% myyntihinnasta. Myyjä maksaa yleensä.","The real estate agent's fee, typically 2–4% of the sale price. Usually paid by the seller.")},
+    {t:t(lang,"Euribor + marginaali","Euribor + margin"),d:t(lang,"Asuntolainan korko = Euribor (viitekorko) + pankin marginaali. Marginaali on neuvoteltavissa.","The mortgage rate = Euribor (reference rate) + the bank's margin. The margin is negotiable.")},
+    {t:t(lang,"Energiatodistus","Energy certificate"),d:t(lang,"Virallinen A–G luokitus asunnon energiatehokkuudesta. Pakollinen myynti-ilmoituksessa.","An official A–G rating of the home's energy efficiency. Required in the sales listing.")},
   ];
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Sanasto</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Tärkeimmät termit ostajalle ja myyjälle</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Sanasto","Glossary")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{t(lang,"Tärkeimmät termit ostajalle ja myyjälle","Key terms for buyers and sellers")}</div>
       <div style={{display:"grid",gap:10}}>
-        {terms.map(t=>(
-          <div key={t.t} style={{background:C.cream,border:`1px solid ${C.border}`,borderLeft:`3px solid ${C.clay}`,borderRadius:"0 10px 10px 0",padding:"16px 18px"}}>
-            <div style={{fontFamily:H,fontSize:17,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t.t}</div>
-            <div style={{fontFamily:B,fontSize:13,color:C.stone,lineHeight:1.7,fontWeight:300}}>{t.d}</div>
+        {terms.map(term=>(
+          <div key={term.t} style={{background:C.cream,border:`1px solid ${C.border}`,borderLeft:`3px solid ${C.clay}`,borderRadius:"0 10px 10px 0",padding:"16px 18px"}}>
+            <div style={{fontFamily:H,fontSize:17,fontStyle:"italic",color:C.ink,marginBottom:6}}>{term.t}</div>
+            <div style={{fontFamily:B,fontSize:13,color:C.stone,lineHeight:1.7,fontWeight:300}}>{term.d}</div>
           </div>
         ))}
       </div>
@@ -1455,6 +1457,7 @@ function RaporttiText({text}){
 // "tiedostot"). Mitään ei tallenneta — paperit luetaan muistissa ja heitetään
 // heti pois. Tulos näkyy ruudulla selkokielisenä.
 function TabTaloyhtion(){
+  const lang=useLang();
   const [files,setFiles]=useState([]);
   const [analyysi,setAnalyysi]=useState(null);
   const [malli,setMalli]=useState(null);
@@ -1473,15 +1476,15 @@ function TabTaloyhtion(){
     let virhe=null;
     for(const f of arr){
       const onPdf=f.type==="application/pdf"||f.name.toLowerCase().endsWith(".pdf");
-      if(!onPdf){virhe="Vain PDF-tiedostot kelpaavat — muut jätettiin pois.";continue;}
-      if(f.size>15*1024*1024){virhe=`"${f.name}" on liian suuri (yli 15 MB).`;continue;}
+      if(!onPdf){virhe=t(lang,"Vain PDF-tiedostot kelpaavat — muut jätettiin pois.","Only PDF files are accepted — others were left out.");continue;}
+      if(f.size>15*1024*1024){virhe=t(lang,`"${f.name}" on liian suuri (yli 15 MB).`,`"${f.name}" is too large (over 15 MB).`);continue;}
       pdfit.push(f);
     }
     setFiles(prev=>{
       const avaimet=new Set(prev.map(f=>f.name+"|"+f.size));
       const uudet=pdfit.filter(f=>!avaimet.has(f.name+"|"+f.size));
       const yhd=[...prev,...uudet];
-      if(yhd.length>10){virhe="Enintään 10 tiedostoa kerralla.";return yhd.slice(0,10);}
+      if(yhd.length>10){virhe=t(lang,"Enintään 10 tiedostoa kerralla.","Up to 10 files at a time.");return yhd.slice(0,10);}
       return yhd;
     });
     setError(virhe);
@@ -1496,46 +1499,51 @@ function TabTaloyhtion(){
   }
 
   async function analysoi(){
-    if(files.length===0){setError("Lataa vähintään yksi PDF-tiedosto.");return;}
+    if(files.length===0){setError(t(lang,"Lataa vähintään yksi PDF-tiedosto.","Upload at least one PDF file."));return;}
     setError(null);setAnalyysi(null);setSkannatut([]);setLoading(true);setLoadStep(1);
     const t1=setTimeout(()=>setLoadStep(2),1800);
     const t2=setTimeout(()=>setLoadStep(3),7000);
     try{
       const fd=new FormData();
       files.forEach(f=>fd.append("tiedostot",f));
+      fd.append("kieli",lang); // välitä kieli backendille (analyysin kieli)
       // HUOM: ei aseteta Content-Type-otsikkoa — selain lisää sen automaattisesti
       // oikealla multipart-rajalla (boundary).
       const res=await fetch(`${BACKEND_URL}/api/analyysi`,{method:"POST",body:fd});
       const data=await res.json().catch(()=>({}));
       if(!res.ok||!data.ok){
-        throw new Error(data.error||`Analyysi epäonnistui (${res.status})`);
+        throw new Error(data.error||t(lang,`Analyysi epäonnistui (${res.status})`,`Analysis failed (${res.status})`));
       }
       setAnalyysi(data.analyysi);
       setMalli(data.malli||null);
       setSkannatut(Array.isArray(data.skannatut)?data.skannatut:[]);
     }catch(e){
       console.error("Analyysi-virhe:",e);
-      setError(e.message||"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
+      setError(e.message||t(lang,"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.","Connection error. Check your network and try again."));
     }finally{
       clearTimeout(t1);clearTimeout(t2);
       setLoading(false);setLoadStep(0);
     }
   }
 
-  const steps=["📄 Luetaan papereita...","🧠 Analysoidaan sisältöä...","📝 Kootaan Asuntoraporttia..."];
+  const steps=t(lang,
+    ["📄 Luetaan papereita...","🧠 Analysoidaan sisältöä...","📝 Kootaan Asuntoraporttia..."],
+    ["📄 Reading the documents...","🧠 Analysing the content...","📝 Compiling your Property Report..."]);
 
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Asuntoanalyysi</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Asuntoanalyysi","Property Analysis")}</div>
       <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>
-        Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, PTS…) — saat selkokielisen Asuntoraportin
+        {t(lang,
+          "Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, PTS…) — saat selkokielisen Asuntoraportin",
+          "Upload the housing company documents (manager's certificate, financial statements, long-term plan…) — get a plain-language Property Report")}
       </div>
 
       {/* Tietosuoja-lupaus */}
       <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
         <span style={{fontSize:13,flexShrink:0,marginTop:1}}>🔒</span>
         <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-          <span style={{color:C.ink,fontWeight:500}}>Papereita ei tallenneta.</span> Ne luetaan analyysiä varten ja heitetään heti pois — mitään ei jää talteen.
+          <span style={{color:C.ink,fontWeight:500}}>{t(lang,"Papereita ei tallenneta.","Documents are not stored.")}</span> {t(lang,"Ne luetaan analyysiä varten ja heitetään heti pois — mitään ei jää talteen.","They are read for the analysis and discarded immediately — nothing is kept.")}
         </div>
       </div>
 
@@ -1549,10 +1557,14 @@ function TabTaloyhtion(){
         <input id="asuntoanalyysi-pdf" type="file" accept=".pdf" multiple style={{display:"none"}} onChange={e=>{addFiles(e.target.files);e.target.value="";}}/>
         <div style={{fontSize:32,marginBottom:10}}>{files.length?"✅":"📄"}</div>
         <div style={{fontFamily:H,fontSize:17,fontStyle:"italic",color:files.length?C.forest:C.ink,marginBottom:4}}>
-          {files.length?`${files.length} tiedosto${files.length===1?"":"a"} valittu`:"Lataa taloyhtiön paperit"}
+          {files.length
+            ? t(lang,`${files.length} tiedosto${files.length===1?"":"a"} valittu`,`${files.length} file${files.length===1?"":"s"} selected`)
+            : t(lang,"Lataa taloyhtiön paperit","Upload the documents")}
         </div>
         <div style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300}}>
-          {files.length?"Klikkaa lisätäksesi tai vedä lisää PDF:iä":"PDF-tiedostot · vedä tähän tai klikkaa · voit lisätä useita"}
+          {files.length
+            ? t(lang,"Klikkaa lisätäksesi tai vedä lisää PDF:iä","Click to add or drag more PDFs")
+            : t(lang,"PDF-tiedostot · vedä tähän tai klikkaa · voit lisätä useita","PDF files · drag here or click · you can add several")}
         </div>
       </div>
 
@@ -1566,7 +1578,7 @@ function TabTaloyhtion(){
                 <div style={{fontFamily:B,fontSize:13,color:C.ink,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.name}</div>
                 <div style={{fontFamily:B,fontSize:11,color:C.stone,fontWeight:300}}>{fmtKoko(f.size)}</div>
               </div>
-              <button onClick={e=>{e.stopPropagation();poistaFile(i);}} style={{background:"none",border:"none",color:C.stone,fontSize:18,cursor:"pointer",lineHeight:1,flexShrink:0,padding:"0 4px"}} aria-label="Poista">×</button>
+              <button onClick={e=>{e.stopPropagation();poistaFile(i);}} style={{background:"none",border:"none",color:C.stone,fontSize:18,cursor:"pointer",lineHeight:1,flexShrink:0,padding:"0 4px"}} aria-label={t(lang,"Poista","Remove")}>×</button>
             </div>
           ))}
         </div>
@@ -1578,15 +1590,15 @@ function TabTaloyhtion(){
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:10,padding:"12px 16px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
           <span style={{fontSize:14,flexShrink:0,marginTop:1}}>🔍</span>
           <div style={{fontFamily:B,fontSize:12,color:C.ink,lineHeight:1.55,fontWeight:300}}>
-            <span style={{fontWeight:500}}>Nämä tiedostot olivat skannattuja, ja teksti luettiin kuvasta:</span>
+            <span style={{fontWeight:500}}>{t(lang,"Nämä tiedostot olivat skannattuja, ja teksti luettiin kuvasta:","These files were scanned, and the text was read from the image:")}</span>
             <span style={{display:"block",marginTop:4,color:C.forest}}>{skannatut.join(", ")}</span>
-            <span style={{display:"block",marginTop:6}}>Skannatun dokumentin luku voi olla hieman epätarkempaa — tarkista tärkeät luvut alkuperäisistä papereista.</span>
+            <span style={{display:"block",marginTop:6}}>{t(lang,"Skannatun dokumentin luku voi olla hieman epätarkempaa — tarkista tärkeät luvut alkuperäisistä papereista.","Reading a scanned document can be slightly less accurate — check important figures against the original documents.")}</span>
           </div>
         </div>
       )}
 
       <DarkBtn onClick={analysoi} style={{marginBottom:analyysi?28:0,opacity:loading?0.6:1,cursor:loading?"wait":"pointer"}} disabled={loading}>
-        {loading?"⏳ Analysoidaan...":"Analysoi →"}
+        {loading?t(lang,"⏳ Analysoidaan...","⏳ Analysing..."):t(lang,"Analysoi →","Analyse →")}
       </DarkBtn>
 
       {/* Latausanimaatio */}
@@ -1601,7 +1613,7 @@ function TabTaloyhtion(){
               <span style={{color:loadStep>i?C.forest:loadStep===i+1?C.ink:C.stone,fontWeight:loadStep===i+1?500:300}}>{s}</span>
             </div>
           ))}
-          <div style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:6,fontWeight:300,fontStyle:"italic"}}>Tämä voi kestää 10–60 sekuntia paperien määrästä riippuen.</div>
+          <div style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:6,fontWeight:300,fontStyle:"italic"}}>{t(lang,"Tämä voi kestää 10–60 sekuntia paperien määrästä riippuen.","This can take 10–60 seconds depending on the number of documents.")}</div>
         </div>
       )}
 
@@ -1611,7 +1623,7 @@ function TabTaloyhtion(){
           <div style={{height:2,background:`linear-gradient(90deg,transparent,${C.gold},${C.clay},transparent)`,borderRadius:2}}/>
           <div style={{background:C.paper,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 22px",marginBottom:16}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-              <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>Asuntoraportti</span>
+              <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>{t(lang,"Asuntoraportti","Property Report")}</span>
               <div style={{height:1,flex:1,background:`linear-gradient(90deg,${C.linen},transparent)`}}/>
             </div>
             <RaporttiText text={analyysi}/>
@@ -1620,12 +1632,14 @@ function TabTaloyhtion(){
           <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
             <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
             <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-              Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.
+              {t(lang,
+                "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.",
+                "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
             </div>
           </div>
 
           <button onClick={nollaa} style={{width:"100%",background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"14px 0",fontFamily:B,fontSize:13,letterSpacing:1,cursor:"pointer",borderRadius:10}}>
-            Tee uusi analyysi
+            {t(lang,"Tee uusi analyysi","Start a new analysis")}
           </button>
         </div>
       )}
@@ -1634,15 +1648,15 @@ function TabTaloyhtion(){
 }
 
 const OSTAJA_TABS=[
-  {id:"taloyhtion",label:"🏢 Asuntoanalyysi"},
-  {id:"opas",label:"🗺 Ostopolku"},
-  {id:"sanasto",label:"📖 Sanasto"},
+  {id:"taloyhtion",label:"🏢 Asuntoanalyysi",labelEn:"🏢 Property Analysis"},
+  {id:"opas",label:"🗺 Ostopolku",labelEn:"🗺 Buying Path"},
+  {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
 ];
 const MYYJA_TABS=[
-  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti"},
-  {id:"lisapalvelut",label:"✨ Lisäpalvelut"},
-  {id:"kulut",label:"💰 Myyntikulut"},
-  {id:"sanasto",label:"📖 Sanasto"},
+  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
+  {id:"lisapalvelut",label:"✨ Lisäpalvelut",labelEn:"✨ Extra Services"},
+  {id:"kulut",label:"💰 Myyntikulut",labelEn:"💰 Selling Costs"},
+  {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
 ];
 
 // Lukee nykyisen tilan URL-hashista, esim. "#ostaja/hinta"
@@ -1810,8 +1824,8 @@ export default function App(){
 
       <div style={{background:C.cream,borderBottom:`1px solid ${C.border}`,padding:"14px 16px",overflowX:"auto"}}>
         <div style={{display:"flex",gap:8,minWidth:"max-content",maxWidth:1080,margin:"0 auto"}}>
-          {tabs.map(t=>(
-            <Pill key={t.id} active={validiTab===t.id} onClick={()=>setTab(t.id)}>{t.label}</Pill>
+          {tabs.map(tabi=>(
+            <Pill key={tabi.id} active={validiTab===tabi.id} onClick={()=>setTab(tabi.id)}>{lang==="en"&&tabi.labelEn?tabi.labelEn:tabi.label}</Pill>
           ))}
         </div>
       </div>
