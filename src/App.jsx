@@ -680,6 +680,7 @@ function TabTarkistus({mode}){
 // ── Pyydä ilmainen arviokäynti: myyjän liidikanava (lähettää /api/liidi → Brevo) ──
 // Välittäjäkumppani tekee maksuttoman arviokäynnin ja jättää tarjouksen.
 function TabKonsultaatio(){
+  const lang=useLang();
   const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",katuosoite:"",postinumero:"",kaupunki:"",tyyppi:"",koko:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
   const [sent,setSent]=useState(false);
@@ -687,10 +688,10 @@ function TabKonsultaatio(){
   const [error,setError]=useState(null);
   const set=(k,v)=>setLiidi(x=>({...x,[k]:v}));
   async function laheta(){
-    if(!liidi.nimi||!liidi.puhelin){setError("Nimi ja puhelin ovat pakollisia.");return;}
-    if(!liidi.email){setError("Sähköposti on pakollinen.");return;}
-    if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError("Täytä katuosoite, postinumero ja kaupunki.");return;}
-    if(!gdpr){setError("Hyväksy tietosuojakäytäntö ennen lähetystä.");return;}
+    if(!liidi.nimi||!liidi.puhelin){setError(t(lang,"Nimi ja puhelin ovat pakollisia.","Name and phone are required."));return;}
+    if(!liidi.email){setError(t(lang,"Sähköposti on pakollinen.","Email is required."));return;}
+    if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError(t(lang,"Täytä katuosoite, postinumero ja kaupunki.","Fill in the street address, postal code and city."));return;}
+    if(!gdpr){setError(t(lang,"Hyväksy tietosuojakäytäntö ennen lähetystä.","Please accept the privacy policy before sending."));return;}
     setError(null);setSending(true);
     // Kootaan asunnon tiedot yhteen luettavaan muotoon Brevon ASUNTO-kenttään
     const asuntoTiedot=[
@@ -717,28 +718,30 @@ function TabKonsultaatio(){
       if(data.ok){
         setSent(true);
       }else{
-        setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");
+        setError(data.error||t(lang,"Lähetys epäonnistui. Yritä uudelleen.","Sending failed. Please try again."));
       }
     }catch(err){
       console.error("Arviokäynti-liidi-virhe:",err);
-      setError("Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
+      setError(t(lang,"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.","Connection error. Check your network and try again."));
     }finally{
       setSending(false);
     }
   }
   const hyodyt=[
-    {e:"🏠",t:"Ilmainen arviokäynti",d:"Luotettava välittäjä käy arvioimassa asuntosi paikan päällä — maksutta."},
-    {e:"💶",t:"Hinta-arvio ja tarjous",d:"Saat tietää paljonko asunnostasi voi saada ja mitä myynti maksaa."},
-    {e:"🤝",t:"Ei sitoumuksia",d:"Arviokäynti ei velvoita mihinkään — päätät itse haluatko edetä."},
+    {e:"🏠",t:t(lang,"Ilmainen arviokäynti","Free valuation visit"),d:t(lang,"Luotettava välittäjä käy arvioimassa asuntosi paikan päällä — maksutta.","A trusted agent visits to value your home in person — free of charge.")},
+    {e:"💶",t:t(lang,"Hinta-arvio ja tarjous","Price estimate and offer"),d:t(lang,"Saat tietää paljonko asunnostasi voi saada ja mitä myynti maksaa.","Find out how much you could get for your home and what selling costs.")},
+    {e:"🤝",t:t(lang,"Ei sitoumuksia","No commitment"),d:t(lang,"Arviokäynti ei velvoita mihinkään — päätät itse haluatko edetä.","The visit commits you to nothing — you decide whether to proceed.")},
   ];
   if(sent){
     return(
       <div>
-        <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Kiitos yhteydenotosta!</div>
+        <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Kiitos yhteydenotosta!","Thank you for getting in touch!")}</div>
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:14,padding:"24px 20px",marginTop:16,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:22,flexShrink:0}}>✅</span>
           <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>
-            Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme sinulle sopivan ajan maksuttomalle arviokäynnille — rauhassa ja ilman kiirettä.
+            {t(lang,
+              "Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme sinulle sopivan ajan maksuttomalle arviokäynnille — rauhassa ja ilman kiirettä.",
+              "Your request has been received. We'll be in touch soon to arrange a time that suits you for a free valuation visit — calmly and without pressure.")}
           </div>
         </div>
       </div>
@@ -746,8 +749,8 @@ function TabKonsultaatio(){
   }
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Pyydä ilmainen arviokäynti</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Vähemmän stressiä, sujuvampi myynti — autamme sinua.</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Pyydä ilmainen arviokäynti","Request a free valuation visit")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{t(lang,"Vähemmän stressiä, sujuvampi myynti — autamme sinua.","Less stress, a smoother sale — we'll help you.")}</div>
 
       <div style={{display:"grid",gap:12,marginBottom:24}}>
         {hyodyt.map((h,i)=>(
@@ -762,44 +765,48 @@ function TabKonsultaatio(){
       </div>
 
       <div style={{fontFamily:B,fontSize:14,color:C.ink,marginBottom:16,fontWeight:300,lineHeight:1.6}}>
-        Jätä yhteystietosi, niin järjestämme sinulle maksuttoman arviokäynnin luotettavan välittäjän kanssa. Ei sido mihinkään.
+        {t(lang,
+          "Jätä yhteystietosi, niin järjestämme sinulle maksuttoman arviokäynnin luotettavan välittäjän kanssa. Ei sido mihinkään.",
+          "Leave your details and we'll arrange a free valuation visit with a trusted agent. No obligation.")}
       </div>
 
       <div style={{display:"grid",gap:10,marginBottom:16}}>
-        <FloatInput label="Nimi *" value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
+        <FloatInput label={t(lang,"Nimi *","Name *")} value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Puhelin *" type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
-          <FloatInput label="Sähköposti *" type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
+          <FloatInput label={t(lang,"Puhelin *","Phone *")} type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
+          <FloatInput label={t(lang,"Sähköposti *","Email *")} type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
         </div>
-        <FloatInput label="Katuosoite *" value={liidi.katuosoite} onChange={e=>set("katuosoite",e.target.value)}/>
+        <FloatInput label={t(lang,"Katuosoite *","Street address *")} value={liidi.katuosoite} onChange={e=>set("katuosoite",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Postinumero *" value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
-          <FloatInput label="Kaupunki *" value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
+          <FloatInput label={t(lang,"Postinumero *","Postal code *")} value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
+          <FloatInput label={t(lang,"Kaupunki *","City *")} value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatSelect label="Asuntotyyppi" value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
-            <option value="">Valitse…</option>
-            <option value="Kerrostalo">Kerrostalo</option>
-            <option value="Rivitalo">Rivitalo</option>
-            <option value="Omakotitalo">Omakotitalo</option>
-            <option value="Paritalo">Paritalo</option>
+          <FloatSelect label={t(lang,"Asuntotyyppi","Property type")} value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
+            <option value="">{t(lang,"Valitse…","Select…")}</option>
+            <option value="Kerrostalo">{t(lang,"Kerrostalo","Apartment")}</option>
+            <option value="Rivitalo">{t(lang,"Rivitalo","Terraced house")}</option>
+            <option value="Omakotitalo">{t(lang,"Omakotitalo","Detached house")}</option>
+            <option value="Paritalo">{t(lang,"Paritalo","Semi-detached")}</option>
           </FloatSelect>
-          <FloatInput label="Koko (m²)" type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
+          <FloatInput label={t(lang,"Koko (m²)","Size (m²)")} type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
         </div>
-        <FloatInput label="Kerro lyhyesti tilanteestasi — vapaaehtoinen" value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
+        <FloatInput label={t(lang,"Kerro lyhyesti tilanteestasi — vapaaehtoinen","Tell us briefly about your situation — optional")} value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
       </div>
 
       <label style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:16,cursor:"pointer"}}>
         <input type="checkbox" checked={gdpr} onChange={e=>setGdpr(e.target.checked)} style={{marginTop:3,cursor:"pointer",accentColor:C.gold}}/>
         <span style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300,lineHeight:1.5}}>
-          Hyväksyn, että minuun saa olla yhteydessä antamillani tiedoilla, ja että tietojani käsitellään tietosuojaselosteen mukaisesti.
+          {t(lang,
+            "Hyväksyn, että minuun saa olla yhteydessä antamillani tiedoilla, ja että tietojani käsitellään tietosuojaselosteen mukaisesti.",
+            "I agree to be contacted using the details I've provided, and that my data is processed in accordance with the privacy policy.")}
         </span>
       </label>
 
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
-        {sending?"⏳ Lähetetään...":"Pyydä ilmainen arviokäynti →"}
+        {sending?t(lang,"⏳ Lähetetään...","⏳ Sending..."):t(lang,"Pyydä ilmainen arviokäynti →","Request a free valuation visit →")}
       </DarkBtn>
     </div>
   );
@@ -811,6 +818,7 @@ function TabKonsultaatio(){
 // ── Yleiskäyttöinen liidilomake (käytetään arviolausunnolle ja kauppakirjalle) ──
 // Parametrit määräävät otsikon, hyödyt, Brevo-tunnisteen ja tekstit.
 function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappiTeksti,kiitosViesti,naytaTyyppiKoko=true,onBack}){
+  const lang=useLang();
   const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",katuosoite:"",postinumero:"",kaupunki:"",tyyppi:"",koko:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
   const [sent,setSent]=useState(false);
@@ -818,10 +826,10 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
   const [error,setError]=useState(null);
   const set=(k,v)=>setLiidi(x=>({...x,[k]:v}));
   async function laheta(){
-    if(!liidi.nimi||!liidi.puhelin){setError("Nimi ja puhelin ovat pakollisia.");return;}
-    if(!liidi.email){setError("Sähköposti on pakollinen.");return;}
-    if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError("Täytä katuosoite, postinumero ja kaupunki.");return;}
-    if(!gdpr){setError("Hyväksy tietosuojakäytäntö ennen lähetystä.");return;}
+    if(!liidi.nimi||!liidi.puhelin){setError(t(lang,"Nimi ja puhelin ovat pakollisia.","Name and phone are required."));return;}
+    if(!liidi.email){setError(t(lang,"Sähköposti on pakollinen.","Email is required."));return;}
+    if(!liidi.katuosoite||!liidi.postinumero||!liidi.kaupunki){setError(t(lang,"Täytä katuosoite, postinumero ja kaupunki.","Fill in the street address, postal code and city."));return;}
+    if(!gdpr){setError(t(lang,"Hyväksy tietosuojakäytäntö ennen lähetystä.","Please accept the privacy policy before sending."));return;}
     setError(null);setSending(true);
     const asuntoTiedot=[
       `${liidi.katuosoite}, ${liidi.postinumero} ${liidi.kaupunki}`,
@@ -844,27 +852,27 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
         })
       });
       const data=await r.json();
-      if(data.ok){setSent(true);}else{setError(data.error||"Lähetys epäonnistui. Yritä uudelleen.");}
+      if(data.ok){setSent(true);}else{setError(data.error||t(lang,"Lähetys epäonnistui. Yritä uudelleen.","Sending failed. Please try again."));}
     }catch(err){
       console.error("Liidi-virhe:",err);
-      setError("Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.");
+      setError(t(lang,"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.","Connection error. Check your network and try again."));
     }finally{setSending(false);}
   }
   if(sent){
     return(
       <div>
-        <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Kiitos yhteydenotosta!</div>
+        <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Kiitos yhteydenotosta!","Thank you for getting in touch!")}</div>
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:14,padding:"24px 20px",marginTop:16,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:22,flexShrink:0}}>✅</span>
           <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>{kiitosViesti}</div>
         </div>
-        {onBack&&<button onClick={onBack} style={{marginTop:18,background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline"}}>← Takaisin lisäpalveluihin</button>}
+        {onBack&&<button onClick={onBack} style={{marginTop:18,background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline"}}>{t(lang,"← Takaisin lisäpalveluihin","← Back to extra services")}</button>}
       </div>
     );
   }
   return(
     <div>
-      {onBack&&<button onClick={onBack} style={{background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline",marginBottom:16,padding:0}}>← Takaisin lisäpalveluihin</button>}
+      {onBack&&<button onClick={onBack} style={{background:"none",border:"none",color:C.stone,fontFamily:B,fontSize:13,cursor:"pointer",textDecoration:"underline",marginBottom:16,padding:0}}>{t(lang,"← Takaisin lisäpalveluihin","← Back to extra services")}</button>}
       <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{otsikko}</div>
       <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{alaotsikko}</div>
 
@@ -881,26 +889,26 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
       </div>
 
       <div style={{display:"grid",gap:10,marginBottom:16}}>
-        <FloatInput label="Nimi *" value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
+        <FloatInput label={t(lang,"Nimi *","Name *")} value={liidi.nimi} onChange={e=>set("nimi",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Puhelin *" type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
-          <FloatInput label="Sähköposti *" type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
+          <FloatInput label={t(lang,"Puhelin *","Phone *")} type="tel" value={liidi.puhelin} onChange={e=>set("puhelin",e.target.value)}/>
+          <FloatInput label={t(lang,"Sähköposti *","Email *")} type="email" value={liidi.email} onChange={e=>set("email",e.target.value)}/>
         </div>
-        <FloatInput label="Katuosoite *" value={liidi.katuosoite} onChange={e=>set("katuosoite",e.target.value)}/>
+        <FloatInput label={t(lang,"Katuosoite *","Street address *")} value={liidi.katuosoite} onChange={e=>set("katuosoite",e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Postinumero *" value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
-          <FloatInput label="Kaupunki *" value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
+          <FloatInput label={t(lang,"Postinumero *","Postal code *")} value={liidi.postinumero} onChange={e=>set("postinumero",e.target.value)}/>
+          <FloatInput label={t(lang,"Kaupunki *","City *")} value={liidi.kaupunki} onChange={e=>set("kaupunki",e.target.value)}/>
         </div>
         {naytaTyyppiKoko&&(
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-            <FloatSelect label="Asuntotyyppi" value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
-              <option value="">Valitse…</option>
-              <option value="Kerrostalo">Kerrostalo</option>
-              <option value="Rivitalo">Rivitalo</option>
-              <option value="Omakotitalo">Omakotitalo</option>
-              <option value="Paritalo">Paritalo</option>
+            <FloatSelect label={t(lang,"Asuntotyyppi","Property type")} value={liidi.tyyppi} onChange={e=>set("tyyppi",e.target.value)}>
+              <option value="">{t(lang,"Valitse…","Select…")}</option>
+              <option value="Kerrostalo">{t(lang,"Kerrostalo","Apartment")}</option>
+              <option value="Rivitalo">{t(lang,"Rivitalo","Terraced house")}</option>
+              <option value="Omakotitalo">{t(lang,"Omakotitalo","Detached house")}</option>
+              <option value="Paritalo">{t(lang,"Paritalo","Semi-detached")}</option>
             </FloatSelect>
-            <FloatInput label="Koko (m²)" type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
+            <FloatInput label={t(lang,"Koko (m²)","Size (m²)")} type="number" value={liidi.koko} onChange={e=>set("koko",e.target.value)}/>
           </div>
         )}
         <FloatInput label={lisatietoLabel} value={liidi.viesti} onChange={e=>set("viesti",e.target.value)}/>
@@ -909,14 +917,16 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
       <label style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:16,cursor:"pointer"}}>
         <input type="checkbox" checked={gdpr} onChange={e=>setGdpr(e.target.checked)} style={{marginTop:3,cursor:"pointer",accentColor:C.gold}}/>
         <span style={{fontFamily:B,fontSize:12,color:C.stone,fontWeight:300,lineHeight:1.5}}>
-          Hyväksyn, että minuun saa olla yhteydessä antamillani tiedoilla, ja että tietojani käsitellään tietosuojaselosteen mukaisesti.
+          {t(lang,
+            "Hyväksyn, että minuun saa olla yhteydessä antamillani tiedoilla, ja että tietojani käsitellään tietosuojaselosteen mukaisesti.",
+            "I agree to be contacted using the details I've provided, and that my data is processed in accordance with the privacy policy.")}
         </span>
       </label>
 
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
-        {sending?"⏳ Lähetetään...":nappiTeksti}
+        {sending?t(lang,"⏳ Lähetetään...","⏳ Sending..."):nappiTeksti}
       </DarkBtn>
     </div>
   );
@@ -924,36 +934,37 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
 
 // ── Lisäpalvelut: kokoaa erikoispalvelut (arviolausunto, kauppakirja) ──
 function TabLisapalvelut(){
+  const lang=useLang();
   const [valittu,setValittu]=useState(null); // null = korttinäkymä, muuten palvelun id
   const palvelut=[
     {
       id:"arviolausunto",
-      kortti:{e:"📄",t:"Arviolausunto pankkiin",d:"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten."},
-      otsikko:"Arviolausunto pankkiin",
-      alaotsikko:"Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.",
+      kortti:{e:"📄",t:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),d:t(lang,"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten.","A written valuation of your home for a loan or collateral.")},
+      otsikko:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),
+      alaotsikko:t(lang,"Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.","Need a written valuation of your home for the bank? We'll help."),
       hyodyt:[
-        {e:"📄",t:"Kirjallinen arviolausunto",d:"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille."},
-        {e:"🏦",t:"Lainaa tai vakuutta varten",d:"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä."},
+        {e:"📄",t:t(lang,"Kirjallinen arviolausunto","Written valuation statement"),d:t(lang,"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille.","The statement is prepared by an experienced agent with LKV qualification (licensed real estate agent). You can submit it directly to the bank.")},
+        {e:"🏦",t:t(lang,"Lainaa tai vakuutta varten","For a loan or collateral"),d:t(lang,"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä.","Banks often require a valuation statement for a loan, additional collateral, or refinancing.")},
       ],
       brevoTyyppi:"myyja-arviolausunto",
-      lisatietoLabel:"Lisätietoa — mihin tarvitset lausunnon (vapaaehtoinen)",
-      nappiTeksti:"Pyydä arviolausunto →",
-      kiitosViesti:"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kirjallisen arviolausunnon laatimisesta.",
+      lisatietoLabel:t(lang,"Lisätietoa — mihin tarvitset lausunnon (vapaaehtoinen)","More info — what you need the statement for (optional)"),
+      nappiTeksti:t(lang,"Pyydä arviolausunto →","Request a valuation statement →"),
+      kiitosViesti:t(lang,"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kirjallisen arviolausunnon laatimisesta.","Your request has been received. We'll be in touch soon to arrange the written valuation statement."),
     },
     {
       id:"kauppakirja",
-      kortti:{e:"📝",t:"Kauppakirjan laatiminen",d:"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen."},
-      otsikko:"Kauppakirjan laatiminen",
-      alaotsikko:"Oletko itsemyyjä ja tarvitset apua kauppakirjan laatimisessa? Autamme.",
+      kortti:{e:"📝",t:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),d:t(lang,"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen.","Selling on your own? Get help drafting the deed of sale.")},
+      otsikko:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),
+      alaotsikko:t(lang,"Oletko itsemyyjä ja tarvitset apua kauppakirjan laatimisessa? Autamme.","Selling on your own and need help drafting the deed of sale? We'll help."),
       hyodyt:[
-        {e:"📝",t:"Asiantunteva kauppakirja",d:"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti."},
-        {e:"🤝",t:"Tueksi kaupantekoon",d:"Hyödyllinen erityisesti yksityiskaupassa, jossa kauppaa ei hoida välittäjä — saat ammattilaisen varmistamaan asiakirjat."},
+        {e:"📝",t:t(lang,"Asiantunteva kauppakirja","An expertly drafted deed"),d:t(lang,"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti.","The deed is drafted by an experienced agent with LKV qualification (licensed real estate agent). You ensure the sale is done correctly and safely.")},
+        {e:"🤝",t:t(lang,"Tueksi kaupantekoon","Support for the transaction"),d:t(lang,"Hyödyllinen erityisesti yksityiskaupassa, jossa kauppaa ei hoida välittäjä — saat ammattilaisen varmistamaan asiakirjat.","Especially useful in a private sale without an agent — you get a professional to verify the documents.")},
       ],
       brevoTyyppi:"myyja-kauppakirja",
       naytaTyyppiKoko:false,
-      lisatietoLabel:"Lisätietoa kaupasta (vapaaehtoinen)",
-      nappiTeksti:"Pyydä apua kauppakirjaan →",
-      kiitosViesti:"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kauppakirjan laatimisesta.",
+      lisatietoLabel:t(lang,"Lisätietoa kaupasta (vapaaehtoinen)","More info about the sale (optional)"),
+      nappiTeksti:t(lang,"Pyydä apua kauppakirjaan →","Request help with the deed →"),
+      kiitosViesti:t(lang,"Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme kauppakirjan laatimisesta.","Your request has been received. We'll be in touch soon to arrange the drafting of the deed of sale."),
     },
   ];
   if(valittu){
@@ -962,8 +973,8 @@ function TabLisapalvelut(){
   }
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Lisäpalvelut</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Asiantuntijan palveluita asunnon omistajalle — valitse mitä tarvitset.</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Lisäpalvelut","Extra services")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{t(lang,"Asiantuntijan palveluita asunnon omistajalle — valitse mitä tarvitset.","Expert services for home owners — choose what you need.")}</div>
       <div style={{display:"grid",gap:14}}>
         {palvelut.map(p=>(
           <button key={p.id} onClick={()=>setValittu(p.id)}
@@ -986,6 +997,7 @@ function TabLisapalvelut(){
 
 
 function TabMyyntikulut(){
+  const lang=useLang();
   const [hinta,setHinta]=useState("280000");
   const [ostoHinta,setOstoHinta]=useState("250000");
   const [omistusAika,setOmistusAika]=useState("3");
@@ -999,23 +1011,23 @@ function TabMyyntikulut(){
   const nettoMyyntitulo=myyntihinta-valittajaPalkkio-luovutusvoittovero;
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>Myyntikululaskin</div>
-      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>Laske myynnin kulut ja nettotulo</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Myyntikululaskin","Selling cost calculator")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300}}>{t(lang,"Laske myynnin kulut ja nettotulo","Calculate selling costs and net proceeds")}</div>
       <div style={{display:"grid",gap:10,marginBottom:20}}>
-        <FloatInput label="Myyntihinta (€)" type="number" value={hinta} onChange={e=>setHinta(e.target.value)}/>
-        <FloatInput label="Alkuperäinen ostohinta (€)" type="number" value={ostoHinta} onChange={e=>setOstoHinta(e.target.value)}/>
+        <FloatInput label={t(lang,"Myyntihinta (€)","Sale price (€)")} type="number" value={hinta} onChange={e=>setHinta(e.target.value)}/>
+        <FloatInput label={t(lang,"Alkuperäinen ostohinta (€)","Original purchase price (€)")} type="number" value={ostoHinta} onChange={e=>setOstoHinta(e.target.value)}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <FloatInput label="Omistusaika (vuotta)" type="number" value={omistusAika} onChange={e=>setOmistusAika(e.target.value)}/>
-          <FloatInput label="Välittäjäpalkkio (%)" type="number" value={valitPct} onChange={e=>setValitPct(e.target.value)}/>
+          <FloatInput label={t(lang,"Omistusaika (vuotta)","Ownership (years)")} type="number" value={omistusAika} onChange={e=>setOmistusAika(e.target.value)}/>
+          <FloatInput label={t(lang,"Välittäjäpalkkio (%)","Agent fee (%)")} type="number" value={valitPct} onChange={e=>setValitPct(e.target.value)}/>
         </div>
       </div>
       <DarkCard style={{padding:"24px 20px"}}>
-        <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.6)",letterSpacing:2,textTransform:"uppercase",marginBottom:16}}>Myyntilaskelma</div>
+        <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.6)",letterSpacing:2,textTransform:"uppercase",marginBottom:16}}>{t(lang,"Myyntilaskelma","Sale breakdown")}</div>
         {[
-          {l:"Myyntihinta",v:`${fmt(myyntihinta)} €`},
-          {l:`Välittäjäpalkkio (${valitPct}%)`,v:`− ${fmt(valittajaPalkkio)} €`},
-          {l:"Voitto / tappio",v:`${voitto>=0?"+":""}${fmt(voitto)} €`},
-          {l:"Luovutusvoittovero (30%)",v:veroVapaa?"0 € (verovapaa ✓)":`− ${fmt(luovutusvoittovero)} €`},
+          {l:t(lang,"Myyntihinta","Sale price"),v:`${fmt(myyntihinta)} €`},
+          {l:`${t(lang,"Välittäjäpalkkio","Agent fee")} (${valitPct}%)`,v:`− ${fmt(valittajaPalkkio)} €`},
+          {l:t(lang,"Voitto / tappio","Profit / loss"),v:`${voitto>=0?"+":""}${fmt(voitto)} €`},
+          {l:t(lang,"Luovutusvoittovero (30%)","Capital gains tax (30%)"),v:veroVapaa?t(lang,"0 € (verovapaa ✓)","€0 (exempt ✓)"):`− ${fmt(luovutusvoittovero)} €`},
         ].map(row=>(
           <div key={row.l} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
             <span style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.5)",fontWeight:300}}>{row.l}</span>
@@ -1023,20 +1035,20 @@ function TabMyyntikulut(){
           </div>
         ))}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",padding:"14px 0"}}>
-          <span style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.5)",fontWeight:300}}>Nettotulo myynnistä</span>
+          <span style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.5)",fontWeight:300}}>{t(lang,"Nettotulo myynnistä","Net proceeds from sale")}</span>
           <span style={{fontFamily:H,fontSize:32,color:C.gold,letterSpacing:-0.5}}>{fmt(nettoMyyntitulo)} €</span>
         </div>
         {veroVapaa&&(
           <div style={{background:"rgba(62,92,63,0.3)",border:"1px solid rgba(62,92,63,0.4)",borderRadius:8,padding:"10px 14px",fontFamily:B,fontSize:12,color:"#A8D5B5",lineHeight:1.6}}>
-            ✓ Yli 2 vuoden omistus — luovutusvoitto on verovapaa!
+            {t(lang,"✓ Yli 2 vuoden omistus — luovutusvoitto on verovapaa!","✓ Over 2 years of ownership — the capital gain is tax-free!")}
           </div>
         )}
         {!veroVapaa&&voitto>0&&(
           <div style={{background:"rgba(181,105,60,0.2)",border:"1px solid rgba(181,105,60,0.3)",borderRadius:8,padding:"10px 14px",fontFamily:B,fontSize:12,color:"#E8B08A",lineHeight:1.6}}>
-            ⚠ Alle 2 vuoden omistus — luovutusvoitosta maksetaan 30% veroa.
+            {t(lang,"⚠ Alle 2 vuoden omistus — luovutusvoitosta maksetaan 30% veroa.","⚠ Less than 2 years of ownership — a 30% tax applies to the capital gain.")}
           </div>
         )}
-        <div style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.3)",marginTop:12,lineHeight:1.6,fontWeight:300}}>Suuntaa-antava. Kysy verottajalta tai tilintarkastajalta tarkempi arvio.</div>
+        <div style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.3)",marginTop:12,lineHeight:1.6,fontWeight:300}}>{t(lang,"Suuntaa-antava. Kysy verottajalta tai tilintarkastajalta tarkempi arvio.","Indicative only. Ask the tax authority or an accountant for a more precise estimate.")}</div>
       </DarkCard>
     </div>
   );
