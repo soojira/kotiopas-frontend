@@ -785,7 +785,7 @@ function TabArviolausunto(){
     }
   }
   const hyodyt=[
-    {e:"📄",t:"Kirjallinen arviolausunto",d:"Välittäjä laatii asunnostasi kirjallisen arvion, jonka voit toimittaa pankille."},
+    {e:"📄",t:"Kirjallinen arviolausunto",d:"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille."},
     {e:"🏦",t:"Lainaa tai vakuutta varten",d:"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä."},
     {e:"🤝",t:"Ei sitoumuksia",d:"Lausunnon pyytäminen ei velvoita myymään tai mihinkään muuhunkaan."},
   ];
