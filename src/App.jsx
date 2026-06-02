@@ -25,6 +25,46 @@ const C = {
 const H="'Cormorant Garamond','Georgia',serif";
 const B="'Jost','Helvetica Neue',sans-serif";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// KIELI / LANGUAGE
+// Yksinkertainen kaksikielinen järjestelmä (fi/en). Kieli pidetään App-tason
+// statessa ja jaetaan komponenteille useLang-hookilla. Oletus: suomi.
+// ─────────────────────────────────────────────────────────────────────────────
+// Globaali kielitila + tilaajat (jotta myös komponentit ilman propseja päivittyvät).
+let _lang = "fi";
+const _langKuuntelijat = new Set();
+function setGlobalLang(l){
+  _lang = l;
+  _langKuuntelijat.forEach(fn=>fn(l));
+}
+// Hook: palauttaa nykyisen kielen ja päivittyy kun kieli vaihtuu.
+function useLang(){
+  const [l,setL]=useState(_lang);
+  useEffect(()=>{
+    const fn=(uusi)=>setL(uusi);
+    _langKuuntelijat.add(fn);
+    return ()=>_langKuuntelijat.delete(fn);
+  },[]);
+  return l;
+}
+// Käännösapuri: t(lang, "fi-teksti", "en-teksti")
+function t(lang,fi,en){ return lang==="en" ? en : fi; }
+
+// Kielivalitsin-nappi (FI / EN)
+function LangToggle({dark=false}){
+  const lang=useLang();
+  const aktiivi=dark?C.gold:C.ink;
+  const passiivi=dark?"rgba(251,243,226,0.4)":C.stone;
+  return(
+    <div style={{display:"inline-flex",alignItems:"center",gap:6,fontFamily:B,fontSize:12,fontWeight:500,letterSpacing:0.5}}>
+      <button onClick={()=>setGlobalLang("fi")} style={{background:"none",border:"none",cursor:"pointer",color:lang==="fi"?aktiivi:passiivi,fontWeight:lang==="fi"?600:400,padding:"2px 4px",fontFamily:B,fontSize:12}}>FI</button>
+      <span style={{color:passiivi,opacity:0.5}}>|</span>
+      <button onClick={()=>setGlobalLang("en")} style={{background:"none",border:"none",cursor:"pointer",color:lang==="en"?aktiivi:passiivi,fontWeight:lang==="en"?600:400,padding:"2px 4px",fontFamily:B,fontSize:12}}>EN</button>
+    </div>
+  );
+}
+
+
 const GLOBAL=`
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -1620,6 +1660,7 @@ function lueHash(){
 
 export default function App(){
   const init=lueHash();
+  const lang=useLang();
   const [mode,setMode]=useState(init.mode);
   const [tab,setTab]=useState(init.tab||"opas");
   const isDesktop=useIsDesktop(900);
@@ -1681,23 +1722,26 @@ export default function App(){
         <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(52px + env(safe-area-inset-top)) 28px calc(60px + env(safe-area-inset-bottom))",minHeight:"100vh",minHeight:"100dvh",display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
           <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:-80,left:-80,width:240,height:240,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.07)",pointerEvents:"none"}}/>
+          <div style={{position:"absolute",top:"calc(20px + env(safe-area-inset-top))",right:24}}><LangToggle dark/></div>
           <div style={{width:"100%",maxWidth:isDesktop?620:420,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:48}}>
             <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="80" height="80" style={{marginBottom:10,objectFit:"contain"}}/>
             <span style={{fontFamily:H,fontSize:18,color:"rgba(251,243,226,0.85)",letterSpacing:4,fontStyle:"italic",fontWeight:500}}>Asuntoraportti</span>
           </div>
-          <div style={{fontFamily:B,fontSize:11,letterSpacing:3,textTransform:"uppercase",color:C.gold,marginBottom:16,fontWeight:500}}>Tervetuloa</div>
+          <div style={{fontFamily:B,fontSize:11,letterSpacing:3,textTransform:"uppercase",color:C.gold,marginBottom:16,fontWeight:500}}>{t(lang,"Tervetuloa","Welcome")}</div>
           <h1 style={{fontFamily:H,fontSize:isDesktop?52:44,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,marginBottom:16,letterSpacing:-0.5}}>
-            Asuntokaupan<br/><em style={{color:C.gold}}>paras apuri.</em>
+            {t(lang,<>Asuntokaupan<br/><em style={{color:C.gold}}>paras apuri.</em></>,<>Your best companion<br/><em style={{color:C.gold}}>in home buying.</em></>)}
           </h1>
           <p style={{fontFamily:B,fontSize:isDesktop?16:14,color:"rgba(251,243,226,0.5)",lineHeight:1.8,maxWidth:isDesktop?460:340,fontWeight:300,marginBottom:52}}>
-            Lataa taloyhtiön paperit ja saat selkokielisen analyysin — tai pyydä apua asuntosi myyntiin. Selkeää tukea asuntokaupan molemmille puolille.
+            {t(lang,
+              "Lataa taloyhtiön paperit ja saat selkokielisen analyysin — tai pyydä apua asuntosi myyntiin. Selkeää tukea asuntokaupan molemmille puolille.",
+              "Upload the housing company documents and get a plain-language analysis — or get help selling your home. Clear support for both sides of the deal.")}
           </p>
-          <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>Olen…</div>
+          <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>{t(lang,"Olen…","I am…")}</div>
           <div style={{display:"grid",gap:16,width:"100%",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr"}}>
             {[
-              {m:"ostaja",e:"🏠",t:"Asunnon ostaja",d:"Asuntoanalyysi papereista, ostopolku ja sanasto"},
-              {m:"myyjä",e:"🔑",t:"Asunnon myyjä",d:"Ilmainen arviokäynti, myyntikululaskin ja sanasto"},
+              {m:"ostaja",e:"🏠",t:t(lang,"Asunnon ostaja","Home buyer"),d:t(lang,"Asuntoanalyysi papereista, ostopolku ja sanasto","Property analysis from documents, buying path and glossary")},
+              {m:"myyjä",e:"🔑",t:t(lang,"Asunnon myyjä","Home seller"),d:t(lang,"Ilmainen arviokäynti, myyntikululaskin ja sanasto","Free valuation visit, selling cost calculator and glossary")},
             ].map(opt=>(
               <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"taloyhtion":"konsultaatio");}}
                 style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:16,padding:"22px 24px",cursor:"pointer",textAlign:"left",transition:"all 0.2s",display:"flex",alignItems:"center",gap:18}}
@@ -1738,10 +1782,11 @@ export default function App(){
       <div style={{position:"relative",overflow:"hidden",background:"linear-gradient(165deg,#2A1F14 0%,#3E2D1A 40%,#1E3020 100%)",padding:"calc(36px + env(safe-area-inset-top)) 24px 44px"}}>
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
-        <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <LangToggle dark/>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
-            Etusivu
+            {t(lang,"Etusivu","Home")}
           </button>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:24}}>
@@ -1753,7 +1798,7 @@ export default function App(){
           {mode==="ostaja"
             ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
             : <span style={{fontSize:14}}>🔑</span>}
-          <span style={{fontFamily:B,fontSize:12,color:mode==="ostaja"?"#A8D5B5":"#E8B08A",fontWeight:500,letterSpacing:1}}>{mode==="ostaja"?"OSTAJA":"MYYJÄ"}</span>
+          <span style={{fontFamily:B,fontSize:12,color:mode==="ostaja"?"#A8D5B5":"#E8B08A",fontWeight:500,letterSpacing:1}}>{mode==="ostaja"?t(lang,"OSTAJA","BUYER"):t(lang,"MYYJÄ","SELLER")}</span>
         </div>
         </div>
         <h1 style={{fontFamily:H,fontSize:34,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,letterSpacing:-0.5,textAlign:"center"}}>
