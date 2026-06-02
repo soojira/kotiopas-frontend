@@ -901,8 +901,8 @@ function TabLisapalvelut(){
     },
     {
       id:"kauppakirja",
-      kortti:{e:"📝",t:"Kauppakirjan teko",d:"Apua asunnon kauppakirjan laatimiseen kaupanteon yhteydessä."},
-      otsikko:"Kauppakirjan teko",
+      kortti:{e:"📝",t:"Kauppakirjan laatiminen",d:"Apua asunnon kauppakirjan laatimiseen kaupanteon yhteydessä."},
+      otsikko:"Kauppakirjan laatiminen",
       alaotsikko:"Tarvitsetko apua asunnon kauppakirjan laatimiseen? Autamme.",
       hyodyt:[
         {e:"📝",t:"Asiantunteva kauppakirja",d:"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti."},
