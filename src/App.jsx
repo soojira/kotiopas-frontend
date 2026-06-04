@@ -1828,8 +1828,8 @@ export default function App(){
         </div>
         </div>
         <h1 style={{fontFamily:H,fontSize:34,fontWeight:500,color:"#FBF3E2",lineHeight:1.1,letterSpacing:-0.5,textAlign:"center"}}>
-          {mode==="ostaja"?"Löydä unelmiesi":"Myy asuntosi"}
-          <br/><em style={{color:C.gold}}>{mode==="ostaja"?"koti.":"parhaaseen hintaan."}</em>
+          {mode==="ostaja"?t(lang,"Löydä unelmiesi","Find your dream"):t(lang,"Myy asuntosi","Sell your home")}
+          <br/><em style={{color:C.gold}}>{mode==="ostaja"?t(lang,"koti.","home."):t(lang,"parhaaseen hintaan.","at the best price.")}</em>
         </h1>
         </div>
       </div>
