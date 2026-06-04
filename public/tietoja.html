@@ -128,65 +128,92 @@
   }
   .foot .back{font-size:13px;letter-spacing:0.5px;}
   .foot .copy{font-size:11px;color:var(--linen);letter-spacing:1px;margin-top:14px;}
+
+  .langbar{position:fixed;top:16px;right:18px;display:flex;gap:6px;align-items:center;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.5px;z-index:10;background:var(--paper);padding:6px 10px;border-radius:20px;border:1px solid var(--border);}
+  .langbar button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;padding:2px 4px;color:var(--stone);}
+  .langbar button.active{color:var(--gold);font-weight:600;}
+  .langbar span{color:var(--linen);opacity:0.5;}
 </style>
 </head>
 <body>
+<div class="langbar">
+  <button id="lang-fi" class="active" onclick="setLang('fi')">FI</button>
+  <span>|</span>
+  <button id="lang-en" onclick="setLang('en')">EN</button>
+</div>
 <div class="wrap">
 
   <div class="brand">
     <div class="brand-mark">Asuntoraportti</div>
-    <h1>Tulkki sinun <em>puolellasi</em></h1>
+    <h1 data-fi="Tulkki sinun <em>puolellasi</em>" data-en="An interpreter <em>on your side</em>">Tulkki sinun <em>puolellasi</em></h1>
   </div>
 
-  <p class="lead">Asunnon paperit ovat täynnä ammattikieltä, jota harva ymmärtää. Me käännämme ne selkokielelle — jotta tiedät mihin olet ryhtymässä.</p>
+  <p class="lead" data-fi="Asunnon paperit ovat täynnä ammattikieltä, jota harva ymmärtää. Me käännämme ne selkokielelle — jotta tiedät mihin olet ryhtymässä." data-en="A home's documents are full of jargon that few people understand. We translate them into plain language — so you know what you're getting into.">Asunnon paperit ovat täynnä ammattikieltä, jota harva ymmärtää. Me käännämme ne selkokielelle — jotta tiedät mihin olet ryhtymässä.</p>
 
   <section>
-    <h2>Miksi Asuntoraportti on olemassa</h2>
-    <p>Asuntokauppa on yksi elämän suurimmista päätöksistä, mutta sen tärkeimmät asiakirjat — isännöitsijäntodistus, yhtiöjärjestys, tilinpäätös — on kirjoitettu kielellä, jota tavallisen ostajan tai myyjän on vaikea avata. Vastikkeet, lainaosuudet, tulevat remontit: tieto on siellä, mutta lukittuna ammattisanaston taakse.</p>
-    <p>Asuntoraportti syntyi tästä havainnosta. Ajatus on yksinkertainen: <strong>toimia tulkkina</strong> asunnon papereiden ja sinun välilläsi. Lataat asiakirjat, ja saat takaisin selkokielisen analyysin — mitä kulut oikeasti ovat, mitkä ovat vahvuudet, mihin kannattaa kiinnittää huomiota.</p>
+    <h2 data-fi="Miksi Asuntoraportti on olemassa" data-en="Why Asuntoraportti exists">Miksi Asuntoraportti on olemassa</h2>
+    <p data-fi="Asuntokauppa on yksi elämän suurimmista päätöksistä, mutta sen tärkeimmät asiakirjat — isännöitsijäntodistus, yhtiöjärjestys, tilinpäätös — on kirjoitettu kielellä, jota tavallisen ostajan tai myyjän on vaikea avata. Vastikkeet, lainaosuudet, tulevat remontit: tieto on siellä, mutta lukittuna ammattisanaston taakse." data-en="Buying a home is one of life's biggest decisions, yet its most important documents — the property manager's certificate, the articles of association, the financial statements — are written in language that an ordinary buyer or seller finds hard to open up. Charges, loan shares, upcoming renovations: the information is there, but locked behind professional jargon.">Asuntokauppa on yksi elämän suurimmista päätöksistä, mutta sen tärkeimmät asiakirjat — isännöitsijäntodistus, yhtiöjärjestys, tilinpäätös — on kirjoitettu kielellä, jota tavallisen ostajan tai myyjän on vaikea avata. Vastikkeet, lainaosuudet, tulevat remontit: tieto on siellä, mutta lukittuna ammattisanaston taakse.</p>
+    <p data-fi="Asuntoraportti syntyi tästä havainnosta. Ajatus on yksinkertainen: <strong>toimia tulkkina</strong> asunnon papereiden ja sinun välilläsi. Lataat asiakirjat, ja saat takaisin selkokielisen analyysin — mitä kulut oikeasti ovat, mitkä ovat vahvuudet, mihin kannattaa kiinnittää huomiota." data-en="Asuntoraportti was born from this observation. The idea is simple: <strong>to act as an interpreter</strong> between a home's documents and you. You upload the documents and get back a plain-language analysis — what the costs really are, what the strengths are, and what to pay attention to.">Asuntoraportti syntyi tästä havainnosta. Ajatus on yksinkertainen: <strong>toimia tulkkina</strong> asunnon papereiden ja sinun välilläsi. Lataat asiakirjat, ja saat takaisin selkokielisen analyysin — mitä kulut oikeasti ovat, mitkä ovat vahvuudet, mihin kannattaa kiinnittää huomiota.</p>
   </section>
 
-  <p class="pull">Tieto kuuluu <span>kaikille</span> — ei vain niille jotka osaavat lukea ammattikieltä.</p>
+  <p class="pull" data-fi="Tieto kuuluu <span>kaikille</span> — ei vain niille jotka osaavat lukea ammattikieltä." data-en="Information belongs to <span>everyone</span> — not just those who can read professional jargon.">Tieto kuuluu <span>kaikille</span> — ei vain niille jotka osaavat lukea ammattikieltä.</p>
 
   <section>
-    <h2>Kokemuksesta, ei tyhjästä</h2>
-    <p>Palvelun takana on käytännön kokemus asuntojen parissa: kohteiden valmistelu ja julkaisu, kiinteistönvälityksen arki sekä työ tulkkina, jossa vaikean tiedon kääntäminen ymmärrettäväksi on jokapäiväistä. Juuri se yhdistelmä — asuntopapereiden tuntemus ja tulkin tapa selittää asiat selkeästi — on Asuntoraportin ydin.</p>
+    <h2 data-fi="Kokemuksesta, ei tyhjästä" data-en="From experience, not from nowhere">Kokemuksesta, ei tyhjästä</h2>
+    <p data-fi="Palvelun takana on käytännön kokemus asuntojen parissa: kohteiden valmistelu ja julkaisu, kiinteistönvälityksen arki sekä työ tulkkina, jossa vaikean tiedon kääntäminen ymmärrettäväksi on jokapäiväistä. Juuri se yhdistelmä — asuntopapereiden tuntemus ja tulkin tapa selittää asiat selkeästi — on Asuntoraportin ydin." data-en="Behind the service is hands-on experience with homes: preparing and publishing listings, the everyday work of real estate brokerage, and work as an interpreter, where translating difficult information into something understandable is a daily task. That very combination — knowledge of property documents and an interpreter's way of explaining things clearly — is the heart of Asuntoraportti.">Palvelun takana on käytännön kokemus asuntojen parissa: kohteiden valmistelu ja julkaisu, kiinteistönvälityksen arki sekä työ tulkkina, jossa vaikean tiedon kääntäminen ymmärrettäväksi on jokapäiväistä. Juuri se yhdistelmä — asuntopapereiden tuntemus ja tulkin tapa selittää asiat selkeästi — on Asuntoraportin ydin.</p>
   </section>
 
   <section>
-    <h2>Periaatteemme</h2>
+    <h2 data-fi="Periaatteemme" data-en="Our principles">Periaatteemme</h2>
     <div class="values">
       <div class="value">
-        <div class="t">Sinun puolellasi</div>
-        <div class="d">Palvelu on tehty auttamaan sinua ymmärtämään — selkeästi ja rehellisesti, ilman myyntipuhetta.</div>
+        <div class="t" data-fi="Sinun puolellasi" data-en="On your side">Sinun puolellasi</div>
+        <div class="d" data-fi="Palvelu on tehty auttamaan sinua ymmärtämään — selkeästi ja rehellisesti, ilman myyntipuhetta." data-en="The service is built to help you understand — clearly and honestly, without a sales pitch.">Palvelu on tehty auttamaan sinua ymmärtämään — selkeästi ja rehellisesti, ilman myyntipuhetta.</div>
       </div>
       <div class="value">
-        <div class="t">Vain mitä papereissa lukee</div>
-        <div class="d">Analyysi perustuu siihen mitä asiakirjoissa oikeasti on — ei arvauksiin tai yleisiin oletuksiin.</div>
+        <div class="t" data-fi="Vain mitä papereissa lukee" data-en="Only what the documents say">Vain mitä papereissa lukee</div>
+        <div class="d" data-fi="Analyysi perustuu siihen mitä asiakirjoissa oikeasti on — ei arvauksiin tai yleisiin oletuksiin." data-en="The analysis is based on what the documents actually contain — not on guesses or general assumptions.">Analyysi perustuu siihen mitä asiakirjoissa oikeasti on — ei arvauksiin tai yleisiin oletuksiin.</div>
       </div>
       <div class="value">
-        <div class="t">Yksityisyys edellä</div>
-        <div class="d">Lataamiasi papereita ei tallenneta. Ne luetaan analyysiä varten ja poistetaan heti.</div>
+        <div class="t" data-fi="Yksityisyys edellä" data-en="Privacy first">Yksityisyys edellä</div>
+        <div class="d" data-fi="Lataamiasi papereita ei tallenneta. Ne luetaan analyysiä varten ja poistetaan heti." data-en="The documents you upload are not stored. They are read for the analysis and deleted immediately.">Lataamiasi papereita ei tallenneta. Ne luetaan analyysiä varten ja poistetaan heti.</div>
       </div>
       <div class="value">
-        <div class="t">Tueksi, ei korvaajaksi</div>
-        <div class="d">Autamme ymmärtämään, mutta tärkeät päätökset kannattaa aina varmistaa ammattilaiselta.</div>
+        <div class="t" data-fi="Tueksi, ei korvaajaksi" data-en="A support, not a replacement">Tueksi, ei korvaajaksi</div>
+        <div class="d" data-fi="Autamme ymmärtämään, mutta tärkeät päätökset kannattaa aina varmistaa ammattilaiselta." data-en="We help you understand, but important decisions should always be confirmed with a professional.">Autamme ymmärtämään, mutta tärkeät päätökset kannattaa aina varmistaa ammattilaiselta.</div>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Ota yhteyttä</h2>
-    <p>Kysymykset, palaute ja yhteydenotot: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a></p>
-    <p style="font-size:14px;color:var(--stone);">Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki.</p>
+    <h2 data-fi="Ota yhteyttä" data-en="Get in touch">Ota yhteyttä</h2>
+    <p data-fi="Kysymykset, palaute ja yhteydenotot: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>" data-en="Questions, feedback and enquiries: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>">Kysymykset, palaute ja yhteydenotot: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a></p>
+    <p style="font-size:14px;color:var(--stone);" data-fi="Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki." data-en="The service is provided by Miss S Tmi (Business ID 3393504-8), Helsinki.">Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki.</p>
   </section>
 
   <div class="foot">
     <div class="name">Asuntoraportti</div>
-    <a class="back" href="/">← Takaisin etusivulle</a>
-    <div class="copy">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+    <a class="back" href="/" data-fi="← Takaisin etusivulle" data-en="← Back to home">← Takaisin etusivulle</a>
+    <div class="copy" data-fi="© 2026 Miss S Tmi — Asuntokaupan paras apuri" data-en="© 2026 Miss S Tmi — Your best companion in home buying">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
   </div>
 
 </div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-fi]').forEach(function(el){
+      var v = l==='en' ? el.getAttribute('data-en') : el.getAttribute('data-fi');
+      if(v!==null) el.innerHTML = v;
+    });
+    document.getElementById('lang-fi').classList.toggle('active', l==='fi');
+    document.getElementById('lang-en').classList.toggle('active', l==='en');
+    document.documentElement.lang = l;
+    try{ localStorage.setItem('ar_lang', l); }catch(e){}
+  }
+  (function(){
+    var saved='fi';
+    try{ saved = localStorage.getItem('ar_lang') || 'fi'; }catch(e){}
+    if(saved==='en') setLang('en');
+  })();
+</script>
 </body>
 </html>
