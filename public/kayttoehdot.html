@@ -128,79 +128,106 @@
   }
   .foot .back{font-size:13px;letter-spacing:0.5px;}
   .foot .copy{font-size:11px;color:var(--linen);letter-spacing:1px;margin-top:14px;}
+
+  .langbar{position:fixed;top:16px;right:18px;display:flex;gap:6px;align-items:center;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.5px;z-index:10;background:var(--paper);padding:6px 10px;border-radius:20px;border:1px solid var(--border);}
+  .langbar button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;padding:2px 4px;color:var(--stone);}
+  .langbar button.active{color:var(--gold);font-weight:600;}
+  .langbar span{color:var(--linen);opacity:0.5;}
 </style>
 </head>
 <body>
+<div class="langbar">
+  <button id="lang-fi" class="active" onclick="setLang('fi')">FI</button>
+  <span>|</span>
+  <button id="lang-en" onclick="setLang('en')">EN</button>
+</div>
 <div class="wrap">
 
   <div class="brand">
     <div class="brand-mark">Asuntoraportti</div>
-    <h1>Käyttöehdot</h1>
-    <div class="meta">Päivitetty 2.6.2026</div>
+    <h1 data-fi="Käyttöehdot" data-en="Terms of use">Käyttöehdot</h1>
+    <div class="meta" data-fi="Päivitetty 2.6.2026" data-en="Updated 2 June 2026">Päivitetty 2.6.2026</div>
   </div>
 
-  <p class="intro">Nämä käyttöehdot koskevat asuntoraportti.fi-palvelun käyttöä. Käyttämällä palvelua hyväksyt nämä ehdot. Lue ne huolellisesti.</p>
+  <p class="intro" data-fi="Nämä käyttöehdot koskevat asuntoraportti.fi-palvelun käyttöä. Käyttämällä palvelua hyväksyt nämä ehdot. Lue ne huolellisesti." data-en="These terms of use apply to the use of the asuntoraportti.fi service. By using the service you accept these terms. Please read them carefully.">Nämä käyttöehdot koskevat asuntoraportti.fi-palvelun käyttöä. Käyttämällä palvelua hyväksyt nämä ehdot. Lue ne huolellisesti.</p>
 
   <section>
-    <h2><span class="num">01</span> Palvelun tarjoaja</h2>
-    <p>Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki. Yhteydenotot: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a>.</p>
+    <h2><span class="num">01</span> <span data-fi="Palvelun tarjoaja" data-en="Service provider">Palvelun tarjoaja</span></h2>
+    <p data-fi="Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki. Yhteydenotot: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>." data-en="The service is provided by Miss S Tmi (Business ID 3393504-8), Helsinki. Contact: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>.">Palvelun tarjoaa Miss S Tmi (Y-tunnus 3393504-8), Helsinki. Yhteydenotot: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a>.</p>
   </section>
 
   <section>
-    <h2><span class="num">02</span> Palvelun tarkoitus</h2>
-    <p>Asuntoraportti on asunnon ostajille ja myyjille tarkoitettu apuväline, joka tarjoaa selkokielistä tietoa ja tukea asuntokaupan eri vaiheisiin. Palvelu sisältää muun muassa taloyhtiön asiakirjojen tekoälyavusteisen analyysin (Asuntoanalyysi) sekä mahdollisuuden pyytää kiinteistönvälittäjän palveluita.</p>
+    <h2><span class="num">02</span> <span data-fi="Palvelun tarkoitus" data-en="Purpose of the service">Palvelun tarkoitus</span></h2>
+    <p data-fi="Asuntoraportti on asunnon ostajille ja myyjille tarkoitettu apuväline, joka tarjoaa selkokielistä tietoa ja tukea asuntokaupan eri vaiheisiin. Palvelu sisältää muun muassa taloyhtiön asiakirjojen tekoälyavusteisen analyysin (Asuntoanalyysi) sekä mahdollisuuden pyytää kiinteistönvälittäjän palveluita." data-en="Asuntoraportti is a tool for home buyers and sellers that provides plain-language information and support for the various stages of a property transaction. The service includes, among other things, AI-assisted analysis of housing company documents (Property Analysis) and the option to request real estate agent services.">Asuntoraportti on asunnon ostajille ja myyjille tarkoitettu apuväline, joka tarjoaa selkokielistä tietoa ja tukea asuntokaupan eri vaiheisiin. Palvelu sisältää muun muassa taloyhtiön asiakirjojen tekoälyavusteisen analyysin (Asuntoanalyysi) sekä mahdollisuuden pyytää kiinteistönvälittäjän palveluita.</p>
     <div class="highlight">
-      <p><strong>Palvelu on tarkoitettu tiedoksi ja tueksi. Se ei korvaa ammattilaisen, kuten kiinteistönvälittäjän, juristin, isännöitsijän tai muun asiantuntijan, henkilökohtaista neuvontaa.</strong> Tärkeät päätökset kannattaa aina varmistaa ammattilaiselta.</p>
+      <p data-fi="<strong>Palvelu on tarkoitettu tiedoksi ja tueksi. Se ei korvaa ammattilaisen, kuten kiinteistönvälittäjän, juristin, isännöitsijän tai muun asiantuntijan, henkilökohtaista neuvontaa.</strong> Tärkeät päätökset kannattaa aina varmistaa ammattilaiselta." data-en="<strong>The service is intended for information and support. It does not replace the personal advice of a professional, such as a real estate agent, lawyer, property manager or other expert.</strong> Important decisions should always be confirmed with a professional."><strong>Palvelu on tarkoitettu tiedoksi ja tueksi. Se ei korvaa ammattilaisen, kuten kiinteistönvälittäjän, juristin, isännöitsijän tai muun asiantuntijan, henkilökohtaista neuvontaa.</strong> Tärkeät päätökset kannattaa aina varmistaa ammattilaiselta.</p>
     </div>
   </section>
 
   <section>
-    <h2><span class="num">03</span> Asuntoanalyysi ja sen rajoitukset</h2>
-    <p>Asuntoanalyysi tuottaa tekoälyn avulla yhteenvedon ja tulkinnan käyttäjän lataamista asiakirjoista. Analyysi perustuu yksinomaan ladattujen asiakirjojen sisältöön.</p>
+    <h2><span class="num">03</span> <span data-fi="Asuntoanalyysi ja sen rajoitukset" data-en="Property Analysis and its limitations">Asuntoanalyysi ja sen rajoitukset</span></h2>
+    <p data-fi="Asuntoanalyysi tuottaa tekoälyn avulla yhteenvedon ja tulkinnan käyttäjän lataamista asiakirjoista. Analyysi perustuu yksinomaan ladattujen asiakirjojen sisältöön." data-en="Property Analysis uses AI to produce a summary and interpretation of the documents uploaded by the user. The analysis is based solely on the content of the uploaded documents.">Asuntoanalyysi tuottaa tekoälyn avulla yhteenvedon ja tulkinnan käyttäjän lataamista asiakirjoista. Analyysi perustuu yksinomaan ladattujen asiakirjojen sisältöön.</p>
     <ul>
-      <li>Analyysi voi sisältää virheitä tai puutteita, eikä sen oikeellisuutta tai täydellisyyttä taata.</li>
-      <li>Analyysi ei ole virallinen lausunto, arvio tai suositus, eikä sitä tule käyttää ainoana päätöksenteon perusteena.</li>
-      <li>Mahdolliset hintaa tai tarjousta koskevat näkemykset ovat suuntaa-antavia tulkintoja asiakirjojen pohjalta, eivät virallisia arvioita markkina-arvosta.</li>
+      <li data-fi="Analyysi voi sisältää virheitä tai puutteita, eikä sen oikeellisuutta tai täydellisyyttä taata." data-en="The analysis may contain errors or omissions, and its accuracy or completeness is not guaranteed.">Analyysi voi sisältää virheitä tai puutteita, eikä sen oikeellisuutta tai täydellisyyttä taata.</li>
+      <li data-fi="Analyysi ei ole virallinen lausunto, arvio tai suositus, eikä sitä tule käyttää ainoana päätöksenteon perusteena." data-en="The analysis is not an official statement, valuation or recommendation, and should not be used as the sole basis for decisions.">Analyysi ei ole virallinen lausunto, arvio tai suositus, eikä sitä tule käyttää ainoana päätöksenteon perusteena.</li>
+      <li data-fi="Mahdolliset hintaa tai tarjousta koskevat näkemykset ovat suuntaa-antavia tulkintoja asiakirjojen pohjalta, eivät virallisia arvioita markkina-arvosta." data-en="Any views on price or offers are indicative interpretations based on the documents, not official assessments of market value.">Mahdolliset hintaa tai tarjousta koskevat näkemykset ovat suuntaa-antavia tulkintoja asiakirjojen pohjalta, eivät virallisia arvioita markkina-arvosta.</li>
     </ul>
-    <p>Käyttäjä vastaa siitä, että hänellä on oikeus ladata ja käsitellä palveluun toimittamiaan asiakirjoja.</p>
+    <p data-fi="Käyttäjä vastaa siitä, että hänellä on oikeus ladata ja käsitellä palveluun toimittamiaan asiakirjoja." data-en="The user is responsible for having the right to upload and process the documents they submit to the service.">Käyttäjä vastaa siitä, että hänellä on oikeus ladata ja käsitellä palveluun toimittamiaan asiakirjoja.</p>
   </section>
 
   <section>
-    <h2><span class="num">04</span> Kiinteistönvälittäjän palvelut</h2>
-    <p>Palvelun kautta voi pyytää kiinteistönvälittäjän palveluita, kuten maksutonta arviokäyntiä tai kirjallista arviolausuntoa. Nämä palvelut toteuttaa yhteistyökumppanina toimiva kiinteistönvälittäjä. Yhteydenottopyynnön jättäminen ei sido käyttäjää mihinkään eikä synnytä sopimusta. Mahdollinen toimeksianto ja sen ehdot sovitaan erikseen suoraan välittäjän kanssa.</p>
+    <h2><span class="num">04</span> <span data-fi="Kiinteistönvälittäjän palvelut" data-en="Real estate agent services">Kiinteistönvälittäjän palvelut</span></h2>
+    <p data-fi="Palvelun kautta voi pyytää kiinteistönvälittäjän palveluita, kuten maksutonta arviokäyntiä tai kirjallista arviolausuntoa. Nämä palvelut toteuttaa yhteistyökumppanina toimiva kiinteistönvälittäjä. Yhteydenottopyynnön jättäminen ei sido käyttäjää mihinkään eikä synnytä sopimusta. Mahdollinen toimeksianto ja sen ehdot sovitaan erikseen suoraan välittäjän kanssa." data-en="Through the service you can request real estate agent services, such as a free valuation visit or a written valuation statement. These services are carried out by a partner real estate agent. Submitting a contact request does not bind the user to anything and does not create a contract. Any assignment and its terms are agreed separately and directly with the agent.">Palvelun kautta voi pyytää kiinteistönvälittäjän palveluita, kuten maksutonta arviokäyntiä tai kirjallista arviolausuntoa. Nämä palvelut toteuttaa yhteistyökumppanina toimiva kiinteistönvälittäjä. Yhteydenottopyynnön jättäminen ei sido käyttäjää mihinkään eikä synnytä sopimusta. Mahdollinen toimeksianto ja sen ehdot sovitaan erikseen suoraan välittäjän kanssa.</p>
   </section>
 
   <section>
-    <h2><span class="num">05</span> Vastuunrajoitus</h2>
-    <p>Palvelu tarjotaan sellaisenaan. Palveluntarjoaja ei vastaa vahingoista, jotka aiheutuvat palvelun käytöstä, sen sisältämistä tiedoista tai analyysin tuloksista, siltä osin kuin laki tämän sallii. Palveluntarjoaja ei takaa palvelun keskeytyksetöntä tai virheetöntä toimintaa.</p>
+    <h2><span class="num">05</span> <span data-fi="Vastuunrajoitus" data-en="Limitation of liability">Vastuunrajoitus</span></h2>
+    <p data-fi="Palvelu tarjotaan sellaisenaan. Palveluntarjoaja ei vastaa vahingoista, jotka aiheutuvat palvelun käytöstä, sen sisältämistä tiedoista tai analyysin tuloksista, siltä osin kuin laki tämän sallii. Palveluntarjoaja ei takaa palvelun keskeytyksetöntä tai virheetöntä toimintaa." data-en="The service is provided as is. To the extent permitted by law, the provider is not liable for damages arising from the use of the service, the information it contains, or the results of the analysis. The provider does not guarantee uninterrupted or error-free operation of the service.">Palvelu tarjotaan sellaisenaan. Palveluntarjoaja ei vastaa vahingoista, jotka aiheutuvat palvelun käytöstä, sen sisältämistä tiedoista tai analyysin tuloksista, siltä osin kuin laki tämän sallii. Palveluntarjoaja ei takaa palvelun keskeytyksetöntä tai virheetöntä toimintaa.</p>
   </section>
 
   <section>
-    <h2><span class="num">06</span> Immateriaalioikeudet</h2>
-    <p>Palvelun sisältö, ulkoasu ja toteutus ovat palveluntarjoajan omaisuutta tai käytetty asianmukaisin oikeuksin. Sisältöä ei saa kopioida tai hyödyntää kaupallisesti ilman lupaa. Käyttäjän lataamat asiakirjat pysyvät käyttäjän omaisuutena.</p>
+    <h2><span class="num">06</span> <span data-fi="Immateriaalioikeudet" data-en="Intellectual property">Immateriaalioikeudet</span></h2>
+    <p data-fi="Palvelun sisältö, ulkoasu ja toteutus ovat palveluntarjoajan omaisuutta tai käytetty asianmukaisin oikeuksin. Sisältöä ei saa kopioida tai hyödyntää kaupallisesti ilman lupaa. Käyttäjän lataamat asiakirjat pysyvät käyttäjän omaisuutena." data-en="The content, appearance and implementation of the service are the property of the provider or used with appropriate rights. The content may not be copied or used commercially without permission. Documents uploaded by the user remain the user's property.">Palvelun sisältö, ulkoasu ja toteutus ovat palveluntarjoajan omaisuutta tai käytetty asianmukaisin oikeuksin. Sisältöä ei saa kopioida tai hyödyntää kaupallisesti ilman lupaa. Käyttäjän lataamat asiakirjat pysyvät käyttäjän omaisuutena.</p>
   </section>
 
   <section>
-    <h2><span class="num">07</span> Henkilötiedot</h2>
-    <p>Henkilötietojen käsittelyä kuvataan erillisessä <a href="/tietosuojaseloste.html">tietosuojaselosteessa</a>.</p>
+    <h2><span class="num">07</span> <span data-fi="Henkilötiedot" data-en="Personal data">Henkilötiedot</span></h2>
+    <p data-fi="Henkilötietojen käsittelyä kuvataan erillisessä <a href=&quot;/tietosuojaseloste.html&quot;>tietosuojaselosteessa</a>." data-en="The processing of personal data is described in a separate <a href=&quot;/tietosuojaseloste.html&quot;>privacy policy</a>.">Henkilötietojen käsittelyä kuvataan erillisessä <a href="/tietosuojaseloste.html">tietosuojaselosteessa</a>.</p>
   </section>
 
   <section>
-    <h2><span class="num">08</span> Muutokset ehtoihin</h2>
-    <p>Palveluntarjoaja voi päivittää näitä käyttöehtoja palvelun tai lainsäädännön muuttuessa. Ajantasaiset ehdot ovat aina saatavilla tällä sivulla, ja viimeisin päivityspäivä merkitään ehtojen alkuun.</p>
+    <h2><span class="num">08</span> <span data-fi="Muutokset ehtoihin" data-en="Changes to the terms">Muutokset ehtoihin</span></h2>
+    <p data-fi="Palveluntarjoaja voi päivittää näitä käyttöehtoja palvelun tai lainsäädännön muuttuessa. Ajantasaiset ehdot ovat aina saatavilla tällä sivulla, ja viimeisin päivityspäivä merkitään ehtojen alkuun." data-en="The provider may update these terms as the service or legislation changes. The current terms are always available on this page, and the latest update date is marked at the top of the terms.">Palveluntarjoaja voi päivittää näitä käyttöehtoja palvelun tai lainsäädännön muuttuessa. Ajantasaiset ehdot ovat aina saatavilla tällä sivulla, ja viimeisin päivityspäivä merkitään ehtojen alkuun.</p>
   </section>
 
   <section>
-    <h2><span class="num">09</span> Sovellettava laki</h2>
-    <p>Näihin käyttöehtoihin ja palvelun käyttöön sovelletaan Suomen lakia. Mahdolliset erimielisyydet pyritään ensisijaisesti ratkaisemaan neuvottelemalla.</p>
+    <h2><span class="num">09</span> <span data-fi="Sovellettava laki" data-en="Applicable law">Sovellettava laki</span></h2>
+    <p data-fi="Näihin käyttöehtoihin ja palvelun käyttöön sovelletaan Suomen lakia. Mahdolliset erimielisyydet pyritään ensisijaisesti ratkaisemaan neuvottelemalla." data-en="These terms and the use of the service are governed by Finnish law. Any disputes are sought to be resolved primarily through negotiation.">Näihin käyttöehtoihin ja palvelun käyttöön sovelletaan Suomen lakia. Mahdolliset erimielisyydet pyritään ensisijaisesti ratkaisemaan neuvottelemalla.</p>
   </section>
 
   <div class="foot">
     <div class="name">Asuntoraportti</div>
-    <a class="back" href="/">← Takaisin etusivulle</a>
-    <div class="copy">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+    <a class="back" href="/" data-fi="← Takaisin etusivulle" data-en="← Back to home">← Takaisin etusivulle</a>
+    <div class="copy" data-fi="© 2026 Miss S Tmi — Asuntokaupan paras apuri" data-en="© 2026 Miss S Tmi — Your best companion in home buying">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
   </div>
 
 </div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-fi]').forEach(function(el){
+      var v = l==='en' ? el.getAttribute('data-en') : el.getAttribute('data-fi');
+      if(v!==null) el.innerHTML = v;
+    });
+    document.getElementById('lang-fi').classList.toggle('active', l==='fi');
+    document.getElementById('lang-en').classList.toggle('active', l==='en');
+    document.documentElement.lang = l;
+    try{ localStorage.setItem('ar_lang', l); }catch(e){}
+  }
+  (function(){
+    var saved='fi';
+    try{ saved = localStorage.getItem('ar_lang') || 'fi'; }catch(e){}
+    if(saved==='en') setLang('en');
+  })();
+</script>
 </body>
 </html>
