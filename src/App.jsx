@@ -1856,13 +1856,13 @@ export default function App(){
 
       <div style={{background:C.paper,borderTop:`1px solid ${C.border}`,padding:"24px 24px calc(24px + env(safe-area-inset-bottom))",textAlign:"center"}}>
         <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>Asuntoraportti</div>
-        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1,marginBottom:10}}>© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+        <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1,marginBottom:10}}>© 2026 Miss S Tmi — {t(lang,"Asuntokaupan paras apuri","Your best companion in home buying")}</div>
         <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:14,flexWrap:"wrap"}}>
-          <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>Tietoja meistä</a>
+          <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
           <span style={{color:C.linen,fontSize:9}}>•</span>
-          <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>Tietosuojaseloste</a>
+          <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Tietosuojaseloste","Privacy policy")}</a>
           <span style={{color:C.linen,fontSize:9}}>•</span>
-          <a href="/kayttoehdot.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>Käyttöehdot</a>
+          <a href="/kayttoehdot.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Käyttöehdot","Terms of use")}</a>
         </div>
       </div>
     </div>
