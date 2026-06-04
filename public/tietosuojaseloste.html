@@ -149,114 +149,141 @@
   }
   .foot .back{font-size:13px;letter-spacing:0.5px;}
   .foot .copy{font-size:11px;color:var(--linen);letter-spacing:1px;margin-top:14px;}
+
+  .langbar{position:fixed;top:16px;right:18px;display:flex;gap:6px;align-items:center;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.5px;z-index:10;background:var(--paper);padding:6px 10px;border-radius:20px;border:1px solid var(--border);}
+  .langbar button{background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;padding:2px 4px;color:var(--stone);}
+  .langbar button.active{color:var(--gold);font-weight:600;}
+  .langbar span{color:var(--linen);opacity:0.5;}
 </style>
 </head>
 <body>
+<div class="langbar">
+  <button id="lang-fi" class="active" onclick="setLang('fi')">FI</button>
+  <span>|</span>
+  <button id="lang-en" onclick="setLang('en')">EN</button>
+</div>
 <div class="wrap">
 
   <div class="brand">
     <div class="brand-mark">Asuntoraportti</div>
-    <h1>Tietosuojaseloste</h1>
-    <div class="meta">Päivitetty 2.6.2026</div>
+    <h1 data-fi="Tietosuojaseloste" data-en="Privacy Policy">Tietosuojaseloste</h1>
+    <div class="meta" data-fi="Päivitetty 2.6.2026" data-en="Updated 2 June 2026">Päivitetty 2.6.2026</div>
   </div>
 
-  <p class="intro">Tämä tietosuojaseloste kuvaa, miten asuntoraportti.fi-palvelussa kerätään, käsitellään ja suojataan henkilötietoja. Käsittely tapahtuu EU:n yleisen tietosuoja-asetuksen (GDPR) mukaisesti.</p>
+  <p class="intro" data-fi="Tämä tietosuojaseloste kuvaa, miten asuntoraportti.fi-palvelussa kerätään, käsitellään ja suojataan henkilötietoja. Käsittely tapahtuu EU:n yleisen tietosuoja-asetuksen (GDPR) mukaisesti." data-en="This privacy policy describes how personal data is collected, processed and protected in the asuntoraportti.fi service. Processing is carried out in accordance with the EU General Data Protection Regulation (GDPR).">Tämä tietosuojaseloste kuvaa, miten asuntoraportti.fi-palvelussa kerätään, käsitellään ja suojataan henkilötietoja. Käsittely tapahtuu EU:n yleisen tietosuoja-asetuksen (GDPR) mukaisesti.</p>
 
   <section>
-    <h2><span class="num">01</span> Rekisterinpitäjä</h2>
+    <h2><span class="num">01</span> <span data-fi="Rekisterinpitäjä" data-en="Data controller">Rekisterinpitäjä</span></h2>
     <div class="card">
-      <p><strong>Miss S Tmi</strong><br>
+      <p data-fi="<strong>Miss S Tmi</strong><br>Y-tunnus: 3393504-8<br>Helsinki<br>Sähköposti: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>" data-en="<strong>Miss S Tmi</strong><br>Business ID: 3393504-8<br>Helsinki, Finland<br>Email: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>"><strong>Miss S Tmi</strong><br>
       Y-tunnus: 3393504-8<br>
       Helsinki<br>
       Sähköposti: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a></p>
     </div>
-    <p style="margin-top:16px;">Rekisterinpitäjä vastaa tällä sivustolla kerättyjen henkilötietojen käsittelystä.</p>
+    <p style="margin-top:16px;" data-fi="Rekisterinpitäjä vastaa tällä sivustolla kerättyjen henkilötietojen käsittelystä." data-en="The data controller is responsible for the processing of personal data collected on this site.">Rekisterinpitäjä vastaa tällä sivustolla kerättyjen henkilötietojen käsittelystä.</p>
   </section>
 
   <section>
-    <h2><span class="num">02</span> Mitä tietoja keräämme ja mihin tarkoitukseen</h2>
-    <p>Keräämme henkilötietoja vain siltä osin kuin se on tarpeen palvelun tarjoamiseksi.</p>
+    <h2><span class="num">02</span> <span data-fi="Mitä tietoja keräämme ja mihin tarkoitukseen" data-en="What data we collect and for what purpose">Mitä tietoja keräämme ja mihin tarkoitukseen</span></h2>
+    <p data-fi="Keräämme henkilötietoja vain siltä osin kuin se on tarpeen palvelun tarjoamiseksi." data-en="We collect personal data only to the extent necessary to provide the service.">Keräämme henkilötietoja vain siltä osin kuin se on tarpeen palvelun tarjoamiseksi.</p>
 
-    <h3>2.1 Yhteydenotto- ja palvelupyynnöt (arviokäynti ja arviolausunto)</h3>
-    <p>Kun jätät yhteydenottopyynnön — esimerkiksi pyydät ilmaista arviokäyntiä tai kirjallista arviolausuntoa — keräämme antamasi tiedot:</p>
+    <h3 data-fi="2.1 Yhteydenotto- ja palvelupyynnöt (arviokäynti ja arviolausunto)" data-en="2.1 Contact and service requests (valuation visit and valuation statement)">2.1 Yhteydenotto- ja palvelupyynnöt (arviokäynti ja arviolausunto)</h3>
+    <p data-fi="Kun jätät yhteydenottopyynnön — esimerkiksi pyydät ilmaista arviokäyntiä tai kirjallista arviolausuntoa — keräämme antamasi tiedot:" data-en="When you submit a contact request — for example, requesting a free valuation visit or a written valuation statement — we collect the details you provide:">Kun jätät yhteydenottopyynnön — esimerkiksi pyydät ilmaista arviokäyntiä tai kirjallista arviolausuntoa — keräämme antamasi tiedot:</p>
     <ul>
-      <li>Nimi</li>
-      <li>Puhelinnumero</li>
-      <li>Sähköpostiosoite</li>
-      <li>Asunnon tiedot (osoite, postinumero, kaupunki, asuntotyyppi, koko)</li>
-      <li>Mahdolliset vapaaehtoiset lisätiedot</li>
+      <li data-fi="Nimi" data-en="Name">Nimi</li>
+      <li data-fi="Puhelinnumero" data-en="Phone number">Puhelinnumero</li>
+      <li data-fi="Sähköpostiosoite" data-en="Email address">Sähköpostiosoite</li>
+      <li data-fi="Asunnon tiedot (osoite, postinumero, kaupunki, asuntotyyppi, koko)" data-en="Property details (address, postal code, city, property type, size)">Asunnon tiedot (osoite, postinumero, kaupunki, asuntotyyppi, koko)</li>
+      <li data-fi="Mahdolliset vapaaehtoiset lisätiedot" data-en="Any optional additional information">Mahdolliset vapaaehtoiset lisätiedot</li>
     </ul>
-    <p><strong>Käyttötarkoitus:</strong> sinuun yhteyden ottaminen ja pyytämäsi palvelun järjestäminen.</p>
-    <p><strong>Oikeusperuste:</strong> suostumuksesi sekä sopimusta edeltävät toimenpiteet (GDPR 6 art. 1 a ja b kohta).</p>
+    <p data-fi="<strong>Käyttötarkoitus:</strong> sinuun yhteyden ottaminen ja pyytämäsi palvelun järjestäminen." data-en="<strong>Purpose:</strong> to contact you and arrange the service you requested."><strong>Käyttötarkoitus:</strong> sinuun yhteyden ottaminen ja pyytämäsi palvelun järjestäminen.</p>
+    <p data-fi="<strong>Oikeusperuste:</strong> suostumuksesi sekä sopimusta edeltävät toimenpiteet (GDPR 6 art. 1 a ja b kohta)." data-en="<strong>Legal basis:</strong> your consent and pre-contractual measures (GDPR Art. 6(1)(a) and (b))."><strong>Oikeusperuste:</strong> suostumuksesi sekä sopimusta edeltävät toimenpiteet (GDPR 6 art. 1 a ja b kohta).</p>
 
-    <h3>2.2 Asuntoanalyysi (ladatut asiakirjat)</h3>
-    <p>Asuntoanalyysi-toiminnossa voit ladata taloyhtiön asiakirjoja (kuten isännöitsijäntodistuksen) saadaksesi niistä selkokielisen analyysin.</p>
+    <h3 data-fi="2.2 Asuntoanalyysi (ladatut asiakirjat)" data-en="2.2 Property Analysis (uploaded documents)">2.2 Asuntoanalyysi (ladatut asiakirjat)</h3>
+    <p data-fi="Asuntoanalyysi-toiminnossa voit ladata taloyhtiön asiakirjoja (kuten isännöitsijäntodistuksen) saadaksesi niistä selkokielisen analyysin." data-en="In the Property Analysis feature you can upload housing company documents (such as the property manager's certificate) to receive a plain-language analysis of them.">Asuntoanalyysi-toiminnossa voit ladata taloyhtiön asiakirjoja (kuten isännöitsijäntodistuksen) saadaksesi niistä selkokielisen analyysin.</p>
     <div class="highlight">
-      <p><strong>Emme tallenna ladattuja asiakirjoja.</strong> Tiedostot käsitellään väliaikaisesti palvelimen muistissa analyysin tekemiseksi ja poistetaan välittömästi sen jälkeen. Asiakirjoja tai niiden sisältöä ei tallenneta eikä säilytetä analyysin valmistumisen jälkeen.</p>
+      <p data-fi="<strong>Emme tallenna ladattuja asiakirjoja.</strong> Tiedostot käsitellään väliaikaisesti palvelimen muistissa analyysin tekemiseksi ja poistetaan välittömästi sen jälkeen. Asiakirjoja tai niiden sisältöä ei tallenneta eikä säilytetä analyysin valmistumisen jälkeen." data-en="<strong>We do not store uploaded documents.</strong> Files are processed temporarily in the server's memory to produce the analysis and are deleted immediately afterwards. Documents or their contents are not stored or retained after the analysis is complete."><strong>Emme tallenna ladattuja asiakirjoja.</strong> Tiedostot käsitellään väliaikaisesti palvelimen muistissa analyysin tekemiseksi ja poistetaan välittömästi sen jälkeen. Asiakirjoja tai niiden sisältöä ei tallenneta eikä säilytetä analyysin valmistumisen jälkeen.</p>
     </div>
-    <p><strong>Käyttötarkoitus:</strong> pyytämäsi analyysin tuottaminen. <strong>Oikeusperuste:</strong> suostumuksesi (GDPR 6 art. 1 a kohta).</p>
+    <p data-fi="<strong>Käyttötarkoitus:</strong> pyytämäsi analyysin tuottaminen. <strong>Oikeusperuste:</strong> suostumuksesi (GDPR 6 art. 1 a kohta)." data-en="<strong>Purpose:</strong> producing the analysis you requested. <strong>Legal basis:</strong> your consent (GDPR Art. 6(1)(a))."><strong>Käyttötarkoitus:</strong> pyytämäsi analyysin tuottaminen. <strong>Oikeusperuste:</strong> suostumuksesi (GDPR 6 art. 1 a kohta).</p>
   </section>
 
   <section>
-    <h2><span class="num">03</span> Tietojen säilytysaika</h2>
+    <h2><span class="num">03</span> <span data-fi="Tietojen säilytysaika" data-en="Data retention">Tietojen säilytysaika</span></h2>
     <ul>
-      <li><strong>Yhteydenottopyyntöjen tiedot:</strong> säilytämme niitä niin kauan kuin on tarpeen yhteydenpitoa ja pyytämäsi palvelun järjestämistä varten, minkä jälkeen ne poistetaan tai anonymisoidaan. Voit milloin tahansa pyytää tietojesi poistamista.</li>
-      <li><strong>Asuntoanalyysin asiakirjat:</strong> ei säilytetä lainkaan (ks. kohta 2.2).</li>
+      <li data-fi="<strong>Yhteydenottopyyntöjen tiedot:</strong> säilytämme niitä niin kauan kuin on tarpeen yhteydenpitoa ja pyytämäsi palvelun järjestämistä varten, minkä jälkeen ne poistetaan tai anonymisoidaan. Voit milloin tahansa pyytää tietojesi poistamista." data-en="<strong>Contact request data:</strong> we keep it for as long as necessary to contact you and arrange the service you requested, after which it is deleted or anonymised. You can request deletion of your data at any time."><strong>Yhteydenottopyyntöjen tiedot:</strong> säilytämme niitä niin kauan kuin on tarpeen yhteydenpitoa ja pyytämäsi palvelun järjestämistä varten, minkä jälkeen ne poistetaan tai anonymisoidaan. Voit milloin tahansa pyytää tietojesi poistamista.</li>
+      <li data-fi="<strong>Asuntoanalyysin asiakirjat:</strong> ei säilytetä lainkaan (ks. kohta 2.2)." data-en="<strong>Property Analysis documents:</strong> not retained at all (see section 2.2)."><strong>Asuntoanalyysin asiakirjat:</strong> ei säilytetä lainkaan (ks. kohta 2.2).</li>
     </ul>
   </section>
 
   <section>
-    <h2><span class="num">04</span> Tietojen luovutukset ja käsittelijät</h2>
-    <p>Emme myy emmekä vuokraa henkilötietojasi kolmansille osapuolille. Käytämme palvelun toteuttamiseen seuraavia luotettavia palveluntarjoajia, jotka käsittelevät tietoja puolestamme:</p>
+    <h2><span class="num">04</span> <span data-fi="Tietojen luovutukset ja käsittelijät" data-en="Data disclosures and processors">Tietojen luovutukset ja käsittelijät</span></h2>
+    <p data-fi="Emme myy emmekä vuokraa henkilötietojasi kolmansille osapuolille. Käytämme palvelun toteuttamiseen seuraavia luotettavia palveluntarjoajia, jotka käsittelevät tietoja puolestamme:" data-en="We do not sell or rent your personal data to third parties. To run the service we use the following trusted providers, who process data on our behalf:">Emme myy emmekä vuokraa henkilötietojasi kolmansille osapuolille. Käytämme palvelun toteuttamiseen seuraavia luotettavia palveluntarjoajia, jotka käsittelevät tietoja puolestamme:</p>
     <ul>
-      <li><strong>Brevo</strong> (Sendinblue SAS) — yhteydenottopyyntöjen tietojen tallennus ja asiakasviestintä.</li>
-      <li><strong>Anthropic</strong> — Asuntoanalyysissä ladattujen asiakirjojen sisällön analysointi tekoälyn avulla. Sisältöä ei tallenneta pysyvästi.</li>
-      <li><strong>Render</strong> ja <strong>Vercel</strong> — palvelun tekninen ylläpito ja käyttöympäristö.</li>
+      <li data-fi="<strong>Brevo</strong> (Sendinblue SAS) — yhteydenottopyyntöjen tietojen tallennus ja asiakasviestintä." data-en="<strong>Brevo</strong> (Sendinblue SAS) — storage of contact request data and customer communication."><strong>Brevo</strong> (Sendinblue SAS) — yhteydenottopyyntöjen tietojen tallennus ja asiakasviestintä.</li>
+      <li data-fi="<strong>Anthropic</strong> — Asuntoanalyysissä ladattujen asiakirjojen sisällön analysointi tekoälyn avulla. Sisältöä ei tallenneta pysyvästi." data-en="<strong>Anthropic</strong> — AI analysis of the content of documents uploaded in Property Analysis. Content is not stored permanently."><strong>Anthropic</strong> — Asuntoanalyysissä ladattujen asiakirjojen sisällön analysointi tekoälyn avulla. Sisältöä ei tallenneta pysyvästi.</li>
+      <li data-fi="<strong>Render</strong> ja <strong>Vercel</strong> — palvelun tekninen ylläpito ja käyttöympäristö." data-en="<strong>Render</strong> and <strong>Vercel</strong> — technical hosting and operating environment of the service."><strong>Render</strong> ja <strong>Vercel</strong> — palvelun tekninen ylläpito ja käyttöympäristö.</li>
     </ul>
-    <p>Jos pyydät palvelua kuten arviokäyntiä tai arviolausuntoa, välitämme antamasi yhteys- ja asuntotiedot yhteistyökumppanina toimivalle kiinteistönvälittäjälle pyytämäsi palvelun toteuttamiseksi.</p>
-    <p>Tietoja voidaan luovuttaa viranomaisille, jos laki sitä edellyttää.</p>
+    <p data-fi="Jos pyydät palvelua kuten arviokäyntiä tai arviolausuntoa, välitämme antamasi yhteys- ja asuntotiedot yhteistyökumppanina toimivalle kiinteistönvälittäjälle pyytämäsi palvelun toteuttamiseksi." data-en="If you request a service such as a valuation visit or valuation statement, we pass the contact and property details you provide to a partner real estate agent in order to carry out the service you requested.">Jos pyydät palvelua kuten arviokäyntiä tai arviolausuntoa, välitämme antamasi yhteys- ja asuntotiedot yhteistyökumppanina toimivalle kiinteistönvälittäjälle pyytämäsi palvelun toteuttamiseksi.</p>
+    <p data-fi="Tietoja voidaan luovuttaa viranomaisille, jos laki sitä edellyttää." data-en="Data may be disclosed to authorities if required by law.">Tietoja voidaan luovuttaa viranomaisille, jos laki sitä edellyttää.</p>
   </section>
 
   <section>
-    <h2><span class="num">05</span> Tietojen siirto EU:n ulkopuolelle</h2>
-    <p>Osa käyttämistämme palveluntarjoajista voi käsitellä tietoja EU/ETA-alueen ulkopuolella. Tällöin huolehdimme, että siirrot tapahtuvat tietosuojalainsäädännön edellyttämin suojatoimin (esimerkiksi Euroopan komission hyväksymin vakiolausekkein).</p>
+    <h2><span class="num">05</span> <span data-fi="Tietojen siirto EU:n ulkopuolelle" data-en="Transfers outside the EU">Tietojen siirto EU:n ulkopuolelle</span></h2>
+    <p data-fi="Osa käyttämistämme palveluntarjoajista voi käsitellä tietoja EU/ETA-alueen ulkopuolella. Tällöin huolehdimme, että siirrot tapahtuvat tietosuojalainsäädännön edellyttämin suojatoimin (esimerkiksi Euroopan komission hyväksymin vakiolausekkein)." data-en="Some of the providers we use may process data outside the EU/EEA. In such cases we ensure that transfers take place with the safeguards required by data protection law (for example, standard contractual clauses approved by the European Commission).">Osa käyttämistämme palveluntarjoajista voi käsitellä tietoja EU/ETA-alueen ulkopuolella. Tällöin huolehdimme, että siirrot tapahtuvat tietosuojalainsäädännön edellyttämin suojatoimin (esimerkiksi Euroopan komission hyväksymin vakiolausekkein).</p>
   </section>
 
   <section>
-    <h2><span class="num">06</span> Tietojen suojaaminen</h2>
-    <p>Käsittelemme henkilötietoja huolellisesti ja suojaamme ne asianmukaisin teknisin ja organisatorisin toimin. Tietoihin on pääsy vain niillä, jotka tarvitsevat niitä tehtäviensä hoitamiseen. Tiedonsiirto selaimen ja palvelimen välillä on salattu.</p>
+    <h2><span class="num">06</span> <span data-fi="Tietojen suojaaminen" data-en="Data security">Tietojen suojaaminen</span></h2>
+    <p data-fi="Käsittelemme henkilötietoja huolellisesti ja suojaamme ne asianmukaisin teknisin ja organisatorisin toimin. Tietoihin on pääsy vain niillä, jotka tarvitsevat niitä tehtäviensä hoitamiseen. Tiedonsiirto selaimen ja palvelimen välillä on salattu." data-en="We process personal data carefully and protect it with appropriate technical and organisational measures. Only those who need the data to perform their tasks have access to it. Data transfer between the browser and the server is encrypted.">Käsittelemme henkilötietoja huolellisesti ja suojaamme ne asianmukaisin teknisin ja organisatorisin toimin. Tietoihin on pääsy vain niillä, jotka tarvitsevat niitä tehtäviensä hoitamiseen. Tiedonsiirto selaimen ja palvelimen välillä on salattu.</p>
   </section>
 
   <section>
-    <h2><span class="num">07</span> Sinun oikeutesi</h2>
-    <p>Sinulla on oikeus:</p>
+    <h2><span class="num">07</span> <span data-fi="Sinun oikeutesi" data-en="Your rights">Sinun oikeutesi</span></h2>
+    <p data-fi="Sinulla on oikeus:" data-en="You have the right to:">Sinulla on oikeus:</p>
     <ul>
-      <li>Saada tietää, mitä henkilötietoja sinusta käsittelemme</li>
-      <li>Pyytää tietojesi oikaisua tai poistamista</li>
-      <li>Rajoittaa tai vastustaa tietojesi käsittelyä</li>
-      <li>Peruuttaa antamasi suostumus milloin tahansa</li>
-      <li>Saada tietosi siirretyksi järjestelmästä toiseen soveltuvin osin</li>
-      <li>Tehdä valitus tietosuojaviranomaiselle (tietosuojavaltuutetun toimisto, <a href="https://tietosuoja.fi" target="_blank" rel="noopener">tietosuoja.fi</a>)</li>
+      <li data-fi="Saada tietää, mitä henkilötietoja sinusta käsittelemme" data-en="Know what personal data we process about you">Saada tietää, mitä henkilötietoja sinusta käsittelemme</li>
+      <li data-fi="Pyytää tietojesi oikaisua tai poistamista" data-en="Request rectification or erasure of your data">Pyytää tietojesi oikaisua tai poistamista</li>
+      <li data-fi="Rajoittaa tai vastustaa tietojesi käsittelyä" data-en="Restrict or object to the processing of your data">Rajoittaa tai vastustaa tietojesi käsittelyä</li>
+      <li data-fi="Peruuttaa antamasi suostumus milloin tahansa" data-en="Withdraw your consent at any time">Peruuttaa antamasi suostumus milloin tahansa</li>
+      <li data-fi="Saada tietosi siirretyksi järjestelmästä toiseen soveltuvin osin" data-en="Have your data transferred from one system to another where applicable">Saada tietosi siirretyksi järjestelmästä toiseen soveltuvin osin</li>
+      <li data-fi="Tehdä valitus tietosuojaviranomaiselle (tietosuojavaltuutetun toimisto, <a href=&quot;https://tietosuoja.fi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>tietosuoja.fi</a>)" data-en="Lodge a complaint with the data protection authority (Office of the Data Protection Ombudsman, <a href=&quot;https://tietosuoja.fi&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>tietosuoja.fi</a>)">Tehdä valitus tietosuojaviranomaiselle (tietosuojavaltuutetun toimisto, <a href="https://tietosuoja.fi" target="_blank" rel="noopener">tietosuoja.fi</a>)</li>
     </ul>
-    <p>Voit käyttää oikeuksiasi ottamalla yhteyttä: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a></p>
+    <p data-fi="Voit käyttää oikeuksiasi ottamalla yhteyttä: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>" data-en="You can exercise your rights by contacting: <a href=&quot;mailto:info@asuntoraportti.fi&quot;>info@asuntoraportti.fi</a>">Voit käyttää oikeuksiasi ottamalla yhteyttä: <a href="mailto:info@asuntoraportti.fi">info@asuntoraportti.fi</a></p>
   </section>
 
   <section>
-    <h2><span class="num">08</span> Evästeet</h2>
-    <p>Palvelu pyrkii käyttämään mahdollisimman vähän evästeitä. Jos otamme käyttöön analytiikka- tai muita evästeitä, päivitämme tämän selosteen ja pyydämme tarvittaessa suostumuksesi.</p>
+    <h2><span class="num">08</span> <span data-fi="Evästeet" data-en="Cookies">Evästeet</span></h2>
+    <p data-fi="Palvelu pyrkii käyttämään mahdollisimman vähän evästeitä. Jos otamme käyttöön analytiikka- tai muita evästeitä, päivitämme tämän selosteen ja pyydämme tarvittaessa suostumuksesi." data-en="The service aims to use as few cookies as possible. If we introduce analytics or other cookies, we will update this policy and request your consent where necessary.">Palvelu pyrkii käyttämään mahdollisimman vähän evästeitä. Jos otamme käyttöön analytiikka- tai muita evästeitä, päivitämme tämän selosteen ja pyydämme tarvittaessa suostumuksesi.</p>
   </section>
 
   <section>
-    <h2><span class="num">09</span> Muutokset tähän selosteeseen</h2>
-    <p>Voimme päivittää tätä tietosuojaselostetta toiminnan tai lainsäädännön muuttuessa. Ajantasainen versio on aina saatavilla tällä sivulla, ja merkitsemme viimeisimmän päivityspäivän selosteen alkuun.</p>
+    <h2><span class="num">09</span> <span data-fi="Muutokset tähän selosteeseen" data-en="Changes to this policy">Muutokset tähän selosteeseen</span></h2>
+    <p data-fi="Voimme päivittää tätä tietosuojaselostetta toiminnan tai lainsäädännön muuttuessa. Ajantasainen versio on aina saatavilla tällä sivulla, ja merkitsemme viimeisimmän päivityspäivän selosteen alkuun." data-en="We may update this privacy policy as our operations or legislation change. The current version is always available on this page, and we mark the latest update date at the top of the policy.">Voimme päivittää tätä tietosuojaselostetta toiminnan tai lainsäädännön muuttuessa. Ajantasainen versio on aina saatavilla tällä sivulla, ja merkitsemme viimeisimmän päivityspäivän selosteen alkuun.</p>
   </section>
 
   <div class="foot">
     <div class="name">Asuntoraportti</div>
-    <a class="back" href="/">← Takaisin etusivulle</a>
-    <div class="copy">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
+    <a class="back" href="/" data-fi="← Takaisin etusivulle" data-en="← Back to home">← Takaisin etusivulle</a>
+    <div class="copy" data-fi="© 2026 Miss S Tmi — Asuntokaupan paras apuri" data-en="© 2026 Miss S Tmi — Your best companion in home buying">© 2026 Miss S Tmi — Asuntokaupan paras apuri</div>
   </div>
 
 </div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-fi]').forEach(function(el){
+      var v = l==='en' ? el.getAttribute('data-en') : el.getAttribute('data-fi');
+      if(v!==null) el.innerHTML = v;
+    });
+    document.getElementById('lang-fi').classList.toggle('active', l==='fi');
+    document.getElementById('lang-en').classList.toggle('active', l==='en');
+    document.documentElement.lang = l;
+    try{ localStorage.setItem('ar_lang', l); }catch(e){}
+  }
+  (function(){
+    var saved='fi';
+    try{ saved = localStorage.getItem('ar_lang') || 'fi'; }catch(e){}
+    if(saved==='en') setLang('en');
+  })();
+</script>
 </body>
 </html>
