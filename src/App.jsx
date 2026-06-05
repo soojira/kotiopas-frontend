@@ -1582,8 +1582,8 @@ function TabTaloyhtion(){
       <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Asuntoanalyysi","Property Analysis")}</div>
       <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>
         {t(lang,
-          "Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, PTS…) — saat selkokielisen Asuntoraportin",
-          "Upload the housing company documents (manager's certificate, financial statements, long-term plan…) — get a plain-language Property Report")}
+          "Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, myyntiesite…) — saat selkokielisen Asuntoraportin",
+          "Upload the housing company documents (manager's certificate, financial statements, sales brochure…) — get a plain-language Property Report")}
       </div>
 
       {/* Tietosuoja-lupaus */}
@@ -1598,7 +1598,7 @@ function TabTaloyhtion(){
       <div style={{background:C.goldDim,border:`1px solid ${C.gold}40`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
         <span style={{fontSize:13,flexShrink:0,marginTop:1}}>💡</span>
         <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-          <span style={{color:C.ink,fontWeight:500}}>{t(lang,"Vinkki: lataa tärkeimmät paperit.","Tip: upload the key documents.")}</span> {t(lang,"Paras tulos saadaan yleensä isännöitsijäntodistuksesta, tilinpäätöksestä ja yhtiöjärjestyksestä. Mitä enemmän dokumentteja lataat, sitä kauemmin analyysi kestää — iso nippu voi viedä pari minuuttia. Voit ladata enintään 10 dokumenttia kerralla.","The best result usually comes from the property manager's certificate, financial statements and articles of association. The more documents you upload, the longer the analysis takes — a large batch may take a couple of minutes. You can upload up to 10 documents at a time.")}
+          <span style={{color:C.ink,fontWeight:500}}>{t(lang,"Vinkki: lataa tärkeimmät paperit.","Tip: upload the key documents.")}</span> {t(lang,"Paras tulos saadaan yleensä isännöitsijäntodistuksesta, tilinpäätöksestä, yhtiöjärjestyksestä ja myyntiesitteestä (josta näkyy hinta). Mitä enemmän dokumentteja lataat, sitä kauemmin analyysi kestää — iso nippu voi viedä pari minuuttia. Voit ladata enintään 10 dokumenttia kerralla.","The best result usually comes from the property manager's certificate, financial statements, articles of association and the sales brochure (which shows the price). The more documents you upload, the longer the analysis takes — a large batch may take a couple of minutes. You can upload up to 10 documents at a time.")}
         </div>
       </div>
 
