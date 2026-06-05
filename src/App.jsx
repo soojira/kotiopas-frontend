@@ -1512,28 +1512,63 @@ function TabTaloyhtion(){
 
   async function analysoi(){
     if(files.length===0){setError(t(lang,"Lataa vähintään yksi PDF-tiedosto.","Upload at least one PDF file."));return;}
-    setError(null);setAnalyysi(null);setSkannatut([]);setLoading(true);setLoadStep(1);
+    setError(null);setAnalyysi(null);setSkannatut([]);setMalli(null);setLoading(true);setLoadStep(1);
     const t1=setTimeout(()=>setLoadStep(2),1800);
-    const t2=setTimeout(()=>setLoadStep(3),7000);
+    // Kun teksti alkaa virrata, siirrytään suoraan vaiheeseen 3 — ei tarvita t2-ajastinta.
+    let ekaPala=true;
     try{
       const fd=new FormData();
       files.forEach(f=>fd.append("tiedostot",f));
       fd.append("kieli",lang); // välitä kieli backendille (analyysin kieli)
-      // HUOM: ei aseteta Content-Type-otsikkoa — selain lisää sen automaattisesti
-      // oikealla multipart-rajalla (boundary).
+      // HUOM: ei aseteta Content-Type-otsikkoa — selain lisää sen automaattisesti.
       const res=await fetch(`${BACKEND_URL}/api/analyysi`,{method:"POST",body:fd});
-      const data=await res.json().catch(()=>({}));
-      if(!res.ok||!data.ok){
+
+      // Jos backend palautti virheen ENNEN streamin alkua, se on tavallista JSONia.
+      const ctype=res.headers.get("content-type")||"";
+      if(!res.ok || ctype.includes("application/json")){
+        const data=await res.json().catch(()=>({}));
         throw new Error(data.error||t(lang,`Analyysi epäonnistui (${res.status})`,`Analysis failed (${res.status})`));
       }
-      setAnalyysi(data.analyysi);
-      setMalli(data.malli||null);
-      setSkannatut(Array.isArray(data.skannatut)?data.skannatut:[]);
+
+      // Striimaava NDJSON-vastaus: luetaan rivi riviltä.
+      const reader=res.body.getReader();
+      const decoder=new TextDecoder();
+      let puskuri="";
+      let kerätty="";
+      while(true){
+        const {done,value}=await reader.read();
+        if(done) break;
+        puskuri+=decoder.decode(value,{stream:true});
+        let nl;
+        while((nl=puskuri.indexOf("\n"))!==-1){
+          const rivi=puskuri.slice(0,nl).trim();
+          puskuri=puskuri.slice(nl+1);
+          if(!rivi) continue;
+          let evt;
+          try{ evt=JSON.parse(rivi); }catch{ continue; }
+          if(evt.tyyppi==="meta"){
+            setMalli(evt.malli||null);
+            setSkannatut(Array.isArray(evt.skannatut)?evt.skannatut:[]);
+          }else if(evt.tyyppi==="teksti"){
+            if(ekaPala){ ekaPala=false; clearTimeout(t1); setLoadStep(3); }
+            kerätty+=evt.pala;
+            setAnalyysi(kerätty); // päivittyy reaaliajassa → teksti ilmestyy ruudulle
+          }else if(evt.tyyppi==="virhe"){
+            throw new Error(evt.error||t(lang,"Analyysi keskeytyi.","Analysis was interrupted."));
+          }else if(evt.tyyppi==="valmis"){
+            // raportti valmis
+          }
+        }
+      }
+      if(!kerätty.trim()){
+        throw new Error(t(lang,"Analyysi jäi tyhjäksi. Yritä uudelleen.","The analysis came back empty. Please try again."));
+      }
     }catch(e){
       console.error("Analyysi-virhe:",e);
       setError(e.message||t(lang,"Yhteysvirhe. Tarkista verkkoyhteys ja yritä uudelleen.","Connection error. Check your network and try again."));
+      setAnalyysi(null);
     }finally{
-      clearTimeout(t1);clearTimeout(t2);
+      clearTimeout(t1);
       setLoading(false);setLoadStep(0);
     }
   }
@@ -1613,8 +1648,8 @@ function TabTaloyhtion(){
         {loading?t(lang,"⏳ Analysoidaan...","⏳ Analysing..."):t(lang,"Analysoi →","Analyse →")}
       </DarkBtn>
 
-      {/* Latausanimaatio */}
-      {loading&&(
+      {/* Latausanimaatio — vain ennen kuin teksti alkaa virrata */}
+      {loading&&!analyysi&&(
         <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 20px",marginTop:16,marginBottom:16}}>
           {steps.map((s,i)=>(
             <div key={i} style={{fontFamily:B,fontSize:13,marginBottom:10,display:"flex",alignItems:"center",gap:10}}>
@@ -1625,11 +1660,11 @@ function TabTaloyhtion(){
               <span style={{color:loadStep>i?C.forest:loadStep===i+1?C.ink:C.stone,fontWeight:loadStep===i+1?500:300}}>{s}</span>
             </div>
           ))}
-          <div style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:6,fontWeight:300,fontStyle:"italic"}}>{t(lang,"Tämä voi kestää 10–60 sekuntia paperien määrästä riippuen.","This can take 10–60 seconds depending on the number of documents.")}</div>
+          <div style={{fontFamily:B,fontSize:11,color:C.stone,marginTop:6,fontWeight:300,fontStyle:"italic"}}>{t(lang,"Raportti alkaa ilmestyä hetken kuluttua.","The report will start appearing shortly.")}</div>
         </div>
       )}
 
-      {/* Tulos: Asuntoraportti */}
+      {/* Tulos: Asuntoraportti (näkyy heti kun teksti alkaa virrata) */}
       {analyysi&&(
         <div>
           <div style={{height:2,background:`linear-gradient(90deg,transparent,${C.gold},${C.clay},transparent)`,borderRadius:2}}/>
@@ -1637,22 +1672,28 @@ function TabTaloyhtion(){
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
               <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>{t(lang,"Asuntoraportti","Property Report")}</span>
               <div style={{height:1,flex:1,background:`linear-gradient(90deg,${C.linen},transparent)`}}/>
+              {loading&&<span style={{fontFamily:B,fontSize:11,color:C.forest,fontWeight:500,fontStyle:"italic",flexShrink:0}}>{t(lang,"kirjoittaa…","writing…")}</span>}
             </div>
             <RaporttiText text={analyysi}/>
           </div>
 
-          <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
-            <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
-            <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-              {t(lang,
-                "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.",
-                "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
-            </div>
-          </div>
+          {/* Vastuuvapaus ja uusi analyysi -nappi vasta kun raportti on valmis */}
+          {!loading&&(
+            <>
+              <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
+                <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
+                <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
+                  {t(lang,
+                    "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.",
+                    "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
+                </div>
+              </div>
 
-          <button onClick={nollaa} style={{width:"100%",background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"14px 0",fontFamily:B,fontSize:13,letterSpacing:1,cursor:"pointer",borderRadius:10}}>
-            {t(lang,"Tee uusi analyysi","Start a new analysis")}
-          </button>
+              <button onClick={nollaa} style={{width:"100%",background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"14px 0",fontFamily:B,fontSize:13,letterSpacing:1,cursor:"pointer",borderRadius:10}}>
+                {t(lang,"Tee uusi analyysi","Start a new analysis")}
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
