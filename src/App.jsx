@@ -1775,8 +1775,8 @@ const OSTAJA_TABS=[
   {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
 ];
 const MYYJA_TABS=[
-  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
   {id:"myyntivalmius",label:"💡 Apua myyntiin",labelEn:"💡 Help Selling"},
+  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
   {id:"lisapalvelut",label:"✨ Lisäpalvelut",labelEn:"✨ Extra Services"},
   {id:"kulut",label:"💰 Myyntikulut",labelEn:"💰 Selling Costs"},
   {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
@@ -1880,7 +1880,7 @@ export default function App(){
               {m:"ostaja",e:"🏠",t:t(lang,"Asunnon ostaja","Home buyer"),d:t(lang,"Asuntoanalyysi papereista, ostopolku ja sanasto","Property analysis from documents, buying path and glossary")},
               {m:"myyjä",e:"🔑",t:t(lang,"Asunnon myyjä","Home seller"),d:t(lang,"Ilmainen arviokäynti, myyntikululaskin ja sanasto","Free valuation visit, selling cost calculator and glossary")},
             ].map(opt=>(
-              <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"taloyhtion":"konsultaatio");}}
+              <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"taloyhtion":"myyntivalmius");}}
                 style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:16,padding:"22px 24px",cursor:"pointer",textAlign:"left",transition:"all 0.2s",display:"flex",alignItems:"center",gap:18}}
                 onMouseEnter={e=>{e.currentTarget.style.background="rgba(201,168,76,0.1)";e.currentTarget.style.borderColor="rgba(201,168,76,0.4)";}}
                 onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,0.04)";e.currentTarget.style.borderColor="rgba(201,168,76,0.2)";}}>
