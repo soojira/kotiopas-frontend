@@ -1898,6 +1898,18 @@ export default function App(){
             ))}
           </div>
           </div>
+          {/* Footer myös etusivulla — luottamus + saavutettavuus */}
+          <div style={{width:"100%",maxWidth:isDesktop?620:420,marginTop:56,paddingTop:24,borderTop:"1px solid rgba(201,168,76,0.15)",textAlign:"center"}}>
+            <div style={{fontFamily:H,fontSize:15,fontStyle:"italic",color:"rgba(251,243,226,0.85)",marginBottom:5}}>Asuntoraportti</div>
+            <div style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.4)",letterSpacing:0.5,marginBottom:12}}>© 2026 Miss S Tmi — {t(lang,"Asuntokaupan paras apuri","Your best companion in home buying")}</div>
+            <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+              <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/tietosuojaseloste.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Tietosuojaseloste","Privacy policy")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/kayttoehdot.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Käyttöehdot","Terms of use")}</a>
+            </div>
+          </div>
         </div>
       </div>
     );
