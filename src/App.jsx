@@ -1054,6 +1054,44 @@ function TabMyyntikulut(){
   );
 }
 
+// Myyjän opas: mitä asunnon myynti vaatii + missä välittäjä auttaa → CTA arviokäyntiin.
+// EI dokumenttianalyysiä (se on ostajan maksullinen tuote). Tarkoitus: auttaa apua
+// tarvitsevaa myyjää hahmottamaan myynnin laajuus ja ohjata ammattilaisen luo.
+function TabMyyntiopas({onArviokaynti}){
+  const lang=useLang();
+  const kortit=[
+    {e:"💰",t:t(lang,"Oikea hinnoittelu","The right pricing"),d:t(lang,"Liian korkea hinta karkottaa ostajat, liian matala maksaa sinulle. Kokenut välittäjä hinnoittelee asunnon tämänhetkisen markkinan ja toteutuneiden kauppojen perusteella.","Too high scares off buyers, too low costs you money. An experienced agent prices your home based on the current market and actual sales.")},
+    {e:"📸",t:t(lang,"Markkinointi ja esittely","Marketing and presentation"),d:t(lang,"Laadukkaat kuvat, hyvä ilmoitus ja näytöt ratkaisevat kuinka monta kiinnostunutta tavoitat. Välittäjällä on välineet ja näkyvyys joita yksityismyyjällä ei ole.","Quality photos, a good listing and viewings decide how many interested buyers you reach. An agent has tools and visibility a private seller doesn't.")},
+    {e:"📋",t:t(lang,"Paperit ja juridiikka","Documents and legal side"),d:t(lang,"Kauppakirja, isännöitsijäntodistus, vastuukysymykset, virhevastuu. Tässä tehdyt virheet voivat tulla kalliiksi — ammattilainen varmistaa että kaikki on kunnossa.","Deed of sale, manager's certificate, liability questions. Mistakes here can be costly — a professional makes sure everything is in order.")},
+    {e:"🤝",t:t(lang,"Neuvottelu ja tarjoukset","Negotiation and offers"),d:t(lang,"Tarjousten käsittely ja hinnasta neuvottelu on taitolaji. Ammattilainen saa usein paremman lopputuloksen kuin myyjä yksin — ja hoitaa tunteikkaatkin tilanteet.","Handling offers and negotiating price is a skill. A professional often gets a better result than a seller alone — and handles emotional moments.")},
+    {e:"🎯",t:t(lang,"Stressitön prosessi","A stress-free process"),d:t(lang,"Myynti on iso ja aikaa vievä projekti. Kun välittäjä hoitaa kokonaisuuden, säästät aikaa ja vaivaa — ja voit keskittyä omaan elämääsi.","Selling is a big, time-consuming project. When an agent handles it all, you save time and effort — and can focus on your own life.")},
+  ];
+  return(
+    <div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Apua asunnon myyntiin","Help with selling your home")}</div>
+      <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:24,fontWeight:300,lineHeight:1.6}}>{t(lang,"Asunnon myynti on iso päätös ja monta liikkuvaa osaa. Tässä mitä myyntiin kuuluu — ja missä kokenut välittäjä auttaa sinua onnistumaan.","Selling a home is a big decision with many moving parts. Here's what selling involves — and where an experienced agent helps you succeed.")}</div>
+
+      <div style={{display:"grid",gap:12,marginBottom:24}}>
+        {kortit.map((k,i)=>(
+          <div key={i} style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 18px",display:"flex",gap:14,alignItems:"flex-start"}}>
+            <span style={{fontSize:24,flexShrink:0}}>{k.e}</span>
+            <div>
+              <div style={{fontFamily:B,fontSize:15,color:C.ink,fontWeight:500,marginBottom:4}}>{k.t}</div>
+              <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.6}}>{k.d}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{background:C.forestDim,border:`1px solid ${C.forest}40`,borderRadius:14,padding:"22px 22px",textAlign:"center"}}>
+        <div style={{fontFamily:H,fontSize:21,fontStyle:"italic",color:C.ink,marginBottom:8}}>{t(lang,"Mietitkö asuntosi myyntiä?","Thinking of selling your home?")}</div>
+        <div style={{fontFamily:B,fontSize:13.5,color:C.stone,fontWeight:300,lineHeight:1.65,marginBottom:18}}>{t(lang,"Aloita ilmaisella arviokäynnillä. Kokenut välittäjä käy katsomassa asuntosi, kertoo paljonko siitä voi saada ja miten myynti kannattaa hoitaa — maksutta ja ilman sitoumuksia.","Start with a free valuation visit. An experienced agent visits your home, tells you what it could sell for and how to approach the sale — free of charge and with no commitment.")}</div>
+        <button onClick={()=>{onArviokaynti&&onArviokaynti();window.scrollTo({top:0,behavior:"smooth"});}} style={{background:C.forest,color:"#FBF3E2",border:"none",padding:"14px 28px",fontFamily:B,fontSize:14,fontWeight:500,letterSpacing:0.5,cursor:"pointer",borderRadius:10}}>{t(lang,"Pyydä ilmainen arviokäynti →","Request a free valuation visit →")}</button>
+      </div>
+    </div>
+  );
+}
+
 function TabSanasto(){
   const lang=useLang();
   const terms=[
@@ -1738,7 +1776,7 @@ const OSTAJA_TABS=[
 ];
 const MYYJA_TABS=[
   {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
-  {id:"myyntivalmius",label:"🔍 Myyntivalmius",labelEn:"🔍 Selling Readiness"},
+  {id:"myyntivalmius",label:"💡 Apua myyntiin",labelEn:"💡 Help Selling"},
   {id:"lisapalvelut",label:"✨ Lisäpalvelut",labelEn:"✨ Extra Services"},
   {id:"kulut",label:"💰 Myyntikulut",labelEn:"💰 Selling Costs"},
   {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
@@ -1923,7 +1961,7 @@ export default function App(){
         {mode==="myyjä"&&validiTab==="konsultaatio"&&<TabKonsultaatio/>}
         {mode==="myyjä"&&validiTab==="lisapalvelut"&&<TabLisapalvelut/>}
         {mode==="ostaja"&&validiTab==="taloyhtion"&&<TabTaloyhtion/>}
-        {mode==="myyjä"&&validiTab==="myyntivalmius"&&<TabTaloyhtion nakokulma="myyja" onArviokaynti={()=>setTab("konsultaatio")}/>}
+        {mode==="myyjä"&&validiTab==="myyntivalmius"&&<TabMyyntiopas onArviokaynti={()=>setTab("konsultaatio")}/>}
         {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
         {validiTab==="sanasto"&&<TabSanasto/>}
       </div>
