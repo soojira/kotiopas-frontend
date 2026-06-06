@@ -1468,8 +1468,9 @@ function RaporttiText({text}){
 // Paperit lähetetään backendin /api/analyysi -endpointtiin (multipart, kenttä
 // "tiedostot"). Mitään ei tallenneta — paperit luetaan muistissa ja heitetään
 // heti pois. Tulos näkyy ruudulla selkokielisenä.
-function TabTaloyhtion(){
+function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
   const lang=useLang();
+  const onMyyja=nakokulma==="myyja";
   const [files,setFiles]=useState([]);
   const [analyysi,setAnalyysi]=useState(null);
   const [malli,setMalli]=useState(null);
@@ -1520,6 +1521,7 @@ function TabTaloyhtion(){
       const fd=new FormData();
       files.forEach(f=>fd.append("tiedostot",f));
       fd.append("kieli",lang); // välitä kieli backendille (analyysin kieli)
+      fd.append("nakokulma",nakokulma); // ostaja tai myyja → eri raporttinäkökulma
       // HUOM: ei aseteta Content-Type-otsikkoa — selain lisää sen automaattisesti.
       const res=await fetch(`${BACKEND_URL}/api/analyysi`,{method:"POST",body:fd});
 
@@ -1579,11 +1581,19 @@ function TabTaloyhtion(){
 
   return(
     <div>
-      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Asuntoanalyysi","Property Analysis")}</div>
+      <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>
+        {onMyyja
+          ? t(lang,"Myyntivalmius","Selling readiness")
+          : t(lang,"Asuntoanalyysi","Property Analysis")}
+      </div>
       <div style={{fontFamily:B,fontSize:13,color:C.stone,marginBottom:20,fontWeight:300}}>
-        {t(lang,
-          "Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, myyntiesite…) — saat selkokielisen Asuntoraportin",
-          "Upload the housing company documents (manager's certificate, financial statements, sales brochure…) — get a plain-language Property Report")}
+        {onMyyja
+          ? t(lang,
+              "Lataa taloyhtiön paperit — näet miten asuntosi näyttäytyy ostajalle, mitä korostaa ja mihin varautua. (Ei hinta-arvio — sen saat arviokäynnillä.)",
+              "Upload the housing company documents — see how your home looks to a buyer, what to highlight and what to prepare for. (Not a price estimate — you get that from the valuation visit.)")
+          : t(lang,
+              "Lataa taloyhtiön paperit (isännöitsijäntodistus, tilinpäätös, myyntiesite…) — saat selkokielisen Asuntoraportin",
+              "Upload the housing company documents (manager's certificate, financial statements, sales brochure…) — get a plain-language Property Report")}
       </div>
 
       {/* Tietosuoja-lupaus */}
@@ -1678,7 +1688,7 @@ function TabTaloyhtion(){
           <div style={{height:2,background:`linear-gradient(90deg,transparent,${C.gold},${C.clay},transparent)`,borderRadius:2}}/>
           <div style={{background:C.paper,border:`1px solid ${C.border}`,borderRadius:14,padding:"24px 22px",marginBottom:16}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-              <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>{t(lang,"Asuntoraportti","Property Report")}</span>
+              <span style={{fontFamily:B,fontSize:10,letterSpacing:2,textTransform:"uppercase",color:C.clay,fontWeight:600}}>{onMyyja?t(lang,"Myyjän raportti","Seller's Report"):t(lang,"Asuntoraportti","Property Report")}</span>
               <div style={{height:1,flex:1,background:`linear-gradient(90deg,${C.linen},transparent)`}}/>
               {loading&&<span style={{fontFamily:B,fontSize:11,color:C.forest,fontWeight:500,fontStyle:"italic",flexShrink:0}}>{t(lang,"kirjoittaa…","writing…")}</span>}
             </div>
@@ -1688,12 +1698,25 @@ function TabTaloyhtion(){
           {/* Vastuuvapaus ja uusi analyysi -nappi vasta kun raportti on valmis */}
           {!loading&&(
             <>
+              {/* Myyjälle: ohjaus arviokäyntiin (tästä liidi syntyy) */}
+              {onMyyja&&(
+                <div style={{background:C.forestDim,border:`1px solid ${C.forest}40`,borderRadius:12,padding:"18px 20px",marginBottom:16,textAlign:"center"}}>
+                  <div style={{fontFamily:H,fontSize:19,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Paljonko asunnostasi voi saada?","What could you get for your home?")}</div>
+                  <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.6,marginBottom:14}}>{t(lang,"Tarkan, tämänhetkiseen markkinaan perustuvan hinta-arvion saat kun kokenut välittäjä käy katsomassa asuntosi paikan päällä — maksutta, ilman sitoumuksia.","Get an accurate price estimate based on the current market when an experienced agent visits your home in person — free of charge, no commitment.")}</div>
+                  <button onClick={()=>{onArviokaynti&&onArviokaynti();window.scrollTo({top:0,behavior:"smooth"});}} style={{background:C.forest,color:"#FBF3E2",border:"none",padding:"13px 26px",fontFamily:B,fontSize:14,fontWeight:500,letterSpacing:0.5,cursor:"pointer",borderRadius:10}}>{t(lang,"Pyydä ilmainen arviokäynti →","Request a free valuation visit →")}</button>
+                </div>
+              )}
+
               <div style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
                 <span style={{fontSize:13,flexShrink:0,marginTop:1}}>ℹ️</span>
                 <div style={{fontFamily:B,fontSize:11,color:C.stone,lineHeight:1.55,fontWeight:300}}>
-                  {t(lang,
-                    "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.",
-                    "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
+                  {onMyyja
+                    ? t(lang,
+                        "Tämän raportin on koonnut tekoäly lataamistasi papereista auttaakseen sinua valmistautumaan myyntiin. Se ei sisällä hinta-arviota eikä korvaa välittäjän tai muun ammattilaisen henkilökohtaista neuvontaa. Varmista tärkeät tiedot alkuperäisistä asiakirjoista ja isännöitsijältä.",
+                        "This report was compiled by AI from the documents you uploaded to help you prepare for selling. It does not include a price estimate and does not replace personal advice from an agent or other professional. Verify important details from the original documents and the property manager.")
+                    : t(lang,
+                        "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.",
+                        "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
                 </div>
               </div>
 
@@ -1715,6 +1738,7 @@ const OSTAJA_TABS=[
 ];
 const MYYJA_TABS=[
   {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
+  {id:"myyntivalmius",label:"🔍 Myyntivalmius",labelEn:"🔍 Selling Readiness"},
   {id:"lisapalvelut",label:"✨ Lisäpalvelut",labelEn:"✨ Extra Services"},
   {id:"kulut",label:"💰 Myyntikulut",labelEn:"💰 Selling Costs"},
   {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
@@ -1845,7 +1869,7 @@ export default function App(){
   // Varmista että tab on validi tälle modelle (esim. suora hash-linkki voi tuoda väärän)
   const validiTab=tabs.some(t=>t.id===tab)?tab:tabs[0].id;
   // Leveä layout vain tietyilla välilehdilla joissa on hyötyä kahdesta palstasta
-  const isWide=isDesktop&&(validiTab==="hinta"||validiTab==="taloyhtion"||validiTab==="ilmoitus");
+  const isWide=isDesktop&&(validiTab==="hinta"||validiTab==="taloyhtion"||validiTab==="ilmoitus"||validiTab==="myyntivalmius");
 
   return(
     <div style={{background:C.paper,minHeight:"100vh",fontFamily:B}}>
@@ -1899,6 +1923,7 @@ export default function App(){
         {mode==="myyjä"&&validiTab==="konsultaatio"&&<TabKonsultaatio/>}
         {mode==="myyjä"&&validiTab==="lisapalvelut"&&<TabLisapalvelut/>}
         {mode==="ostaja"&&validiTab==="taloyhtion"&&<TabTaloyhtion/>}
+        {mode==="myyjä"&&validiTab==="myyntivalmius"&&<TabTaloyhtion nakokulma="myyja" onArviokaynti={()=>setTab("konsultaatio")}/>}
         {validiTab==="tarkistus"&&<TabTarkistus mode={mode}/>}
         {validiTab==="sanasto"&&<TabSanasto/>}
       </div>
