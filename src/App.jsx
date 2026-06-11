@@ -96,6 +96,48 @@ function DarkCard({children,style={}}){
   );
 }
 
+// Ohuet viivaikonit (korvaavat emojit). Sama tyyli kuin muut sivuston SVG-ikonit:
+// stroke, ei täyttöä, strokeWidth 1.5. Väri ja koko peritään propseista.
+function Ikoni({nimi,size=16,color="currentColor",style={}}){
+  const p={width:size,height:size,viewBox:"0 0 24 24",fill:"none",stroke:color,strokeWidth:1.5,strokeLinecap:"round",strokeLinejoin:"round",style:{flexShrink:0,...style}};
+  switch(nimi){
+    case "building":
+      return <svg {...p}><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/><path d="M4 21h16"/></svg>;
+    case "compass":
+      return <svg {...p}><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>;
+    case "book":
+      return <svg {...p}><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 5v14"/></svg>;
+    case "bulb":
+      return <svg {...p}><path d="M9 18h6"/><path d="M10 21h4"/><path d="M8.5 14a5 5 0 1 1 7 0c-.7.6-1.2 1.2-1.4 2h-4.2c-.2-.8-.7-1.4-1.4-2z"/></svg>;
+    case "home":
+      return <svg {...p}><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/></svg>;
+    case "sparkles":
+      return <svg {...p}><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.3 6.3 2 2M15.7 15.7l2 2M17.7 6.3l-2 2M8.3 15.7l-2 2"/></svg>;
+    case "coins":
+      return <svg {...p}><circle cx="8" cy="8" r="5"/><path d="M15.5 5.3A5 5 0 0 1 16 15"/><path d="M11.7 19.3A5 5 0 0 1 8 21"/><circle cx="8" cy="8" r="1.5"/></svg>;
+    case "euro":
+      return <svg {...p}><path d="M16 7a5 5 0 1 0 0 10"/><path d="M5 10h7M5 14h7"/></svg>;
+    case "handshake":
+      return <svg {...p}><path d="m11 17 2 2a1 1 0 0 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 0 0 3-3l-3.9-3.9a2 2 0 0 0-1.7-.5l-2.2.4a2 2 0 0 1-1.6-.5L8 7.5"/><path d="m4 13 3 3M16 16l2-2M8 6l4 4"/></svg>;
+    case "camera":
+      return <svg {...p}><path d="M5 8h2l1.5-2h7L17 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3"/></svg>;
+    case "clipboard":
+      return <svg {...p}><rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h6M9 18h3"/></svg>;
+    case "target":
+      return <svg {...p}><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>;
+    case "doc":
+      return <svg {...p}><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13h5M10 17h5"/></svg>;
+    case "bank":
+      return <svg {...p}><path d="M3 9 12 4l9 5"/><path d="M5 9v9M19 9v9M9 9v9M15 9v9"/><path d="M3 21h18"/></svg>;
+    case "pen":
+      return <svg {...p}><path d="M14 4l6 6L8 22l-5 1 1-5z"/><path d="M13 5l6 6"/></svg>;
+    case "key":
+      return <svg {...p}><circle cx="8" cy="8" r="4"/><path d="m11 11 8 8"/><path d="m16 16 2-2M19 19l1.5-1.5"/></svg>;
+    default:
+      return <svg {...p}><circle cx="12" cy="12" r="9"/></svg>;
+  }
+}
+
 function Pill({children,active,onClick}){
   return(
     <button onClick={onClick} style={{
@@ -737,9 +779,9 @@ function TabKonsultaatio(){
     }
   }
   const hyodyt=[
-    {e:"🏠",t:t(lang,"Ilmainen arviokäynti","Free valuation visit"),d:t(lang,"Luotettava välittäjä käy arvioimassa asuntosi paikan päällä — maksutta.","A trusted agent visits to value your home in person — free of charge.")},
-    {e:"💶",t:t(lang,"Hinta-arvio ja tarjous","Price estimate and offer"),d:t(lang,"Saat tietää paljonko asunnostasi voi saada ja mitä myynti maksaa.","Find out how much you could get for your home and what selling costs.")},
-    {e:"🤝",t:t(lang,"Ei sitoumuksia","No commitment"),d:t(lang,"Arviokäynti ei velvoita mihinkään — päätät itse haluatko edetä.","The visit commits you to nothing — you decide whether to proceed.")},
+    {ikoni:"home",t:t(lang,"Ilmainen arviokäynti","Free valuation visit"),d:t(lang,"Luotettava välittäjä käy arvioimassa asuntosi paikan päällä — maksutta.","A trusted agent visits to value your home in person — free of charge.")},
+    {ikoni:"euro",t:t(lang,"Hinta-arvio ja tarjous","Price estimate and offer"),d:t(lang,"Saat tietää paljonko asunnostasi voi saada ja mitä myynti maksaa.","Find out how much you could get for your home and what selling costs.")},
+    {ikoni:"handshake",t:t(lang,"Ei sitoumuksia","No commitment"),d:t(lang,"Arviokäynti ei velvoita mihinkään — päätät itse haluatko edetä.","The visit commits you to nothing — you decide whether to proceed.")},
   ];
   if(sent){
     return(
@@ -764,7 +806,7 @@ function TabKonsultaatio(){
       <div style={{display:"grid",gap:12,marginBottom:24}}>
         {hyodyt.map((h,i)=>(
           <div key={i} style={{background:C.cream,borderRadius:12,padding:"16px 18px",display:"flex",gap:14,alignItems:"flex-start"}}>
-            <span style={{fontSize:22,flexShrink:0}}>{h.e}</span>
+            <span style={{flexShrink:0,marginTop:1}}><Ikoni nimi={h.ikoni} size={22} color={C.clay}/></span>
             <div>
               <div style={{fontFamily:B,fontSize:14,color:C.ink,fontWeight:500,marginBottom:3}}>{h.t}</div>
               <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.55}}>{h.d}</div>
@@ -888,7 +930,7 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
       <div style={{display:"grid",gap:12,marginBottom:24}}>
         {hyodyt.map((h,i)=>(
           <div key={i} style={{background:C.cream,borderRadius:12,padding:"16px 18px",display:"flex",gap:14,alignItems:"flex-start"}}>
-            <span style={{fontSize:22,flexShrink:0}}>{h.e}</span>
+            <span style={{flexShrink:0,marginTop:1}}><Ikoni nimi={h.ikoni} size={22} color={C.clay}/></span>
             <div>
               <div style={{fontFamily:B,fontSize:14,color:C.ink,fontWeight:500,marginBottom:3}}>{h.t}</div>
               <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.55}}>{h.d}</div>
@@ -948,12 +990,12 @@ function TabLisapalvelut(){
   const palvelut=[
     {
       id:"arviolausunto",
-      kortti:{e:"📄",t:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),d:t(lang,"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten.","A written valuation of your home for a loan or collateral.")},
+      kortti:{ikoni:"doc",t:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),d:t(lang,"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten.","A written valuation of your home for a loan or collateral.")},
       otsikko:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),
       alaotsikko:t(lang,"Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.","Need a written valuation of your home for the bank? We'll help."),
       hyodyt:[
-        {e:"📄",t:t(lang,"Kirjallinen arviolausunto","Written valuation statement"),d:t(lang,"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille.","The statement is prepared by an experienced agent with LKV qualification (licensed real estate agent). You can submit it directly to the bank.")},
-        {e:"🏦",t:t(lang,"Lainaa tai vakuutta varten","For a loan or collateral"),d:t(lang,"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä.","Banks often require a valuation statement for a loan, additional collateral, or refinancing.")},
+        {ikoni:"doc",t:t(lang,"Kirjallinen arviolausunto","Written valuation statement"),d:t(lang,"Arviolausunnon laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Voit toimittaa lausunnon suoraan pankille.","The statement is prepared by an experienced agent with LKV qualification (licensed real estate agent). You can submit it directly to the bank.")},
+        {ikoni:"bank",t:t(lang,"Lainaa tai vakuutta varten","For a loan or collateral"),d:t(lang,"Pankki pyytää usein arviolausunnon esim. lainan, lisävakuuden tai uudelleenrahoituksen yhteydessä.","Banks often require a valuation statement for a loan, additional collateral, or refinancing.")},
       ],
       brevoTyyppi:"myyja-arviolausunto",
       lisatietoLabel:t(lang,"Lisätietoa — mihin tarvitset lausunnon (vapaaehtoinen)","More info — what you need the statement for (optional)"),
@@ -962,12 +1004,12 @@ function TabLisapalvelut(){
     },
     {
       id:"kauppakirja",
-      kortti:{e:"📝",t:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),d:t(lang,"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen.","Selling on your own? Get help drafting the deed of sale.")},
+      kortti:{ikoni:"pen",t:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),d:t(lang,"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen.","Selling on your own? Get help drafting the deed of sale.")},
       otsikko:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),
       alaotsikko:t(lang,"Oletko itsemyyjä ja tarvitset apua kauppakirjan laatimisessa? Autamme.","Selling on your own and need help drafting the deed of sale? We'll help."),
       hyodyt:[
-        {e:"📝",t:t(lang,"Asiantunteva kauppakirja","An expertly drafted deed"),d:t(lang,"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti.","The deed is drafted by an experienced agent with LKV qualification (licensed real estate agent). You ensure the sale is done correctly and safely.")},
-        {e:"🤝",t:t(lang,"Tueksi kaupantekoon","Support for the transaction"),d:t(lang,"Hyödyllinen erityisesti yksityiskaupassa, jossa kauppaa ei hoida välittäjä — saat ammattilaisen varmistamaan asiakirjat.","Especially useful in a private sale without an agent — you get a professional to verify the documents.")},
+        {ikoni:"pen",t:t(lang,"Asiantunteva kauppakirja","An expertly drafted deed"),d:t(lang,"Kauppakirjan laatii kokenut kiinteistönvälittäjä, jolla on LKV-pätevyys (laillistettu kiinteistönvälittäjä). Varmistat että kauppa tehdään oikein ja turvallisesti.","The deed is drafted by an experienced agent with LKV qualification (licensed real estate agent). You ensure the sale is done correctly and safely.")},
+        {ikoni:"handshake",t:t(lang,"Tueksi kaupantekoon","Support for the transaction"),d:t(lang,"Hyödyllinen erityisesti yksityiskaupassa, jossa kauppaa ei hoida välittäjä — saat ammattilaisen varmistamaan asiakirjat.","Especially useful in a private sale without an agent — you get a professional to verify the documents.")},
       ],
       brevoTyyppi:"myyja-kauppakirja",
       naytaTyyppiKoko:false,
@@ -990,7 +1032,7 @@ function TabLisapalvelut(){
             style={{textAlign:"left",background:C.cream,border:`1px solid ${C.border}`,borderRadius:14,padding:"20px 22px",cursor:"pointer",display:"flex",gap:16,alignItems:"center",transition:"all 0.2s"}}
             onMouseEnter={e=>{e.currentTarget.style.borderColor=C.gold;e.currentTarget.style.background=C.goldDim;}}
             onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.background=C.cream;}}>
-            <span style={{fontSize:28,flexShrink:0}}>{p.kortti.e}</span>
+            <span style={{flexShrink:0,marginTop:1}}><Ikoni nimi={p.kortti.ikoni} size={26} color={C.clay}/></span>
             <div style={{flex:1}}>
               <div style={{fontFamily:B,fontSize:16,color:C.ink,fontWeight:500,marginBottom:3}}>{p.kortti.t}</div>
               <div style={{fontFamily:B,fontSize:13.5,color:C.stone,fontWeight:300,lineHeight:1.5}}>{p.kortti.d}</div>
@@ -1069,11 +1111,11 @@ function TabMyyntikulut(){
 function TabMyyntiopas({onArviokaynti}){
   const lang=useLang();
   const kortit=[
-    {e:"💰",t:t(lang,"Oikea hinnoittelu","The right pricing"),d:t(lang,"Liian korkea hinta karkottaa ostajat, liian matala maksaa sinulle. Kokenut välittäjä hinnoittelee asunnon tämänhetkisen markkinan ja toteutuneiden kauppojen perusteella.","Too high scares off buyers, too low costs you money. An experienced agent prices your home based on the current market and actual sales.")},
-    {e:"📸",t:t(lang,"Markkinointi ja esittely","Marketing and presentation"),d:t(lang,"Laadukkaat kuvat, hyvä ilmoitus ja näytöt ratkaisevat kuinka monta kiinnostunutta tavoitat. Välittäjällä on välineet ja näkyvyys joita yksityismyyjällä ei ole.","Quality photos, a good listing and viewings decide how many interested buyers you reach. An agent has tools and visibility a private seller doesn't.")},
-    {e:"📋",t:t(lang,"Paperit ja juridiikka","Documents and legal side"),d:t(lang,"Kauppakirja, isännöitsijäntodistus, vastuukysymykset, virhevastuu. Tässä tehdyt virheet voivat tulla kalliiksi — ammattilainen varmistaa että kaikki on kunnossa.","Deed of sale, manager's certificate, liability questions. Mistakes here can be costly — a professional makes sure everything is in order.")},
-    {e:"🤝",t:t(lang,"Neuvottelu ja tarjoukset","Negotiation and offers"),d:t(lang,"Tarjousten käsittely ja hinnasta neuvottelu on taitolaji. Ammattilainen saa usein paremman lopputuloksen kuin myyjä yksin — ja hoitaa tunteikkaatkin tilanteet.","Handling offers and negotiating price is a skill. A professional often gets a better result than a seller alone — and handles emotional moments.")},
-    {e:"🎯",t:t(lang,"Stressitön prosessi","A stress-free process"),d:t(lang,"Myynti on iso ja aikaa vievä projekti. Kun välittäjä hoitaa kokonaisuuden, säästät aikaa ja vaivaa — ja voit keskittyä omaan elämääsi.","Selling is a big, time-consuming project. When an agent handles it all, you save time and effort — and can focus on your own life.")},
+    {ikoni:"coins",t:t(lang,"Oikea hinnoittelu","The right pricing"),d:t(lang,"Liian korkea hinta karkottaa ostajat, liian matala maksaa sinulle. Kokenut välittäjä hinnoittelee asunnon tämänhetkisen markkinan ja toteutuneiden kauppojen perusteella.","Too high scares off buyers, too low costs you money. An experienced agent prices your home based on the current market and actual sales.")},
+    {ikoni:"camera",t:t(lang,"Markkinointi ja esittely","Marketing and presentation"),d:t(lang,"Laadukkaat kuvat, hyvä ilmoitus ja näytöt ratkaisevat kuinka monta kiinnostunutta tavoitat. Välittäjällä on välineet ja näkyvyys joita yksityismyyjällä ei ole.","Quality photos, a good listing and viewings decide how many interested buyers you reach. An agent has tools and visibility a private seller doesn't.")},
+    {ikoni:"clipboard",t:t(lang,"Paperit ja juridiikka","Documents and legal side"),d:t(lang,"Kauppakirja, isännöitsijäntodistus, vastuukysymykset, virhevastuu. Tässä tehdyt virheet voivat tulla kalliiksi — ammattilainen varmistaa että kaikki on kunnossa.","Deed of sale, manager's certificate, liability questions. Mistakes here can be costly — a professional makes sure everything is in order.")},
+    {ikoni:"handshake",t:t(lang,"Neuvottelu ja tarjoukset","Negotiation and offers"),d:t(lang,"Tarjousten käsittely ja hinnasta neuvottelu on taitolaji. Ammattilainen saa usein paremman lopputuloksen kuin myyjä yksin — ja hoitaa tunteikkaatkin tilanteet.","Handling offers and negotiating price is a skill. A professional often gets a better result than a seller alone — and handles emotional moments.")},
+    {ikoni:"target",t:t(lang,"Stressitön prosessi","A stress-free process"),d:t(lang,"Myynti on iso ja aikaa vievä projekti. Kun välittäjä hoitaa kokonaisuuden, säästät aikaa ja vaivaa — ja voit keskittyä omaan elämääsi.","Selling is a big, time-consuming project. When an agent handles it all, you save time and effort — and can focus on your own life.")},
   ];
   return(
     <div>
@@ -1083,7 +1125,7 @@ function TabMyyntiopas({onArviokaynti}){
       <div style={{display:"grid",gap:12,marginBottom:24}}>
         {kortit.map((k,i)=>(
           <div key={i} style={{background:C.cream,border:`1px solid ${C.border}`,borderRadius:12,padding:"16px 18px",display:"flex",gap:14,alignItems:"flex-start"}}>
-            <span style={{fontSize:24,flexShrink:0}}>{k.e}</span>
+            <span style={{flexShrink:0,marginTop:1}}><Ikoni nimi={k.ikoni} size={24} color={C.clay}/></span>
             <div>
               <div style={{fontFamily:B,fontSize:15,color:C.ink,fontWeight:500,marginBottom:4}}>{k.t}</div>
               <div style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,lineHeight:1.6}}>{k.d}</div>
@@ -1779,16 +1821,16 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
 }
 
 const OSTAJA_TABS=[
-  {id:"taloyhtion",label:"🏢 Asuntoanalyysi",labelEn:"🏢 Property Analysis"},
-  {id:"opas",label:"🧭 Ostopolku",labelEn:"🧭 Buying Path"},
-  {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
+  {id:"taloyhtion",ikoni:"building",label:"Asuntoanalyysi",labelEn:"Property Analysis"},
+  {id:"opas",ikoni:"compass",label:"Ostopolku",labelEn:"Buying Path"},
+  {id:"sanasto",ikoni:"book",label:"Sanasto",labelEn:"Glossary"},
 ];
 const MYYJA_TABS=[
-  {id:"myyntivalmius",label:"💡 Apua myyntiin",labelEn:"💡 Help Selling"},
-  {id:"konsultaatio",label:"🏠 Ilmainen arviokäynti",labelEn:"🏠 Free Valuation Visit"},
-  {id:"lisapalvelut",label:"✨ Lisäpalvelut",labelEn:"✨ Extra Services"},
-  {id:"kulut",label:"💰 Myyntikulut",labelEn:"💰 Selling Costs"},
-  {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
+  {id:"myyntivalmius",ikoni:"bulb",label:"Apua myyntiin",labelEn:"Help Selling"},
+  {id:"konsultaatio",ikoni:"home",label:"Ilmainen arviokäynti",labelEn:"Free Valuation Visit"},
+  {id:"lisapalvelut",ikoni:"sparkles",label:"Lisäpalvelut",labelEn:"Extra Services"},
+  {id:"kulut",ikoni:"coins",label:"Myyntikulut",labelEn:"Selling Costs"},
+  {id:"sanasto",ikoni:"book",label:"Sanasto",labelEn:"Glossary"},
 ];
 
 // Lukee nykyisen tilan URL-hashista, esim. "#ostaja/hinta"
@@ -1886,8 +1928,8 @@ export default function App(){
           <div style={{fontFamily:B,fontSize:12,letterSpacing:2,textTransform:"uppercase",color:"rgba(201,168,76,0.6)",marginBottom:20,fontWeight:500}}>{t(lang,"Olen…","I am…")}</div>
           <div style={{display:"grid",gap:16,width:"100%",gridTemplateColumns:isDesktop?"1fr 1fr":"1fr"}}>
             {[
-              {m:"ostaja",e:"🏠",t:t(lang,"Asunnon ostaja","Home buyer"),d:t(lang,"Asuntoanalyysi papereista, ostopolku ja sanasto","Property analysis from documents, buying path and glossary")},
-              {m:"myyjä",e:"🔑",t:t(lang,"Asunnon myyjä","Home seller"),d:t(lang,"Ilmainen arviokäynti, myyntikululaskin ja sanasto","Free valuation visit, selling cost calculator and glossary")},
+              {m:"ostaja",t:t(lang,"Asunnon ostaja","Home buyer"),d:t(lang,"Asuntoanalyysi papereista, ostopolku ja sanasto","Property analysis from documents, buying path and glossary")},
+              {m:"myyjä",t:t(lang,"Asunnon myyjä","Home seller"),d:t(lang,"Ilmainen arviokäynti, myyntikululaskin ja sanasto","Free valuation visit, selling cost calculator and glossary")},
             ].map(opt=>(
               <button key={opt.m} onClick={()=>{setMode(opt.m);setTab(opt.m==="ostaja"?"taloyhtion":"myyntivalmius");}}
                 style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:16,padding:"22px 24px",cursor:"pointer",textAlign:"left",transition:"all 0.2s",display:"flex",alignItems:"center",gap:18}}
@@ -1896,7 +1938,7 @@ export default function App(){
                 <div style={{width:52,height:52,borderRadius:"50%",background:"rgba(201,168,76,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>
                   {opt.m==="ostaja"
                     ? <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
-                    : opt.e}
+                    : <Ikoni nimi="key" size={30} color={C.gold} style={{strokeWidth:1.3}}/>}
                 </div>
                 <div>
                   <div style={{fontFamily:H,fontSize:22,fontStyle:"italic",color:"#FBF3E2",marginBottom:4}}>{opt.t}</div>
@@ -1971,7 +2013,12 @@ export default function App(){
       <div style={{background:C.cream,borderBottom:`1px solid ${C.border}`,padding:"14px 16px",overflowX:"auto"}}>
         <div style={{display:"flex",gap:8,minWidth:"max-content",maxWidth:1080,margin:"0 auto"}}>
           {tabs.map(tabi=>(
-            <Pill key={tabi.id} active={validiTab===tabi.id} onClick={()=>setTab(tabi.id)}>{lang==="en"&&tabi.labelEn?tabi.labelEn:tabi.label}</Pill>
+            <Pill key={tabi.id} active={validiTab===tabi.id} onClick={()=>setTab(tabi.id)}>
+              <span style={{display:"inline-flex",alignItems:"center",gap:7}}>
+                {tabi.ikoni&&<Ikoni nimi={tabi.ikoni} size={15} color={validiTab===tabi.id?C.gold:C.stone}/>}
+                {lang==="en"&&tabi.labelEn?tabi.labelEn:tabi.label}
+              </span>
+            </Pill>
           ))}
         </div>
       </div>
