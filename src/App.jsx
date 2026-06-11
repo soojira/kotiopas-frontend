@@ -31,10 +31,14 @@ const B="'Jost','Helvetica Neue',sans-serif";
 // statessa ja jaetaan komponenteille useLang-hookilla. Oletus: suomi.
 // ─────────────────────────────────────────────────────────────────────────────
 // Globaali kielitila + tilaajat (jotta myös komponentit ilman propseja päivittyvät).
+// Kieli muistetaan localStoragessa (avain ar_lang), jaettu legal-sivujen kanssa,
+// jotta esim. tietoja.html avautuu samalla kielellä kuin sovellus.
 let _lang = "fi";
+try { const tallennettu = localStorage.getItem("ar_lang"); if (tallennettu === "en" || tallennettu === "fi") _lang = tallennettu; } catch (e) {}
 const _langKuuntelijat = new Set();
 function setGlobalLang(l){
   _lang = l;
+  try { localStorage.setItem("ar_lang", l); } catch (e) {}
   _langKuuntelijat.forEach(fn=>fn(l));
 }
 // Hook: palauttaa nykyisen kielen ja päivittyy kun kieli vaihtuu.
@@ -1099,13 +1103,13 @@ function TabSanasto(){
     {t:t(lang,"Taloyhtiölaina","Housing company loan"),d:t(lang,"Taloyhtiön ottama laina jaettuna osakkaiden kesken. Velaton hinta = myyntihinta + oma osuus lainasta.","A loan taken by the housing company, divided among the shareholders. Debt-free price = sale price + your share of the loan.")},
     {t:t(lang,"Hoitovastike","Maintenance charge (hoitovastike)"),d:t(lang,"Kuukausimaksu taloyhtiön juokseviin kuluihin: lämmitys, siivous, hallinto, vakuutukset.","A monthly fee for the housing company's running costs: heating, cleaning, administration, insurance.")},
     {t:t(lang,"ASP-laina","ASP loan (first-home savings)"),d:t(lang,"Asuntosäästöpalkkiojärjestelmä alle 44-vuotiaille ensiasunnon ostajille — valtion korkotuki ja alhaisempi marginaali.","A home-savings bonus scheme for first-home buyers under 44 — state interest subsidy and a lower margin.")},
-    {t:t(lang,"Varainsiirtovero","Transfer tax (varainsiirtovero)"),d:t(lang,"Ostajalta perittävä vero. Osakehuoneistosta 2%, kiinteistöstä 4%. Ensiasunnon ostaja usein verovapaa.","A tax paid by the buyer. 2% for shares in a housing company, 4% for real property. First-home buyers are often exempt.")},
+    {t:t(lang,"Varainsiirtovero","Transfer tax (varainsiirtovero)"),d:t(lang,"Ostajalta perittävä vero. Osakehuoneistosta 1,5 %, kiinteistöstä 3 %. (Ensiasunnon verovapaus poistui 1.1.2024 – myös ensiasunnon ostaja maksaa veron.)","A tax paid by the buyer. 1.5% for shares in a housing company, 3% for real property. (The first-home exemption was abolished on 1 Jan 2024 – first-home buyers now pay the tax too.)")},
     {t:t(lang,"Luovutusvoittovero","Capital gains tax"),d:t(lang,"Myyjältä perittävä 30% vero myyntivoitosta. Verovapaa jos asunto on ollut omassa asuinkäytössä yli 2 vuotta.","A 30% tax on the seller's profit. Exempt if the home has been your own residence for over 2 years.")},
     {t:t(lang,"PTS","Long-term plan (PTS)"),d:t(lang,"Pitkän tähtäimen suunnitelma — taloyhtiön 5–10 vuoden tuleva remonttiohjelma.","A long-term plan — the housing company's 5–10 year upcoming renovation programme.")},
     {t:t(lang,"Välittäjäpalkkio","Agent's commission"),d:t(lang,"Kiinteistönvälittäjän palkkio, tyypillisesti 2–4% myyntihinnasta. Myyjä maksaa yleensä.","The real estate agent's fee, typically 2–4% of the sale price. Usually paid by the seller.")},
     {t:t(lang,"Euribor + marginaali","Euribor + margin"),d:t(lang,"Asuntolainan korko = Euribor (viitekorko) + pankin marginaali. Marginaali on neuvoteltavissa.","The mortgage rate = Euribor (reference rate) + the bank's margin. The margin is negotiable.")},
     {t:t(lang,"Energiatodistus","Energy certificate"),d:t(lang,"Virallinen A–G luokitus asunnon energiatehokkuudesta. Pakollinen myynti-ilmoituksessa.","An official A–G rating of the home's energy efficiency. Required in the sales listing.")},
-  ];
+  ].sort((a,b)=>a.t.localeCompare(b.t,lang==="en"?"en":"fi"));
   return(
     <div>
       <div style={{fontFamily:H,fontSize:28,fontStyle:"italic",color:C.ink,marginBottom:6}}>{t(lang,"Sanasto","Glossary")}</div>
@@ -1771,7 +1775,7 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
 
 const OSTAJA_TABS=[
   {id:"taloyhtion",label:"🏢 Asuntoanalyysi",labelEn:"🏢 Property Analysis"},
-  {id:"opas",label:"🗺 Ostopolku",labelEn:"🗺 Buying Path"},
+  {id:"opas",label:"🧭 Ostopolku",labelEn:"🧭 Buying Path"},
   {id:"sanasto",label:"📖 Sanasto",labelEn:"📖 Glossary"},
 ];
 const MYYJA_TABS=[
@@ -1932,15 +1936,17 @@ export default function App(){
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",border:"1px solid rgba(201,168,76,0.1)",pointerEvents:"none"}}/>
         <div style={{maxWidth:1080,margin:"0 auto",width:"100%"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-          <LangToggle dark/>
           <button onClick={()=>setMode(null)} style={{background:"rgba(255,255,255,0.08)",border:"none",color:"rgba(251,243,226,0.5)",fontFamily:B,fontSize:11,letterSpacing:1,padding:"6px 14px",borderRadius:20,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/><rect x="10" y="14.5" width="4" height="6.5"/><path d="M16 7.5V5h1.8v3.9"/></svg>
             {t(lang,"Etusivu","Home")}
           </button>
+          <LangToggle dark/>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:24}}>
-          <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="72" height="72" style={{objectFit:"contain",marginBottom:8}}/>
-          <span style={{fontFamily:H,fontSize:24,color:"rgba(251,243,226,0.85)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
+          <button onClick={()=>setMode(null)} title={t(lang,"Etusivulle","To home")} style={{background:"none",border:"none",padding:0,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <img src="/Asuntoraportti_Logo_256.png" alt="Asuntoraportti" width="72" height="72" style={{objectFit:"contain",marginBottom:8}}/>
+            <span style={{fontFamily:H,fontSize:24,color:"rgba(251,243,226,0.85)",letterSpacing:3,fontStyle:"italic"}}>Asuntoraportti</span>
+          </button>
         </div>
         <div style={{display:"flex",justifyContent:"center"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:8,background:mode==="ostaja"?"rgba(62,92,63,0.25)":"rgba(181,105,60,0.25)",border:`1px solid ${mode==="ostaja"?"rgba(62,92,63,0.5)":"rgba(181,105,60,0.5)"}`,borderRadius:20,padding:"5px 14px",marginBottom:14}}>
