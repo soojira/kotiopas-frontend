@@ -118,7 +118,7 @@ function Ikoni({nimi,size=16,color="currentColor",style={}}){
     case "euro":
       return <svg {...p}><path d="M16 7a5 5 0 1 0 0 10"/><path d="M5 10h7M5 14h7"/></svg>;
     case "handshake":
-      return <svg {...p}><path d="m11 17 2 2a1 1 0 0 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 0 0 3-3l-3.9-3.9a2 2 0 0 0-1.7-.5l-2.2.4a2 2 0 0 1-1.6-.5L8 7.5"/><path d="m4 13 3 3M16 16l2-2M8 6l4 4"/></svg>;
+      return <svg {...p}><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>;
     case "camera":
       return <svg {...p}><path d="M5 8h2l1.5-2h7L17 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3"/></svg>;
     case "clipboard":
