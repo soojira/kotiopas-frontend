@@ -292,7 +292,7 @@ function TabOstopolku(){
     {t:t(lang,"Näytöt ja asiakirjat","Viewings and documents"),d:t(lang,"Tutki isännöitsijäntodistus, tilinpäätös ja remonttisuunnitelmat ennen tarjousta.","Study the property manager's certificate, financial statements and renovation plans before making an offer.")},
     {t:t(lang,"Tarjous ja neuvottelu","Offer and negotiation"),d:t(lang,"Tee kirjallinen tarjous. Hintaa saa usein alennettua 2–5%.","Make a written offer. The price can often be lowered by 2–5%.")},
     {t:t(lang,"Lainapäätös","Loan decision"),d:t(lang,"Vie pankkiin kauppakirjaluonnos. Päätös syntyy muutamassa päivässä.","Take a draft deed of sale to the bank. The decision comes within a few days.")},
-    {t:t(lang,"Kaupan allekirjoitus","Signing the deal"),d:t(lang,"Kirjallinen kauppa välittäjällä. Muista varainsiirtovero (2% osake, 4% kiinteistö).","A written sale at the agent's. Remember the transfer tax (2% shares, 4% real property).")},
+    {t:t(lang,"Kaupan allekirjoitus","Signing the deal"),d:t(lang,"Kirjallinen kauppa välittäjällä. Muista varainsiirtovero (1,5% osake, 3% kiinteistö).","A written sale at the agent's. Remember the transfer tax (1.5% shares, 3% real property).")},
     {t:t(lang,"Avainten luovutus","Handover of keys"),d:t(lang,"Tarkista asunto, tee muuttoilmoitus DVV:lle ja hanki kotivakuutus.","Inspect the home, file a notice of move with the DVV, and get home insurance.")},
   ];
   const [cur,setCur]=useState(-1);
@@ -327,9 +327,14 @@ function TabOstopolku(){
           );
         })}
       </div>
-      <div style={{display:"flex",gap:12,marginTop:8}}>
+      <div style={{display:"flex",gap:12,marginTop:8,flexWrap:"wrap"}}>
         <DarkBtn onClick={()=>setCur(c=>Math.min(c+1,steps.length-1))} style={{width:"auto",padding:"13px 24px",fontSize:15}}>{t(lang,"Merkitse tehty →","Mark as done →")}</DarkBtn>
-        <button onClick={()=>setCur(-1)} style={{background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"13px 20px",fontFamily:B,fontSize:12,cursor:"pointer",borderRadius:10}}>{t(lang,"Nollaa","Reset")}</button>
+        {cur>=0&&(
+          <button onClick={()=>setCur(c=>Math.max(c-1,-1))} style={{background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"13px 20px",fontFamily:B,fontSize:12,cursor:"pointer",borderRadius:10,display:"inline-flex",alignItems:"center",gap:6}}>{t(lang,"← Peru edellinen","← Undo last")}</button>
+        )}
+        {cur>=0&&(
+          <button onClick={()=>setCur(-1)} style={{background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"13px 20px",fontFamily:B,fontSize:12,cursor:"pointer",borderRadius:10}}>{t(lang,"Nollaa","Reset")}</button>
+        )}
       </div>
     </div>
   );
