@@ -1,7 +1,7 @@
 {
   "name": "Asuntoraportti",
   "short_name": "Asuntoraportti",
-  "description": "Asuntokaupan paras apuri — lainalaskin, hinta-arvio, tarkistuslistat ja myyntikululaskin yhdessä paikassa.",
+  "description": "Taloyhtiön paperit selkokielellä, heti. Lataa asiakirjat ja saat selkokielisen analyysin sekunneissa — apua myös asunnon myyntiin.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
