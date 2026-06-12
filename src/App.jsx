@@ -837,10 +837,27 @@ function renderInline(teksti){
   });
 }
 
+// Tunnistaa taulukkorivin: sisältää vähintään yhden |-merkin keskellä
+// (sallii rivit jotka eivät ala/lopu täsmälleen |-merkkiin, esim. "| a | b |.")
+function onTaulukkoRivi(t){
+  if(!t.includes("|")) return false;
+  const ydin=t.replace(/^[\s.|]+/,"").replace(/[\s.|]+$/,"");
+  return ydin.includes("|");
+}
+// Erotinrivi otsikon alla: "|---|:--:|---|" (pelkkiä viivoja, kaksoispisteitä, putkia)
+function onErotinRivi(t){
+  const ydin=t.replace(/^[\s|]+/,"").replace(/[\s|]+$/,"");
+  return /^[\s:|-]+$/.test(ydin) && ydin.includes("-");
+}
+function jaaSolut(t){
+  return t.replace(/^[\s.|]+/,"").replace(/[\s.|]+$/,"").split("|").map(s=>s.trim());
+}
+
 function RaporttiText({text}){
   const rivit=String(text).split("\n");
   const elementit=[];
   let lista=[];
+  let viimeisinOtsikko="";
   const purgeLista=avain=>{
     if(lista.length){
       const nykyinen=lista.slice();
@@ -854,9 +871,78 @@ function RaporttiText({text}){
       lista=[];
     }
   };
-  rivit.forEach((raaka,idx)=>{
-    const t=raaka.trim();
-    if(!t){ purgeLista(idx); return; }
+
+  for(let idx=0; idx<rivit.length; idx++){
+    const t=rivit[idx].trim();
+    if(!t){ purgeLista(idx); continue; }
+
+    // ── Taulukko ──────────────────────────────────────────────────────────
+    if(onTaulukkoRivi(t)){
+      purgeLista(idx);
+      // Kerää kaikki peräkkäiset taulukkorivit
+      const taulukkoRivit=[];
+      let j=idx;
+      while(j<rivit.length && onTaulukkoRivi(rivit[j].trim())){
+        taulukkoRivit.push(rivit[j].trim());
+        j++;
+      }
+      idx=j-1; // hyppää taulukon yli (for-silmukka kasvattaa vielä +1)
+
+      // Ensimmäinen rivi = otsikko (ei näytetä rivilistassa), erotinrivi ohitetaan
+      let dataAlku=1;
+      if(taulukkoRivit[1] && onErotinRivi(taulukkoRivit[1])) dataAlku=2;
+      const dataRivit=taulukkoRivit.slice(dataAlku).map(jaaSolut);
+
+      // Onko tämä Kuukausikulut-osio? → kortit. Muuten → rivilista.
+      const onKulut=/kuukausikul|kulut/i.test(viimeisinOtsikko);
+
+      if(onKulut){
+        // ── KORTIT ──────────────────────────────────────────────────────
+        // Viimeinen rivi (esim. "Arvioitu yhteensä") korostetaan tummalla kortilla.
+        elementit.push(
+          <div key={"kortit-"+idx} style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,margin:"8px 0 16px"}}>
+            {dataRivit.map((rivi,ri)=>{
+              const viimeinen=ri===dataRivit.length-1;
+              const nimi=rivi[0]||"";
+              const arvo=rivi.slice(1).filter(Boolean).join(" · ");
+              if(viimeinen){
+                return(
+                  <div key={ri} style={{gridColumn:"1 / -1",background:"linear-gradient(160deg,#2A1F14,#1E3020)",borderRadius:8,padding:"14px 16px"}}>
+                    <div style={{fontFamily:B,fontSize:11,letterSpacing:1,textTransform:"uppercase",color:"rgba(201,168,76,0.7)",marginBottom:6}}>{renderInline(nimi)}</div>
+                    <div style={{fontFamily:H,fontSize:22,color:C.gold}}>{renderInline(arvo)}</div>
+                  </div>
+                );
+              }
+              return(
+                <div key={ri} style={{background:C.cream,borderRadius:8,padding:"14px 16px"}}>
+                  <div style={{fontFamily:B,fontSize:11,letterSpacing:1,textTransform:"uppercase",color:C.stone,marginBottom:6}}>{renderInline(nimi)}</div>
+                  <div style={{fontFamily:H,fontSize:20,color:C.ink}}>{renderInline(arvo)}</div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      } else {
+        // ── RIVILISTA ───────────────────────────────────────────────────
+        elementit.push(
+          <div key={"taulu-"+idx} style={{background:C.cream,borderRadius:10,padding:"6px 16px",margin:"8px 0 16px"}}>
+            {dataRivit.map((rivi,ri)=>{
+              const viimeinen=ri===dataRivit.length-1;
+              const nimi=rivi[0]||"";
+              const arvo=rivi.slice(1).filter(Boolean).join(" · ");
+              return(
+                <div key={ri} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:14,padding:"11px 0",borderBottom:viimeinen?"none":`1px solid ${C.linen}`}}>
+                  <span style={{fontFamily:B,fontSize:13,color:C.stone,fontWeight:300,flexShrink:0}}>{renderInline(nimi)}</span>
+                  <span style={{fontFamily:B,fontSize:13,color:C.ink,textAlign:"right"}}>{renderInline(arvo)}</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+      continue;
+    }
+
     const h1=t.match(/^#\s+(.*)/);
     const h2=t.match(/^##\s+(.*)/);
     const h3=t.match(/^###\s+(.*)/);
@@ -864,6 +950,7 @@ function RaporttiText({text}){
     if(h3||h2||h1){
       purgeLista(idx);
       const sisalto=h3?h3[1]:h2?h2[1]:h1[1];
+      viimeisinOtsikko=sisalto; // seuraa otsikkoa (jotta tiedämme onko Kuukausikulut-osio)
       const koko=h1?24:h2?20:17;
       elementit.push(
         <div key={idx} style={{fontFamily:H,fontSize:koko,fontStyle:"italic",color:C.ink,margin:"20px 0 8px",lineHeight:1.25}}>{renderInline(sisalto)}</div>
@@ -876,7 +963,7 @@ function RaporttiText({text}){
         <p key={idx} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.75,marginBottom:12,fontWeight:300}}>{renderInline(t)}</p>
       );
     }
-  });
+  }
   purgeLista("loppu");
   return <div>{elementit}</div>;
 }
