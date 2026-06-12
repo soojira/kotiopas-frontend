@@ -1048,49 +1048,57 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         logging:false,
       });
 
-      // 3) Rakenna A4-PDF: brändipalkit + kuva, jaettuna usealle sivulle jos pitkä
-      const doc=new JsPDF({unit:"mm",format:"a4"});
-      const PW=210, PH=297;
-      const M=12;                         // sivumarginaali
-      const ylaH=22, alaH=12;             // ylä/alapalkin korkeudet
-      const sisaltoYla=ylaH+6;            // mistä kuva alkaa
-      const sisaltoKorkeus=PH-sisaltoYla-alaH-6; // käytettävä korkeus per sivu
-      const kuvaLeveys=PW-M*2;
-      const kuvaKokoKorkeus=canvas.height*kuvaLeveys/canvas.width; // skaalattu mm
-      const c_dark=[42,31,20], c_gold=[201,168,76], c_cream=[251,243,226];
+      // 3) Rakenna YKSI pitkä sivu: brändipalkki ylös + alas, raportti yhtenä pätkänä.
+      //    Ei sivunvaihtoja → mikään ei katkea, ilme on yhtenäinen.
+      const M=12;                          // sivumarginaali (mm)
+      const ylaH=22, alaH=12;              // ylä/alapalkin korkeudet (mm)
+      const valiYla=6, valiAla=6;          // tyhjää palkkien ja kuvan välissä
+      const sivuLeveys=210;                // A4-leveys säilytetään (mm)
+      const kuvaLeveys=sivuLeveys-M*2;
+      const kuvaKorkeus=canvas.height*kuvaLeveys/canvas.width; // skaalattu mm
 
-      function ylapalkki(){
-        doc.setFillColor(...c_dark); doc.rect(0,0,PW,ylaH,"F");
-        doc.setTextColor(...c_cream); doc.setFont("times","italic"); doc.setFontSize(18);
-        doc.text("Asuntoraportti",M,13);
-        doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(...c_gold);
-        doc.text((onMyyja?"MYYJÄN RAPORTTI":"ASUNTOANALYYSI"),M,18);
-        const pvm=new Date().toLocaleDateString(lang==="en"?"en-GB":"fi-FI");
-        doc.setTextColor(...c_cream); doc.text(pvm,PW-M,18,{align:"right"});
-        doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,ylaH-1,PW-M,ylaH-1);
-      }
-      function alapalkki(sivu,sivuja){
-        doc.setFillColor(...c_dark); doc.rect(0,PH-alaH,PW,alaH,"F");
-        doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(8);
-        doc.text("asuntoraportti.fi",M,PH-4);
-        doc.text(`${sivu} / ${sivuja}`,PW-M,PH-4,{align:"right"});
-      }
+      // Vastuuvapausteksti (sama kuin ruudulla) — lasketaan sen korkeus etukäteen
+      const vastuuTeksti=onMyyja
+        ? "Tämän raportin on koonnut tekoäly lataamistasi papereista auttaakseen sinua valmistautumaan myyntiin. Se ei sisällä hinta-arviota eikä korvaa välittäjän tai muun ammattilaisen henkilökohtaista neuvontaa. Varmista tärkeät tiedot alkuperäisistä asiakirjoista ja isännöitsijältä."
+        : "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.";
+      const vastuuLeveys=sivuLeveys-M*2;
+      // jsPDF tarvitaan ensin vastuutekstin rivityksen laskemiseen → luodaan doc heti
+      const c_dark=[42,31,20], c_gold=[201,168,76], c_cream=[251,243,226], c_stone=[110,100,88];
+      // Väliaikainen doc rivityslaskua varten (sama fontti)
+      const apuDoc=new JsPDF({unit:"mm",format:"a4"});
+      apuDoc.setFont("helvetica","italic"); apuDoc.setFontSize(8);
+      const vastuuRivit=apuDoc.splitTextToSize(vastuuTeksti,vastuuLeveys);
+      const vastuuKorkeus=vastuuRivit.length*3.5+8; // rivit + ylä/alaväli
 
-      // Montako A4-sivua kuva tarvitsee
-      const sivuja=Math.max(1,Math.ceil(kuvaKokoKorkeus/sisaltoKorkeus));
+      // Koko sivun korkeus = palkit + välit + kuva + vastuuteksti
+      const sivuKorkeus=ylaH+valiYla+kuvaKorkeus+valiAla+vastuuKorkeus+alaH;
+      const doc=new JsPDF({unit:"mm",format:[sivuLeveys,sivuKorkeus]});
 
-      for(let s=0;s<sivuja;s++){
-        if(s>0) doc.addPage();
-        ylapalkki(); alapalkki(s+1,sivuja);
-        // Leikkaa kuvasta tämän sivun osa: siirretään koko kuvaa ylöspäin s*sisaltoKorkeus verran
-        const offsetY = sisaltoYla - s*sisaltoKorkeus;
-        // Rajaa kuva näkymään vain sisältöalueelle (ylä/alapalkki piirretään päälle)
-        doc.addImage(canvas,"PNG",M,offsetY,kuvaLeveys,kuvaKokoKorkeus,undefined,"FAST");
-        // Peitä ylä- ja alaosa uudestaan palkeilla (jotta kuva ei vuoda niiden päälle)
-        doc.setFillColor(...c_dark); doc.rect(0,0,PW,ylaH,"F");
-        doc.setFillColor(...c_dark); doc.rect(0,PH-alaH,PW,alaH,"F");
-        ylapalkki(); alapalkki(s+1,sivuja);
-      }
+      // Yläpalkki
+      doc.setFillColor(...c_dark); doc.rect(0,0,sivuLeveys,ylaH,"F");
+      doc.setTextColor(...c_cream); doc.setFont("times","italic"); doc.setFontSize(18);
+      doc.text("Asuntoraportti",M,13);
+      doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(...c_gold);
+      doc.text((onMyyja?"MYYJÄN RAPORTTI":"ASUNTOANALYYSI"),M,18);
+      const pvm=new Date().toLocaleDateString(lang==="en"?"en-GB":"fi-FI");
+      doc.setTextColor(...c_cream); doc.text(pvm,sivuLeveys-M,18,{align:"right"});
+      doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,ylaH-1,sivuLeveys-M,ylaH-1);
+
+      // Raporttikuva (koko korkeus, ei leikkausta)
+      doc.addImage(canvas,"PNG",M,ylaH+valiYla,kuvaLeveys,kuvaKorkeus,undefined,"FAST");
+
+      // Vastuuvapausteksti kuvan alle (ohut viiva + harmaa kursiivi)
+      const vastuuY=ylaH+valiYla+kuvaKorkeus+valiAla;
+      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,vastuuY,sivuLeveys-M,vastuuY);
+      doc.setFont("helvetica","italic"); doc.setFontSize(8); doc.setTextColor(...c_stone);
+      doc.text(vastuuRivit,M,vastuuY+5);
+
+      // Alapalkki (sivun pohjalla)
+      const alaY=sivuKorkeus-alaH;
+      doc.setFillColor(...c_dark); doc.rect(0,alaY,sivuLeveys,alaH,"F");
+      doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(8);
+      doc.text("asuntoraportti.fi",M,alaY+8);
+      doc.text("Asuntokaupan tulkki",sivuLeveys-M,alaY+8,{align:"right"});
 
       const tiedostonimi=onMyyja?"Asuntoraportti-myyja.pdf":"Asuntoraportti-analyysi.pdf";
       doc.save(tiedostonimi);
