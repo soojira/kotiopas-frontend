@@ -907,9 +907,9 @@ function RaporttiText({text}){
               const arvo=rivi.slice(1).filter(Boolean).join(" · ");
               if(viimeinen){
                 return(
-                  <div key={ri} style={{gridColumn:"1 / -1",background:"linear-gradient(160deg,#2A1F14,#1E3020)",borderRadius:8,padding:"14px 16px"}}>
-                    <div style={{fontFamily:B,fontSize:11,letterSpacing:1,textTransform:"uppercase",color:"rgba(201,168,76,0.7)",marginBottom:6}}>{renderInline(nimi)}</div>
-                    <div style={{fontFamily:H,fontSize:22,color:C.gold}}>{renderInline(arvo)}</div>
+                  <div key={ri} style={{gridColumn:"1 / -1",background:"linear-gradient(160deg,#2A1F14,#1E3020)",borderRadius:8,padding:"16px 18px"}}>
+                    <div style={{fontFamily:B,fontSize:11,letterSpacing:1,textTransform:"uppercase",color:C.gold,marginBottom:6}}>{renderInline(nimi)}</div>
+                    <div style={{fontFamily:H,fontSize:24,color:"#FBF3E2"}}>{renderInline(arvo)}</div>
                   </div>
                 );
               }
