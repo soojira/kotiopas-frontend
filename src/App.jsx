@@ -838,6 +838,7 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
   const [loading,setLoading]=useState(false);
   const [loadStep,setLoadStep]=useState(0);
   const [dragging,setDragging]=useState(false);
+  const [pdfLataa,setPdfLataa]=useState(false);
 
   const fmtKoko=b=>b>=1048576?`${(b/1048576).toFixed(1)} MB`:`${Math.round(b/1024)} kB`;
 
@@ -868,6 +869,139 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
 
   function nollaa(){
     setFiles([]);setAnalyysi(null);setMalli(null);setSkannatut([]);setError(null);setLoadStep(0);
+  }
+
+  // Lataa jsPDF dynaamisesti (vasta kun PDF:ää tarvitaan — ei rasita sivun latausta).
+  function lataaJsPDF(){
+    return new Promise((resolve,reject)=>{
+      if(window.jspdf&&window.jspdf.jsPDF){resolve(window.jspdf.jsPDF);return;}
+      const s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      s.onload=()=>resolve(window.jspdf.jsPDF);
+      s.onerror=()=>reject(new Error("PDF-kirjaston lataus epäonnistui"));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function lataaPDF(){
+    if(!analyysi)return;
+    setPdfLataa(true);
+    try{
+      const JsPDF=await lataaJsPDF();
+      const doc=new JsPDF({unit:"mm",format:"a4"});
+      const PW=210, PH=297;               // A4 mitat
+      const M=18;                          // marginaali
+      const CW=PW-M*2;                     // sisältöleveys
+      // Värit (sivuston paletti)
+      const c_dark=[42,31,20], c_dark2=[30,48,32], c_gold=[201,168,76];
+      const c_ink=[42,37,32], c_stone=[110,100,88], c_cream=[251,243,226];
+
+      // ── Yläpalkki (tumma brändi) ──
+      function ylapalkki(){
+        doc.setFillColor(...c_dark); doc.rect(0,0,PW,26,"F");
+        doc.setTextColor(...c_cream);
+        doc.setFont("times","italic"); doc.setFontSize(20);
+        doc.text("Asuntoraportti",M,14);
+        doc.setFont("helvetica","normal"); doc.setFontSize(8);
+        doc.setTextColor(201,168,76);
+        doc.text((onMyyja?"MYYJÄN RAPORTTI":"ASUNTOANALYYSI"),M,20);
+        // päivämäärä oikealle
+        const pvm=new Date().toLocaleDateString(lang==="en"?"en-GB":"fi-FI");
+        doc.setTextColor(...c_cream); doc.setFontSize(8);
+        doc.text(pvm,PW-M,20,{align:"right"});
+        // kultainen viiva alle
+        doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,24,PW-M,24);
+      }
+      // ── Alapalkki (sivunumero + url) ──
+      function alapalkki(sivu){
+        doc.setFillColor(...c_dark); doc.rect(0,PH-14,PW,14,"F");
+        doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(8);
+        doc.text("asuntoraportti.fi",M,PH-5);
+        doc.text(String(sivu),PW-M,PH-5,{align:"right"});
+      }
+
+      let sivu=1, y=36;
+      ylapalkki(); alapalkki(sivu);
+      doc.setTextColor(...c_ink);
+
+      function uusiSivu(){ doc.addPage(); sivu++; ylapalkki(); alapalkki(sivu); y=36; doc.setTextColor(...c_ink); }
+      function tilaa(korkeus){ if(y+korkeus>PH-20){ uusiSivu(); } }
+
+      // Markdown-rivien jäsennys → PDF
+      const rivit=analyysi.split("\n");
+      for(let raw of rivit){
+        let line=raw.replace(/\r/g,"");
+        // liikennevalo-emojit tekstiksi (jsPDF ei piirrä emojeja)
+        line=line.replace(/🟢/g,"[OK] ").replace(/🟡/g,"[!] ").replace(/🔴/g,"[X] ")
+                 .replace(/[🏠💰📋📜🎯❓💡✅📊]|⚠️/g,"").trim();
+        // Normalisoi erikoismerkit (jsPDF Latin-1 ei tue kaikkia)
+        line=line.replace(/[—–]/g,"-").replace(/[""]/g,'"').replace(/['']/g,"'").replace(/…/g,"...");
+        if(!line){ y+=2.5; continue; }
+
+        // Otsikot (## tai ###)
+        if(/^#{1,6}\s/.test(line)){
+          const teksti=line.replace(/^#{1,6}\s/,"").replace(/\*\*/g,"");
+          tilaa(12);
+          y+=3;
+          doc.setFont("times","bold"); doc.setFontSize(13); doc.setTextColor(...c_dark2);
+          const wrapped=doc.splitTextToSize(teksti,CW);
+          doc.text(wrapped,M,y); y+=wrapped.length*6+1.5;
+          // kultainen alleviivaus
+          doc.setDrawColor(...c_gold); doc.setLineWidth(0.3); doc.line(M,y-1,M+30,y-1);
+          y+=2;
+          doc.setTextColor(...c_ink);
+          continue;
+        }
+        // Taulukkorivit (| ... |) → näytetään pelkistettynä
+        if(/^\|/.test(line)){
+          if(/^\|[\s:|-]+\|?$/.test(line)) continue; // erotinrivi pois
+          const solut=line.split("|").map(s=>s.trim()).filter(Boolean);
+          const teksti=solut.join("  •  ");
+          tilaa(8); doc.setFont("helvetica","normal"); doc.setFontSize(10);
+          const wrapped=doc.splitTextToSize(teksti,CW);
+          doc.text(wrapped,M,y); y+=wrapped.length*5+1;
+          continue;
+        }
+        // Luettelomerkit
+        let bullet=false;
+        if(/^[-*]\s/.test(line)){ bullet=true; line=line.replace(/^[-*]\s/,""); }
+        // **lihavointi** → erottele osiin
+        const osat=line.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+        tilaa(8);
+        if(bullet){ doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(...c_gold); doc.text("•",M,y); doc.setTextColor(...c_ink); }
+        const xStart=bullet?M+4:M;
+        const maxW=bullet?CW-4:CW;
+        // Kokoa rivi osista (lihavoidut bold)
+        let segs=osat.map(o=>{
+          const bold=/^\*\*[^*]+\*\*$/.test(o);
+          return {t:o.replace(/\*\*/g,""), bold};
+        });
+        // Yksinkertainen rivitys: yhdistä teksti, käytä bold jos koko rivi bold
+        const kokoTeksti=segs.map(s=>s.t).join("");
+        const onBold=segs.length===1&&segs[0].bold;
+        doc.setFont("helvetica",onBold?"bold":"normal"); doc.setFontSize(10); doc.setTextColor(...c_ink);
+        const wrapped=doc.splitTextToSize(kokoTeksti,maxW);
+        doc.text(wrapped,xStart,y); y+=wrapped.length*5+1.5;
+      }
+
+      // ── Vastuuvapaus loppuun ──
+      tilaa(20); y+=4;
+      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,y,PW-M,y); y+=5;
+      doc.setFont("helvetica","italic"); doc.setFontSize(8); doc.setTextColor(...c_stone);
+      const vastuu=onMyyja
+        ? "Tämän raportin on koonnut tekoäly lataamistasi papereista. Se ei sisällä hinta-arviota eikä korvaa ammattilaisen henkilökohtaista neuvontaa. Varmista tärkeät tiedot alkuperäisistä asiakirjoista."
+        : "Tämän raportin on koonnut tekoäly lataamistasi papereista. Lopullinen ja sitova tieto löytyy alkuperäisistä asiakirjoista ja isännöitsijältä. Asuntoraportti ei korvaa juridista tai sijoitusneuvontaa.";
+      const vw=doc.splitTextToSize(vastuu,CW);
+      tilaa(vw.length*4+4); doc.text(vw,M,y);
+
+      const tiedostonimi=onMyyja?"Asuntoraportti-myyja.pdf":"Asuntoraportti-analyysi.pdf";
+      doc.save(tiedostonimi);
+    }catch(e){
+      console.error("PDF-virhe:",e);
+      alert(t(lang,"PDF:n luonti epäonnistui. Yritä uudelleen.","PDF generation failed. Please try again."));
+    }finally{
+      setPdfLataa(false);
+    }
   }
 
   async function analysoi(){
@@ -1078,6 +1212,11 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
                         "This report was compiled by AI from the documents you uploaded, so you can grasp the essentials quickly and in plain language. The final and binding information is always in the original documents and from the property manager — verify important details from those before making a purchase decision. The Property Report supports your decision but does not replace legal or investment advice.")}
                 </div>
               </div>
+
+              <button onClick={lataaPDF} disabled={pdfLataa} style={{width:"100%",background:C.forest,color:"#FBF3E2",border:"none",padding:"14px 0",fontFamily:B,fontSize:13,fontWeight:500,letterSpacing:0.5,cursor:pdfLataa?"wait":"pointer",borderRadius:10,marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:pdfLataa?0.7:1}}>
+                <Ikoni nimi="doc" size={16} color="#FBF3E2"/>
+                {pdfLataa?t(lang,"Luodaan PDF…","Creating PDF…"):t(lang,"Lataa raportti PDF:nä","Download report as PDF")}
+              </button>
 
               <button onClick={nollaa} style={{width:"100%",background:"transparent",color:C.stone,border:`1px solid ${C.border}`,padding:"14px 0",fontFamily:B,fontSize:13,letterSpacing:1,cursor:"pointer",borderRadius:10}}>
                 {t(lang,"Tee uusi analyysi","Start a new analysis")}
