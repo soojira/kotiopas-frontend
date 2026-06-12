@@ -823,6 +823,64 @@ function TabSanasto(){
 
 const BACKEND_URL = "https://kotiopas-backend.onrender.com";
 
+// ── Asuntoraportin tekstin renderöinti ────────────────────────────────────
+// Claude palauttaa analyysin selkokielisenä tekstinä (mahdollisesti markdownia).
+// Tämä kevyt renderöijä muuntaa otsikot, lihavoinnit ja luettelot brändin
+// mukaisiksi elementeiksi — ilman ulkoisia kirjastoja.
+function renderInline(teksti){
+  const osat=String(teksti).split(/(\*\*[^*]+\*\*)/g);
+  return osat.map((osa,i)=>{
+    if(/^\*\*[^*]+\*\*$/.test(osa)){
+      return <strong key={i} style={{color:C.ink,fontWeight:600}}>{osa.slice(2,-2)}</strong>;
+    }
+    return <span key={i}>{osa}</span>;
+  });
+}
+
+function RaporttiText({text}){
+  const rivit=String(text).split("\n");
+  const elementit=[];
+  let lista=[];
+  const purgeLista=avain=>{
+    if(lista.length){
+      const nykyinen=lista.slice();
+      elementit.push(
+        <ul key={"ul-"+avain} style={{margin:"4px 0 14px",paddingLeft:22}}>
+          {nykyinen.map((it,i)=>(
+            <li key={i} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.7,marginBottom:6,fontWeight:300}}>{renderInline(it)}</li>
+          ))}
+        </ul>
+      );
+      lista=[];
+    }
+  };
+  rivit.forEach((raaka,idx)=>{
+    const t=raaka.trim();
+    if(!t){ purgeLista(idx); return; }
+    const h1=t.match(/^#\s+(.*)/);
+    const h2=t.match(/^##\s+(.*)/);
+    const h3=t.match(/^###\s+(.*)/);
+    const bullet=t.match(/^[-*•]\s+(.*)/);
+    if(h3||h2||h1){
+      purgeLista(idx);
+      const sisalto=h3?h3[1]:h2?h2[1]:h1[1];
+      const koko=h1?24:h2?20:17;
+      elementit.push(
+        <div key={idx} style={{fontFamily:H,fontSize:koko,fontStyle:"italic",color:C.ink,margin:"20px 0 8px",lineHeight:1.25}}>{renderInline(sisalto)}</div>
+      );
+    } else if(bullet){
+      lista.push(bullet[1]);
+    } else {
+      purgeLista(idx);
+      elementit.push(
+        <p key={idx} style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.75,marginBottom:12,fontWeight:300}}>{renderInline(t)}</p>
+      );
+    }
+  });
+  purgeLista("loppu");
+  return <div>{elementit}</div>;
+}
+
 // ── Asuntoanalyysi: lataa taloyhtiön paperit (PDF), AI tekee Asuntoraportin ───
 // Paperit lähetetään backendin /api/analyysi -endpointtiin (multipart, kenttä
 // "tiedostot"). Mitään ei tallenneta — paperit luetaan muistissa ja heitetään
