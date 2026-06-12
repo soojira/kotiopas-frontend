@@ -106,27 +106,27 @@ function Ikoni({nimi,size=16,color="currentColor",style={}}){
     case "compass":
       return <svg {...p}><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>;
     case "book":
-      return <svg {...p}><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 5v14"/></svg>;
+      return <svg {...p}><path d="M12 6v13"/><path d="M12 6 7 4 3 5v12l4-1 5 2"/><path d="m12 6 5-2 4 1v12l-4-1-5 2"/></svg>;
     case "bulb":
-      return <svg {...p}><path d="M9 18h6"/><path d="M10 21h4"/><path d="M8.5 14a5 5 0 1 1 7 0c-.7.6-1.2 1.2-1.4 2h-4.2c-.2-.8-.7-1.4-1.4-2z"/></svg>;
+      return <svg {...p}><circle cx="12" cy="10" r="4.5"/><path d="M9.5 15h5M10.5 17.5h3"/><path d="M12 2v2M4 10H6M18 10h2M6 4l1.5 1.5M18 4l-1.5 1.5"/></svg>;
     case "home":
       return <svg {...p}><path d="M5 21V10.5"/><path d="M19 10.5V21"/><path d="M3 11.2 12 4l9 7.2"/><path d="M5 21h14"/></svg>;
     case "sparkles":
-      return <svg {...p}><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="m6.3 6.3 2 2M15.7 15.7l2 2M17.7 6.3l-2 2M8.3 15.7l-2 2"/></svg>;
+      return <svg {...p}><path d="M11 3 12.5 9.5 19 11 12.5 12.5 11 19 9.5 12.5 3 11 9.5 9.5 11 3Z"/><path d="M18 16 18.7 18.3 21 19 18.7 19.7 18 22 17.3 19.7 15 19 17.3 18.3 18 16Z"/></svg>;
     case "coins":
-      return <svg {...p}><circle cx="8" cy="8" r="5"/><path d="M15.5 5.3A5 5 0 0 1 16 15"/><path d="M11.7 19.3A5 5 0 0 1 8 21"/><circle cx="8" cy="8" r="1.5"/></svg>;
+      return <svg {...p}><ellipse cx="9" cy="13.5" rx="5" ry="2"/><path d="M4 13.5v4c0 1.1 2.2 2 5 2s5-.9 5-2v-4"/><circle cx="16" cy="9" r="4.5"/><path d="M14.5 7.5h3M14.5 10.5h3"/></svg>;
     case "euro":
-      return <svg {...p}><path d="M16 7a5 5 0 1 0 0 10"/><path d="M5 10h7M5 14h7"/></svg>;
+      return <svg {...p}><path d="M5 3h8l4 4v14H5z"/><path d="M13 3v4h4"/><text x="11" y="17.5" textAnchor="middle" fontSize="9" fontWeight="600" fill={color} stroke="none" fontFamily="Arial, sans-serif">€</text></svg>;
     case "handshake":
       return <svg {...p}><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>;
     case "camera":
       return <svg {...p}><path d="M5 8h2l1.5-2h7L17 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3"/></svg>;
     case "clipboard":
-      return <svg {...p}><rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h6M9 18h3"/></svg>;
+      return <svg {...p}><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v3h3"/><path d="M9 11h6M9 14h6M9 17h4"/></svg>;
     case "target":
       return <svg {...p}><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>;
     case "doc":
-      return <svg {...p}><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13h5M10 17h5"/></svg>;
+      return <svg {...p}><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5"/><circle cx="12.5" cy="16.5" r="2.3"/></svg>;
     case "bank":
       return <svg {...p}><path d="M3 9 12 4l9 5"/><path d="M5 9v9M19 9v9M9 9v9M15 9v9"/><path d="M3 21h18"/></svg>;
     case "pen":
