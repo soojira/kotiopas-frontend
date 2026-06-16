@@ -21,6 +21,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://asuntoraportti.fi/opas-vastikkeet.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://asuntoraportti.fi/opas-taloyhtiolaina-vs-asuntolaina.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://asuntoraportti.fi/opas-myynnin-asiakirjat.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://asuntoraportti.fi/tietoja.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
