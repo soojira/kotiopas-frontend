@@ -98,7 +98,26 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Staattinen sisältö hakukoneille ja tekoälyille (näkyy ennen kuin React latautuu;
+           React korvaa tämän automaattisesti, joten ihmiskäyttäjät eivät näe tätä). -->
+      <div style="max-width:760px;margin:0 auto;padding:40px 24px;font-family:system-ui,sans-serif;line-height:1.6;color:#2A2520;">
+        <h1>Asuntoraportti – taloyhtiön paperit selkokielellä</h1>
+        <p><strong>Asuntoraportti</strong> on suomalainen verkkopalvelu, joka kääntää taloyhtiön asiakirjat selkokielelle asunnon ostajille ja myyjille. Lataat taloyhtiön paperit – kuten isännöitsijäntodistuksen, tilinpäätöksen ja remonttisuunnitelmat – ja saat ymmärrettävän, selkokielisen analyysin niiden sisällöstä.</p>
+
+        <h2>Kenelle Asuntoraportti on tarkoitettu?</h2>
+        <p><strong>Asunnon ostajalle:</strong> ymmärrät mitä olet ostamassa ennen kuin teet tarjouksen. Analyysi kertoo selkokielellä taloyhtiön vastikkeet, velat, tulevat remontit ja muut olennaiset asiat, jotka kannattaa tietää ennen asuntokauppaa.</p>
+        <p><strong>Asunnon myyjälle:</strong> saat apua myyntiin ja voit pyytää maksuttoman arviokäynnin kokeneelta välittäjältä.</p>
+
+        <h2>Miten Asuntoraportti toimii?</h2>
+        <p>Lataat taloyhtiön asiakirjat (PDF) palveluun, ja tekoäly tekee niistä selkokielisen analyysin. Saat tiedot kuukausikuluista, taloyhtiön taloudesta, tulevista remonteista ja mahdollisista riskeistä helposti ymmärrettävässä muodossa. Palvelu on saatavilla suomeksi ja englanniksi.</p>
+
+        <h2>Miksi Asuntoraportti?</h2>
+        <p>Taloyhtiön paperit ovat usein vaikeaselkoisia juuri silloin, kun pitäisi tehdä elämän suurin ostopäätös. Asuntoraportti toimii asuntokaupan tulkkina: se selittää vaikeat asiakirjat selkokielellä, jotta voit tehdä päätöksen tietoon perustuen. Palvelu on riippumaton ja faktoihin perustuva. Asuntoraportti ei korvaa juridista tai sijoitusneuvontaa, vaan toimii päätöksenteon tukena.</p>
+
+        <p>Lisätietoja ja palvelun kokeilu: <a href="https://asuntoraportti.fi">asuntoraportti.fi</a></p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
