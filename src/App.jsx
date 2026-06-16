@@ -595,7 +595,8 @@ function TabMyyntikulut(){
   const valittajaPalkkio=myyntihinta*(parseFloat(valitPct)/100);
   const voitto=myyntihinta-ostohinta;
   const veroVapaa=parseInt(omistusAika)>=2;
-  const luovutusvoittovero=voitto>0&&!veroVapaa?voitto*0.30:0;
+  // Luovutusvoittovero porrastettu: 30 % aina 30 000 €:n voittoon asti, 34 % ylittävältä osalta.
+  const luovutusvoittovero=voitto>0&&!veroVapaa?(voitto<=30000?voitto*0.30:30000*0.30+(voitto-30000)*0.34):0;
   const nettoMyyntitulo=myyntihinta-valittajaPalkkio-luovutusvoittovero;
   return(
     <div>
@@ -615,7 +616,7 @@ function TabMyyntikulut(){
           {l:t(lang,"Myyntihinta","Sale price"),v:`${fmt(myyntihinta)} €`},
           {l:`${t(lang,"Välittäjäpalkkio","Agent fee")} (${valitPct}%)`,v:`− ${fmt(valittajaPalkkio)} €`},
           {l:t(lang,"Voitto / tappio","Profit / loss"),v:`${voitto>=0?"+":""}${fmt(voitto)} €`},
-          {l:t(lang,"Luovutusvoittovero (30%)","Capital gains tax (30%)"),v:veroVapaa?t(lang,"0 € (verovapaa ✓)","€0 (exempt ✓)"):`− ${fmt(luovutusvoittovero)} €`},
+          {l:t(lang,"Luovutusvoittovero (30/34%)","Capital gains tax (30/34%)"),v:veroVapaa?t(lang,"0 € (verovapaa ✓)","€0 (exempt ✓)"):`− ${fmt(luovutusvoittovero)} €`},
         ].map(row=>(
           <div key={row.l} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
             <span style={{fontFamily:B,fontSize:13,color:"rgba(251,243,226,0.5)",fontWeight:300}}>{row.l}</span>
@@ -633,7 +634,7 @@ function TabMyyntikulut(){
         )}
         {!veroVapaa&&voitto>0&&(
           <div style={{background:"rgba(181,105,60,0.2)",border:"1px solid rgba(181,105,60,0.3)",borderRadius:8,padding:"10px 14px",fontFamily:B,fontSize:12,color:"#E8B08A",lineHeight:1.6}}>
-            {t(lang,"⚠ Alle 2 vuoden omistus — luovutusvoitosta maksetaan 30% veroa.","⚠ Less than 2 years of ownership — a 30% tax applies to the capital gain.")}
+            {t(lang,"⚠ Alle 2 vuoden omistus — luovutusvoitosta maksetaan 30 % veroa (34 % yli 30 000 € voitosta).","⚠ Less than 2 years of ownership — a 30% tax applies to the capital gain (34% on the part over €30,000).")}
           </div>
         )}
         <div style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.3)",marginTop:12,lineHeight:1.6,fontWeight:300}}>{t(lang,"Suuntaa-antava. Kysy verottajalta tai tilintarkastajalta tarkempi arvio.","Indicative only. Ask the tax authority or an accountant for a more precise estimate.")}</div>
@@ -686,9 +687,9 @@ function TabSanasto(){
     {t:t(lang,"Isännöitsijäntodistus","Property manager's certificate (isännöitsijäntodistus)"),d:t(lang,"Taloyhtiön virallinen dokumentti: osakkeiden tiedot, yhtiön velat, tehdyt ja tulevat remontit sekä vastike.","The housing company's official document: share details, company debts, completed and upcoming renovations, and the maintenance charge.")},
     {t:t(lang,"Taloyhtiölaina","Housing company loan"),d:t(lang,"Taloyhtiön ottama laina jaettuna osakkaiden kesken. Velaton hinta = myyntihinta + oma osuus lainasta.","A loan taken by the housing company, divided among the shareholders. Debt-free price = sale price + your share of the loan.")},
     {t:t(lang,"Hoitovastike","Maintenance charge (hoitovastike)"),d:t(lang,"Kuukausimaksu taloyhtiön juokseviin kuluihin: lämmitys, siivous, hallinto, vakuutukset.","A monthly fee for the housing company's running costs: heating, cleaning, administration, insurance.")},
-    {t:t(lang,"ASP-laina","ASP loan (first-home savings)"),d:t(lang,"Asuntosäästöpalkkiojärjestelmä alle 44-vuotiaille ensiasunnon ostajille — valtion korkotuki ja alhaisempi marginaali.","A home-savings bonus scheme for first-home buyers under 44 — state interest subsidy and a lower margin.")},
+    {t:t(lang,"ASP-laina","ASP loan (first-home savings)"),d:t(lang,"Asuntosäästöjärjestelmä ensiasunnon ostajille — valtion korkotuki, valtiontakaus ja alhaisempi marginaali. Yläikäraja poistui 1.6.2026 (tilin voi avata 15 vuotta täyttänyt, ei ylärajaa). Säästät itse 10 % asunnon hinnasta.","A home-savings scheme for first-home buyers — state interest subsidy, state guarantee and a lower margin. The upper age limit was removed on 1 June 2026 (anyone aged 15+ can open an account, no upper limit). You save 10% of the home's price yourself.")},
     {t:t(lang,"Varainsiirtovero","Transfer tax (varainsiirtovero)"),d:t(lang,"Ostajalta perittävä vero. Osakehuoneistosta 1,5 %, kiinteistöstä 3 %. (Ensiasunnon verovapaus poistui 1.1.2024 – myös ensiasunnon ostaja maksaa veron.)","A tax paid by the buyer. 1.5% for shares in a housing company, 3% for real property. (The first-home exemption was abolished on 1 Jan 2024 – first-home buyers now pay the tax too.)")},
-    {t:t(lang,"Luovutusvoittovero","Capital gains tax"),d:t(lang,"Myyjältä perittävä 30% vero myyntivoitosta. Verovapaa jos asunto on ollut omassa asuinkäytössä yli 2 vuotta.","A 30% tax on the seller's profit. Exempt if the home has been your own residence for over 2 years.")},
+    {t:t(lang,"Luovutusvoittovero","Capital gains tax"),d:t(lang,"Myyjältä perittävä vero myyntivoitosta: 30 % (yli 30 000 € voitosta 34 %). Verovapaa, jos asunto on ollut omassa asuinkäytössä yhtäjaksoisesti yli 2 vuotta.","A tax on the seller's profit: 30% (34% on profit over €30,000). Exempt if the home has been your own residence continuously for over 2 years.")},
     {t:t(lang,"PTS","Long-term plan (PTS)"),d:t(lang,"Pitkän tähtäimen suunnitelma — taloyhtiön 5–10 vuoden tuleva remonttiohjelma.","A long-term plan — the housing company's 5–10 year upcoming renovation programme.")},
     {t:t(lang,"Välittäjäpalkkio","Agent's commission"),d:t(lang,"Kiinteistönvälittäjän palkkio, tyypillisesti 2–4% myyntihinnasta. Myyjä maksaa yleensä.","The real estate agent's fee, typically 2–4% of the sale price. Usually paid by the seller.")},
     {t:t(lang,"Euribor + marginaali","Euribor + margin"),d:t(lang,"Asuntolainan korko = Euribor (viitekorko) + pankin marginaali. Marginaali on neuvoteltavissa.","The mortgage rate = Euribor (reference rate) + the bank's margin. The margin is negotiable.")},
