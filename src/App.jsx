@@ -1382,6 +1382,14 @@ export default function App(){
           <div style={{width:"100%",maxWidth:isDesktop?620:420,marginTop:56,paddingTop:24,borderTop:"1px solid rgba(201,168,76,0.15)",textAlign:"center"}}>
             <div style={{fontFamily:H,fontSize:15,fontStyle:"italic",color:"rgba(251,243,226,0.85)",marginBottom:5}}>Asuntoraportti</div>
             <div style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.4)",letterSpacing:0.5,marginBottom:12}}>© 2026 Miss S Tmi — {t(lang,"Asuntokaupan paras apuri","Your best companion in home buying")}</div>
+            <div style={{fontFamily:B,fontSize:10,color:"rgba(201,168,76,0.7)",letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>{t(lang,"Oppaat","Guides")}</div>
+            <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:12,flexWrap:"wrap",marginBottom:16}}>
+              <a href="/opas-isannoitsijantodistus.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Isännöitsijäntodistus","Property manager's certificate")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/opas-asunnon-osto-tarkistuslista.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Ostajan tarkistuslista","Buyer's checklist")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/opas-taloyhtion-talous.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Taloyhtiön talous","Housing company finances")}</a>
+            </div>
             <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:12,flexWrap:"wrap"}}>
               <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
               <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
@@ -1465,6 +1473,14 @@ export default function App(){
       <div style={{background:C.paper,borderTop:`1px solid ${C.border}`,padding:"24px 24px calc(24px + env(safe-area-inset-bottom))",textAlign:"center"}}>
         <div style={{fontFamily:H,fontSize:14,fontStyle:"italic",color:C.stone,marginBottom:4}}>Asuntoraportti</div>
         <div style={{fontFamily:B,fontSize:11,color:C.linen,letterSpacing:1,marginBottom:10}}>© 2026 Miss S Tmi — {t(lang,"Asuntokaupan paras apuri","Your best companion in home buying")}</div>
+        <div style={{fontFamily:B,fontSize:10,color:C.gold,letterSpacing:1.5,textTransform:"uppercase",marginBottom:8}}>{t(lang,"Oppaat","Guides")}</div>
+        <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:14,flexWrap:"wrap",marginBottom:16}}>
+          <a href="/opas-isannoitsijantodistus.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Isännöitsijäntodistus","Property manager's certificate")}</a>
+          <span style={{color:C.linen,fontSize:9}}>•</span>
+          <a href="/opas-asunnon-osto-tarkistuslista.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Ostajan tarkistuslista","Buyer's checklist")}</a>
+          <span style={{color:C.linen,fontSize:9}}>•</span>
+          <a href="/opas-taloyhtion-talous.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Taloyhtiön talous","Housing company finances")}</a>
+        </div>
         <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:14,flexWrap:"wrap"}}>
           <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
           <span style={{color:C.linen,fontSize:9}}>•</span>
