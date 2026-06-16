@@ -58,6 +58,44 @@
         min-height: 100dvh;
       }
     </style>
+
+    <!-- Strukturoitu data (JSON-LD) hakukoneille -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://asuntoraportti.fi/#website",
+          "url": "https://asuntoraportti.fi/",
+          "name": "Asuntoraportti",
+          "description": "Taloyhtiön paperit selkokielellä, heti. Lataa asiakirjat ja saat selkokielisen analyysin sekunneissa.",
+          "inLanguage": ["fi-FI", "en-US"],
+          "publisher": { "@id": "https://asuntoraportti.fi/#organization" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://asuntoraportti.fi/#organization",
+          "name": "Asuntoraportti",
+          "legalName": "Miss S Tmi",
+          "url": "https://asuntoraportti.fi/",
+          "logo": "https://asuntoraportti.fi/Asuntoraportti_OG_1200.png",
+          "email": "info@asuntoraportti.fi",
+          "areaServed": { "@type": "Country", "name": "Finland" },
+          "vatID": "FI33935048"
+        },
+        {
+          "@type": "Service",
+          "name": "Taloyhtiön asiakirjojen selkokielinen analyysi",
+          "serviceType": "Asuntokaupan asiakirjojen tulkinta",
+          "description": "Lataa taloyhtiön asiakirjat (isännöitsijäntodistus, tilinpäätös, remonttisuunnitelmat) ja saat selkokielisen analyysin sekunneissa — ymmärrät vastikkeet, velat ja tulevat remontit ennen asuntokauppaa. Apua myös asunnon myyntiin.",
+          "provider": { "@id": "https://asuntoraportti.fi/#organization" },
+          "areaServed": { "@type": "Country", "name": "Finland" },
+          "availableLanguage": ["fi", "en"]
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
