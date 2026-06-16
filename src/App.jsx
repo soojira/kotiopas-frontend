@@ -943,57 +943,74 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         logging:false,
       });
 
-      // 3) Rakenna YKSI pitkä sivu: brändipalkki ylös + alas, raportti yhtenä pätkänä.
-      //    Ei sivunvaihtoja → mikään ei katkea, ilme on yhtenäinen.
-      const M=12;                          // sivumarginaali (mm)
-      const ylaH=22, alaH=12;              // ylä/alapalkin korkeudet (mm)
-      const valiYla=6, valiAla=6;          // tyhjää palkkien ja kuvan välissä
-      const sivuLeveys=210;                // A4-leveys säilytetään (mm)
-      const kuvaLeveys=sivuLeveys-M*2;
-      const kuvaKorkeus=canvas.height*kuvaLeveys/canvas.width; // skaalattu mm
+      // 3) Rakenna A4-sivutettu PDF luettavalla skaalauksella (tulostuu hyvin).
+      //    Kuva leikataan canvas-paloina sivuille → terävä, luettava tuloste.
+      const sivuLeveys=210, sivuKorkeus=297;   // A4 (mm)
+      const M=12;                              // sivumarginaali (mm)
+      const ylaH=20, alaH=11;                  // ylä/alapalkin korkeudet (mm)
+      const sisaltoYla=ylaH+5;                 // mistä sisältö alkaa (mm)
+      const sisaltoAla=sivuKorkeus-alaH-4;     // mihin sisältö loppuu (mm)
+      const sisaltoKorkeus=sisaltoAla-sisaltoYla; // käytettävä korkeus per sivu (mm)
+      const kuvaLeveys=sivuLeveys-M*2;         // kuvan leveys sivulla (mm)
 
-      // Vastuuvapausteksti (sama kuin ruudulla) — lasketaan sen korkeus etukäteen
+      const c_dark=[42,31,20], c_gold=[201,168,76], c_cream=[251,243,226], c_stone=[110,100,88];
+
+      // Skaala: montako canvas-pikseliä vastaa yhtä mm:ä (kuvan leveys → kuvaLeveys mm)
+      const pxPerMm=canvas.width/kuvaLeveys;
+      // Montako canvas-pikseliä mahtuu yhdelle sivulle (korkeussuunnassa)
+      const sivuPx=Math.floor(sisaltoKorkeus*pxPerMm);
+      // Montako sivua koko kuva tarvitsee
+      const sivuja=Math.ceil(canvas.height/sivuPx);
+
+      const doc=new JsPDF({unit:"mm",format:"a4"});
+
+      function ylapalkki(){
+        doc.setFillColor(...c_dark); doc.rect(0,0,sivuLeveys,ylaH,"F");
+        doc.setTextColor(...c_cream); doc.setFont("times","italic"); doc.setFontSize(16);
+        doc.text("Asuntoraportti",M,12);
+        doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(...c_gold);
+        doc.text((onMyyja?"MYYJÄN RAPORTTI":"ASUNTOANALYYSI"),M,17);
+        const pvm=new Date().toLocaleDateString(lang==="en"?"en-GB":"fi-FI");
+        doc.setTextColor(...c_cream); doc.text(pvm,sivuLeveys-M,17,{align:"right"});
+        doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,ylaH-1,sivuLeveys-M,ylaH-1);
+      }
+      function alapalkki(sivu,yht){
+        doc.setFillColor(...c_dark); doc.rect(0,sivuKorkeus-alaH,sivuLeveys,alaH,"F");
+        doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(7.5);
+        doc.text("asuntoraportti.fi",M,sivuKorkeus-4);
+        doc.text(`${sivu} / ${yht}`,sivuLeveys-M,sivuKorkeus-4,{align:"right"});
+      }
+
+      // Leikkaa kuva sivu kerrallaan väliaikaiselle canvasille ja lisää PDF:ään
+      for(let s=0;s<sivuja;s++){
+        if(s>0) doc.addPage();
+        ylapalkki(); alapalkki(s+1,sivuja);
+
+        const alkuPx=s*sivuPx;
+        const palaPx=Math.min(sivuPx,canvas.height-alkuPx); // viimeinen sivu voi olla lyhyempi
+        // Väliaikainen canvas tälle sivun palalle
+        const tmp=document.createElement("canvas");
+        tmp.width=canvas.width; tmp.height=palaPx;
+        const ctx=tmp.getContext("2d");
+        ctx.fillStyle="#FBF8F3"; ctx.fillRect(0,0,tmp.width,tmp.height);
+        ctx.drawImage(canvas,0,alkuPx,canvas.width,palaPx,0,0,canvas.width,palaPx);
+        const palaKorkeusMm=palaPx/pxPerMm;
+        doc.addImage(tmp,"PNG",M,sisaltoYla,kuvaLeveys,palaKorkeusMm,undefined,"FAST");
+      }
+
+      // Vastuuvapausteksti omalle viimeiselle sivulle (jotta ei katkea)
       const vastuuTeksti=onMyyja
         ? "Tämän raportin on koonnut tekoäly lataamistasi papereista auttaakseen sinua valmistautumaan myyntiin. Se ei sisällä hinta-arviota eikä korvaa välittäjän tai muun ammattilaisen henkilökohtaista neuvontaa. Varmista tärkeät tiedot alkuperäisistä asiakirjoista ja isännöitsijältä."
         : "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.";
-      const vastuuLeveys=sivuLeveys-M*2;
-      // jsPDF tarvitaan ensin vastuutekstin rivityksen laskemiseen → luodaan doc heti
-      const c_dark=[42,31,20], c_gold=[201,168,76], c_cream=[251,243,226], c_stone=[110,100,88];
-      // Väliaikainen doc rivityslaskua varten (sama fontti)
-      const apuDoc=new JsPDF({unit:"mm",format:"a4"});
-      apuDoc.setFont("helvetica","italic"); apuDoc.setFontSize(8);
-      const vastuuRivit=apuDoc.splitTextToSize(vastuuTeksti,vastuuLeveys);
-      const vastuuKorkeus=vastuuRivit.length*3.5+8; // rivit + ylä/alaväli
-
-      // Koko sivun korkeus = palkit + välit + kuva + vastuuteksti
-      const sivuKorkeus=ylaH+valiYla+kuvaKorkeus+valiAla+vastuuKorkeus+alaH;
-      const doc=new JsPDF({unit:"mm",format:[sivuLeveys,sivuKorkeus]});
-
-      // Yläpalkki
-      doc.setFillColor(...c_dark); doc.rect(0,0,sivuLeveys,ylaH,"F");
-      doc.setTextColor(...c_cream); doc.setFont("times","italic"); doc.setFontSize(18);
-      doc.text("Asuntoraportti",M,13);
-      doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(...c_gold);
-      doc.text((onMyyja?"MYYJÄN RAPORTTI":"ASUNTOANALYYSI"),M,18);
-      const pvm=new Date().toLocaleDateString(lang==="en"?"en-GB":"fi-FI");
-      doc.setTextColor(...c_cream); doc.text(pvm,sivuLeveys-M,18,{align:"right"});
-      doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,ylaH-1,sivuLeveys-M,ylaH-1);
-
-      // Raporttikuva (koko korkeus, ei leikkausta)
-      doc.addImage(canvas,"PNG",M,ylaH+valiYla,kuvaLeveys,kuvaKorkeus,undefined,"FAST");
-
-      // Vastuuvapausteksti kuvan alle (ohut viiva + harmaa kursiivi)
-      const vastuuY=ylaH+valiYla+kuvaKorkeus+valiAla;
-      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,vastuuY,sivuLeveys-M,vastuuY);
-      doc.setFont("helvetica","italic"); doc.setFontSize(8); doc.setTextColor(...c_stone);
-      doc.text(vastuuRivit,M,vastuuY+5);
-
-      // Alapalkki (sivun pohjalla)
-      const alaY=sivuKorkeus-alaH;
-      doc.setFillColor(...c_dark); doc.rect(0,alaY,sivuLeveys,alaH,"F");
-      doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(8);
-      doc.text("asuntoraportti.fi",M,alaY+8);
-      doc.text("Asuntokaupan tulkki",sivuLeveys-M,alaY+8,{align:"right"});
+      doc.addPage();
+      const vSivu=doc.getNumberOfPages();
+      ylapalkki(); alapalkki(vSivu,vSivu);
+      doc.setFont("helvetica","italic"); doc.setFontSize(9); doc.setTextColor(...c_stone);
+      doc.text(t(lang,"Vastuuvapauslauseke","Disclaimer"),M,sisaltoYla+4);
+      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,sisaltoYla+7,sivuLeveys-M,sisaltoYla+7);
+      doc.setFontSize(9.5);
+      const vastuuRivit=doc.splitTextToSize(vastuuTeksti,sivuLeveys-M*2);
+      doc.text(vastuuRivit,M,sisaltoYla+14);
 
       const tiedostonimi=onMyyja?"Asuntoraportti-myyja.pdf":"Asuntoraportti-analyysi.pdf";
       doc.save(tiedostonimi);
