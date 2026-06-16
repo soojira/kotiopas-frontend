@@ -1389,6 +1389,12 @@ export default function App(){
               <a href="/opas-asunnon-osto-tarkistuslista.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Ostajan tarkistuslista","Buyer's checklist")}</a>
               <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
               <a href="/opas-taloyhtion-talous.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Taloyhtiön talous","Housing company finances")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/opas-vastikkeet.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Vastikkeet","Charges")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/opas-taloyhtiolaina-vs-asuntolaina.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Taloyhtiölaina vs. asuntolaina","Company loan vs. mortgage")}</a>
+              <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
+              <a href="/opas-myynnin-asiakirjat.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Myynnin asiakirjat","Documents for selling")}</a>
             </div>
             <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:12,flexWrap:"wrap"}}>
               <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
@@ -1480,6 +1486,12 @@ export default function App(){
           <a href="/opas-asunnon-osto-tarkistuslista.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Ostajan tarkistuslista","Buyer's checklist")}</a>
           <span style={{color:C.linen,fontSize:9}}>•</span>
           <a href="/opas-taloyhtion-talous.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Taloyhtiön talous","Housing company finances")}</a>
+          <span style={{color:C.linen,fontSize:9}}>•</span>
+          <a href="/opas-vastikkeet.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Vastikkeet","Charges")}</a>
+          <span style={{color:C.linen,fontSize:9}}>•</span>
+          <a href="/opas-taloyhtiolaina-vs-asuntolaina.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Taloyhtiölaina vs. asuntolaina","Company loan vs. mortgage")}</a>
+          <span style={{color:C.linen,fontSize:9}}>•</span>
+          <a href="/opas-myynnin-asiakirjat.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Myynnin asiakirjat","Documents for selling")}</a>
         </div>
         <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:14,flexWrap:"wrap"}}>
           <a href="/tietoja.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Tietoja meistä","About us")}</a>
