@@ -974,28 +974,30 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         doc.setTextColor(...c_cream); doc.text(pvm,sivuLeveys-M,17,{align:"right"});
         doc.setDrawColor(...c_gold); doc.setLineWidth(0.4); doc.line(M,ylaH-1,sivuLeveys-M,ylaH-1);
       }
-      function alapalkki(sivu,yht){
+      function alapalkki(){
         doc.setFillColor(...c_dark); doc.rect(0,sivuKorkeus-alaH,sivuLeveys,alaH,"F");
         doc.setTextColor(...c_cream); doc.setFont("helvetica","normal"); doc.setFontSize(7.5);
         doc.text("asuntoraportti.fi",M,sivuKorkeus-4);
-        doc.text(`${sivu} / ${yht}`,sivuLeveys-M,sivuKorkeus-4,{align:"right"});
+        doc.text("Asuntokaupan tulkki",sivuLeveys-M,sivuKorkeus-4,{align:"right"});
       }
 
-      // Leikkaa kuva sivu kerrallaan väliaikaiselle canvasille ja lisää PDF:ään
+      // Leikkaa kuva sivu kerrallaan väliaikaiselle canvasille ja lisää PDF:ään.
+      // Yläpalkki vain ensimmäisellä sivulla; muuten sisältö alkaa korkeammalta.
       for(let s=0;s<sivuja;s++){
         if(s>0) doc.addPage();
-        ylapalkki(); alapalkki(s+1,sivuja);
+        const ekaSivu=s===0;
+        if(ekaSivu) ylapalkki();
+        const ylaRaja=ekaSivu?sisaltoYla:M; // 1. sivu jättää tilaa palkille, muut alkavat ylhäältä
 
         const alkuPx=s*sivuPx;
         const palaPx=Math.min(sivuPx,canvas.height-alkuPx); // viimeinen sivu voi olla lyhyempi
-        // Väliaikainen canvas tälle sivun palalle
         const tmp=document.createElement("canvas");
         tmp.width=canvas.width; tmp.height=palaPx;
         const ctx=tmp.getContext("2d");
         ctx.fillStyle="#FBF8F3"; ctx.fillRect(0,0,tmp.width,tmp.height);
         ctx.drawImage(canvas,0,alkuPx,canvas.width,palaPx,0,0,canvas.width,palaPx);
         const palaKorkeusMm=palaPx/pxPerMm;
-        doc.addImage(tmp,"PNG",M,sisaltoYla,kuvaLeveys,palaKorkeusMm,undefined,"FAST");
+        doc.addImage(tmp,"PNG",M,ylaRaja,kuvaLeveys,palaKorkeusMm,undefined,"FAST");
       }
 
       // Vastuuvapausteksti omalle viimeiselle sivulle (jotta ei katkea)
@@ -1003,14 +1005,14 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         ? "Tämän raportin on koonnut tekoäly lataamistasi papereista auttaakseen sinua valmistautumaan myyntiin. Se ei sisällä hinta-arviota eikä korvaa välittäjän tai muun ammattilaisen henkilökohtaista neuvontaa. Varmista tärkeät tiedot alkuperäisistä asiakirjoista ja isännöitsijältä."
         : "Tämän raportin on koonnut tekoäly lataamistasi papereista, jotta ymmärrät olennaisen nopeasti ja selkokielellä. Lopullinen ja sitova tieto löytyy aina alkuperäisistä asiakirjoista ja isännöitsijältä — varmista tärkeät yksityiskohdat niistä ennen ostopäätöstä. Asuntoraportti on päätöksesi tukena, mutta ei korvaa juridista tai sijoitusneuvontaa.";
       doc.addPage();
-      const vSivu=doc.getNumberOfPages();
-      ylapalkki(); alapalkki(vSivu,vSivu);
       doc.setFont("helvetica","italic"); doc.setFontSize(9); doc.setTextColor(...c_stone);
-      doc.text(t(lang,"Vastuuvapauslauseke","Disclaimer"),M,sisaltoYla+4);
-      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,sisaltoYla+7,sivuLeveys-M,sisaltoYla+7);
+      doc.text(t(lang,"Vastuuvapauslauseke","Disclaimer"),M,M+6);
+      doc.setDrawColor(220,210,195); doc.setLineWidth(0.2); doc.line(M,M+9,sivuLeveys-M,M+9);
       doc.setFontSize(9.5);
       const vastuuRivit=doc.splitTextToSize(vastuuTeksti,sivuLeveys-M*2);
-      doc.text(vastuuRivit,M,sisaltoYla+14);
+      doc.text(vastuuRivit,M,M+16);
+      // Alapalkki vain tällä viimeisellä sivulla
+      alapalkki();
 
       const tiedostonimi=onMyyja?"Asuntoraportti-myyja.pdf":"Asuntoraportti-analyysi.pdf";
       doc.save(tiedostonimi);
