@@ -391,7 +391,7 @@ function TabKonsultaatio(){
         </span>
       </label>
 
-      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
+      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}<div style={{marginTop:8,fontSize:12,color:"#9B6B6B"}}>{t(lang,"Jos ongelma jatkuu, ota yhteyttä: ","If the problem persists, contact us: ")}<a href="mailto:info@asuntoraportti.fi" style={{color:"#B91C1C",textDecoration:"underline"}}>info@asuntoraportti.fi</a></div></div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
         {sending?t(lang,"⏳ Lähetetään...","⏳ Sending..."):t(lang,"Pyydä ilmainen arviokäynti →","Request a free valuation visit →")}
@@ -511,7 +511,7 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
         </span>
       </label>
 
-      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
+      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}<div style={{marginTop:8,fontSize:12,color:"#9B6B6B"}}>{t(lang,"Jos ongelma jatkuu, ota yhteyttä: ","If the problem persists, contact us: ")}<a href="mailto:info@asuntoraportti.fi" style={{color:"#B91C1C",textDecoration:"underline"}}>info@asuntoraportti.fi</a></div></div>}
 
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
         {sending?t(lang,"⏳ Lähetetään...","⏳ Sending..."):nappiTeksti}
@@ -1162,7 +1162,7 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         </div>
       )}
 
-      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}</div>}
+      {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}<div style={{marginTop:8,fontSize:12,color:"#9B6B6B"}}>{t(lang,"Jos ongelma jatkuu, ota yhteyttä: ","If the problem persists, contact us: ")}<a href="mailto:info@asuntoraportti.fi" style={{color:"#B91C1C",textDecoration:"underline"}}>info@asuntoraportti.fi</a></div></div>}
 
       {skannatut.length>0&&(
         <div style={{background:C.forestDim,border:`1px solid ${C.forest}30`,borderRadius:10,padding:"12px 16px",marginBottom:16,display:"flex",gap:8,alignItems:"flex-start"}}>
@@ -1403,6 +1403,7 @@ export default function App(){
               <span style={{color:"rgba(251,243,226,0.3)",fontSize:9}}>•</span>
               <a href="/kayttoehdot.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.55)",letterSpacing:0.3,textDecoration:"underline"}}>{t(lang,"Käyttöehdot","Terms of use")}</a>
             </div>
+            <div style={{marginTop:16,fontFamily:B,fontSize:11,color:"rgba(251,243,226,0.5)",letterSpacing:0.3}}>{t(lang,"Tarvitsetko apua tai eikö jokin toiminut? ","Need help or something didn't work? ")}<a href="mailto:info@asuntoraportti.fi" style={{color:"rgba(201,168,76,0.85)",textDecoration:"underline"}}>info@asuntoraportti.fi</a></div>
           </div>
         </div>
       </div>
@@ -1500,6 +1501,7 @@ export default function App(){
           <span style={{color:C.linen,fontSize:9}}>•</span>
           <a href="/kayttoehdot.html" target="_blank" rel="noopener" style={{fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.5,textDecoration:"underline"}}>{t(lang,"Käyttöehdot","Terms of use")}</a>
         </div>
+        <div style={{marginTop:16,fontFamily:B,fontSize:11,color:C.stone,letterSpacing:0.3}}>{t(lang,"Tarvitsetko apua tai eikö jokin toiminut? ","Need help or something didn't work? ")}<a href="mailto:info@asuntoraportti.fi" style={{color:C.gold,textDecoration:"underline"}}>info@asuntoraportti.fi</a></div>
       </div>
     </div>
   );
