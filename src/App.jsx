@@ -965,8 +965,39 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
       const pxPerMm=canvas.width/kuvaLeveys;
       // Montako canvas-pikseliä mahtuu yhdelle sivulle (korkeussuunnassa)
       const sivuPx=Math.floor(sisaltoKorkeus*pxPerMm);
-      // Montako sivua koko kuva tarvitsee
-      const sivuja=Math.ceil(canvas.height/sivuPx);
+
+      // ── ÄLYKÄS LEIKKAUS ──────────────────────────────────────────────
+      // Ongelma: jos sivu leikataan sokeasti tasavälein, katkos osuu usein
+      // keskelle tekstiä/otsikkoa/väripalkkia ja näyttää rikkinäiseltä.
+      // Ratkaisu: etsi leikkauskohdan lähistöltä (ylöspäin) "tyhjä" vaakarivi
+      // — rivi jossa lähes kaikki pikselit ovat paperinväriä (osioiden väli) —
+      // ja leikkaa siitä. Näin yksikään lohko ei katkea kahtia.
+      const ctxFull=canvas.getContext("2d");
+      // Paperin sävy on ~#FBF8F3 (251,248,243). "Tyhjä" = lähellä tätä.
+      function riviTyhja(y){
+        if(y<0||y>=canvas.height) return false;
+        let data;
+        try{ data=ctxFull.getImageData(0,y,canvas.width,1).data; }catch(e){ return false; }
+        // Näytteistä joka 6. pikseli nopeuden vuoksi
+        for(let x=0;x<canvas.width;x+=6){
+          const i=x*4, r=data[i], g=data[i+1], b=data[i+2];
+          // Jos pikseli poikkeaa selvästi paperin sävystä → rivi ei ole tyhjä
+          if(Math.abs(r-251)>12||Math.abs(g-248)>12||Math.abs(b-243)>12) return false;
+        }
+        return true;
+      }
+      // Etsi paras leikkauskohta: aloita ihanteellisesta (alku+sivuPx),
+      // skannaa ylöspäin enintään 18% sivun verran tyhjää riviä etsien.
+      function etsiLeikkaus(alku){
+        const ihanne=alku+sivuPx;
+        if(ihanne>=canvas.height) return canvas.height; // viimeinen pala
+        const maxHaku=Math.floor(sivuPx*0.18); // kuinka paljon ylöspäin saa perääntyä
+        for(let y=ihanne;y>ihanne-maxHaku;y--){
+          // vaadi muutama peräkkäinen tyhjä rivi (varmempi väli, ei sattuma)
+          if(riviTyhja(y)&&riviTyhja(y-2)&&riviTyhja(y+2)) return y;
+        }
+        return ihanne; // ei löytynyt tyhjää → leikkaa ihanteesta (kuten ennen)
+      }
 
       const doc=new JsPDF({unit:"mm",format:"a4"});
 
@@ -988,15 +1019,18 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
       }
 
       // Leikkaa kuva sivu kerrallaan väliaikaiselle canvasille ja lisää PDF:ään.
+      // Käytä älykkäitä leikkauskohtia (osioiden välistä), ei sokeaa tasaväliä.
       // Yläpalkki vain ensimmäisellä sivulla; muuten sisältö alkaa korkeammalta.
-      for(let s=0;s<sivuja;s++){
+      let alkuPx=0;
+      let s=0;
+      while(alkuPx<canvas.height){
         if(s>0) doc.addPage();
         const ekaSivu=s===0;
         if(ekaSivu) ylapalkki();
         const ylaRaja=ekaSivu?sisaltoYla:M; // 1. sivu jättää tilaa palkille, muut alkavat ylhäältä
 
-        const alkuPx=s*sivuPx;
-        const palaPx=Math.min(sivuPx,canvas.height-alkuPx); // viimeinen sivu voi olla lyhyempi
+        const loppuPx=etsiLeikkaus(alkuPx);  // älykäs leikkauskohta
+        const palaPx=loppuPx-alkuPx;
         const tmp=document.createElement("canvas");
         tmp.width=canvas.width; tmp.height=palaPx;
         const ctx=tmp.getContext("2d");
@@ -1004,6 +1038,10 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         ctx.drawImage(canvas,0,alkuPx,canvas.width,palaPx,0,0,canvas.width,palaPx);
         const palaKorkeusMm=palaPx/pxPerMm;
         doc.addImage(tmp,"PNG",M,ylaRaja,kuvaLeveys,palaKorkeusMm,undefined,"FAST");
+
+        alkuPx=loppuPx;
+        s++;
+        if(s>200) break; // turvaraja (ei ikuista silmukkaa)
       }
 
       // Vastuuvapausteksti omalle viimeiselle sivulle (jotta ei katkea)
