@@ -1108,6 +1108,9 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
           if(evt.tyyppi==="meta"){
             setMalli(evt.malli||null);
             setSkannatut(Array.isArray(evt.skannatut)?evt.skannatut:[]);
+          }else if(evt.tyyppi==="ping"){
+            // Heartbeat backendiltä — pitää yhteyden elossa pitkän analyysin aikana.
+            // Ei tehdä mitään, jätetään huomiotta.
           }else if(evt.tyyppi==="teksti"){
             if(ekaPala){ ekaPala=false; clearTimeout(t1); setLoadStep(3); }
             kerätty+=evt.pala;
