@@ -168,10 +168,11 @@ function FloatSelect({label,value,onChange,children}){
   const [f,setF]=useState(false);
   return(
     <div style={{position:"relative"}}>
-      <label style={{position:"absolute",left:14,top:8,fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:f?C.clay:C.stone,fontFamily:B,transition:"color 0.2s",pointerEvents:"none",zIndex:1}}>{label}</label>
+      <label style={{position:"absolute",left:14,top:7,fontSize:10,letterSpacing:1.5,textTransform:"uppercase",color:f?C.clay:C.stone,fontFamily:B,transition:"color 0.2s",pointerEvents:"none",zIndex:1}}>{label}</label>
       <select value={value} onChange={onChange}
-        style={{width:"100%",padding:"22px 14px 8px",background:f?C.paper:C.cream,border:`1.5px solid ${f?C.clay:C.border}`,borderRadius:10,fontFamily:B,fontSize:14,color:C.ink,outline:"none",cursor:"pointer",transition:"all 0.2s",boxSizing:"border-box"}}
+        style={{width:"100%",padding:"26px 14px 9px",background:f?C.paper:C.cream,border:`1.5px solid ${f?C.clay:C.border}`,borderRadius:10,fontFamily:B,fontSize:14,color:value?C.ink:C.linen,outline:"none",cursor:"pointer",transition:"all 0.2s",boxSizing:"border-box",appearance:"none",WebkitAppearance:"none",MozAppearance:"none"}}
         onFocus={()=>setF(true)} onBlur={()=>setF(false)}>{children}</select>
+      <span style={{position:"absolute",right:16,top:"50%",transform:"translateY(-25%)",pointerEvents:"none",color:C.stone,fontSize:10}}>▾</span>
     </div>
   );
 }
@@ -328,8 +329,8 @@ function TabKonsultaatio(){
           <span style={{fontSize:22,flexShrink:0}}>✅</span>
           <div style={{fontFamily:B,fontSize:14,color:C.ink,lineHeight:1.65,fontWeight:300}}>
             {t(lang,
-              "Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme sinulle sopivan ajan maksuttomalle arviokäynnille — rauhassa ja ilman kiirettä.",
-              "Your request has been received. We'll be in touch soon to arrange a time that suits you for a free valuation visit — calmly and without pressure.")}
+              "Pyyntösi on vastaanotettu. Otamme sinuun yhteyttä pian ja sovimme sinulle sopivan ajan maksuttomalle arviokäynnille.",
+              "Your request has been received. We'll be in touch soon to arrange a time that suits you for a free valuation visit.")}
           </div>
         </div>
       </div>
@@ -405,7 +406,7 @@ function TabKonsultaatio(){
 // varten. Lähettää /api/liidi → Brevo, tunniste "myyja-arviolausunto".
 // ── Yleiskäyttöinen liidilomake (käytetään arviolausunnolle ja kauppakirjalle) ──
 // Parametrit määräävät otsikon, hyödyt, Brevo-tunnisteen ja tekstit.
-function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappiTeksti,kiitosViesti,naytaTyyppiKoko=true,onBack}){
+function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappiTeksti,kiitosViesti,naytaTyyppiKoko=true,maksullinen=false,onBack}){
   const lang=useLang();
   const [liidi,setLiidi]=useState({nimi:"",puhelin:"",email:"",katuosoite:"",postinumero:"",kaupunki:"",tyyppi:"",koko:"",viesti:""});
   const [gdpr,setGdpr]=useState(false);
@@ -513,6 +514,8 @@ function LiidiLomake({otsikko,alaotsikko,hyodyt,brevoTyyppi,lisatietoLabel,nappi
 
       {error&&<div style={{background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:10,padding:"12px 16px",color:"#B91C1C",fontFamily:B,fontSize:13,marginBottom:16}}>⚠ {error}<div style={{marginTop:8,fontSize:12,color:"#9B6B6B"}}>{t(lang,"Jos ongelma jatkuu, ota yhteyttä: ","If the problem persists, contact us: ")}<a href="mailto:info@asuntoraportti.fi" style={{color:"#B91C1C",textDecoration:"underline"}}>info@asuntoraportti.fi</a></div></div>}
 
+      {maksullinen&&<div style={{background:C.goldDim,border:`1px solid ${C.gold}`,borderRadius:10,padding:"12px 16px",marginBottom:14,fontFamily:B,fontSize:12.5,color:C.ink,lineHeight:1.6}}>{t(lang,"💶 Tämä on maksullinen palvelu. Hinta sovitaan kanssasi etukäteen ennen työn aloittamista — pyynnön lähettäminen ei sido sinua mihinkään.","💶 This is a paid service. The price is agreed with you in advance before any work begins — submitting the request does not commit you to anything.")}</div>}
+
       <DarkBtn onClick={laheta} disabled={sending} style={{opacity:sending?0.6:1,cursor:sending?"wait":"pointer"}}>
         {sending?t(lang,"⏳ Lähetetään...","⏳ Sending..."):nappiTeksti}
       </DarkBtn>
@@ -527,6 +530,7 @@ function TabLisapalvelut(){
   const palvelut=[
     {
       id:"arviolausunto",
+      maksullinen:true,
       kortti:{ikoni:"doc",t:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),d:t(lang,"Kirjallinen arvio asunnostasi lainaa tai vakuutta varten.","A written valuation of your home for a loan or collateral.")},
       otsikko:t(lang,"Arviolausunto pankkiin","Valuation statement for the bank"),
       alaotsikko:t(lang,"Tarvitsetko kirjallisen arvion asunnostasi pankkia varten? Autamme.","Need a written valuation of your home for the bank? We'll help."),
@@ -541,6 +545,7 @@ function TabLisapalvelut(){
     },
     {
       id:"kauppakirja",
+      maksullinen:true,
       kortti:{ikoni:"pen",t:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),d:t(lang,"Oletko itsemyyjä? Saat apua asunnon kauppakirjan laatimiseen.","Selling on your own? Get help drafting the deed of sale.")},
       otsikko:t(lang,"Kauppakirjan laatiminen","Drafting the deed of sale"),
       alaotsikko:t(lang,"Oletko itsemyyjä ja tarvitset apua kauppakirjan laatimisessa? Autamme.","Selling on your own and need help drafting the deed of sale? We'll help."),
@@ -573,6 +578,7 @@ function TabLisapalvelut(){
             <div style={{flex:1}}>
               <div style={{fontFamily:B,fontSize:16,color:C.ink,fontWeight:500,marginBottom:3}}>{p.kortti.t}</div>
               <div style={{fontFamily:B,fontSize:13.5,color:C.stone,fontWeight:300,lineHeight:1.5}}>{p.kortti.d}</div>
+              {p.maksullinen&&<div style={{display:"inline-block",marginTop:7,fontFamily:B,fontSize:10.5,letterSpacing:0.5,color:C.clay,background:C.goldDim,border:`1px solid ${C.gold}`,borderRadius:6,padding:"2px 9px"}}>{t(lang,"Maksullinen palvelu","Paid service")}</div>}
             </div>
             <span style={{color:C.gold,fontSize:20,flexShrink:0}}>→</span>
           </button>
