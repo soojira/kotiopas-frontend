@@ -986,32 +986,52 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
         }
         return true;
       }
-      // Etsi paras leikkauskohta: aloita ihanteellisesta (alku+sivuPx),
-      // skannaa ylöspäin enintään 18% sivun verran tyhjää riviä etsien.
+      // Onko kohdassa y "tekstiä" (ei-tyhjä rivi)? Apuri otsikon tunnistukseen.
+      function riviTekstia(y){
+        return !riviTyhja(y);
+      }
       // Onko kohdassa y "iso tyhjä väli" — vähintään minVali peräkkäistä
-      // tyhjää riviä? Iso väli = osioiden raja (otsikon yläpuolinen tila),
-      // toisin kuin pieni väli tekstirivien välissä.
+      // tyhjää riviä? Iso väli = osioiden raja (otsikon yläpuolinen tila).
       function isoTyhjaVali(y,minVali){
-        let m=0;
         for(let yy=y; yy<y+minVali; yy++){
           if(!riviTyhja(yy)) return false;
-          m++;
         }
-        return m>=minVali;
+        return true;
+      }
+      // Löytyykö kohdasta y alaspäin (enintään katso px) iso tyhjä väli, jota
+      // SEURAA tekstiä (= otsikko alkamassa)? Palauttaa välin yläreunan y-arvon
+      // (johon kannattaa leikata, jotta otsikko siirtyy seuraavalle sivulle),
+      // tai -1 jos ei löydy.
+      function etsiOtsikkoraja(ylaY,alaY,minVali){
+        for(let y=ylaY; y<alaY; y++){
+          if(isoTyhjaVali(y,minVali)){
+            // väli alkaa y:stä; tuleeko välin jälkeen tekstiä (otsikko)?
+            const valinLoppu=y+minVali;
+            if(valinLoppu<canvas.height && riviTekstia(valinLoppu+1)){
+              return y; // leikkaa välin yläreunasta → otsikko menee seuraavalle sivulle
+            }
+          }
+        }
+        return -1;
       }
       function etsiLeikkaus(alku){
         const ihanne=alku+sivuPx;
         if(ihanne>=canvas.height) return canvas.height; // viimeinen pala
-        const maxHaku=Math.floor(sivuPx*0.28); // saa perääntyä ylöspäin enemmän
-        // minVali skaalautuu sivun korkeuteen (~2.2% sivusta ≈ otsikon yläväli)
-        const minVali=Math.max(8,Math.floor(sivuPx*0.022));
+        const maxHaku=Math.floor(sivuPx*0.30); // saa perääntyä ylöspäin
+        const minVali=Math.max(8,Math.floor(sivuPx*0.020));
 
-        // 1) Ensisijaisesti: etsi ISO tyhjä väli (osioraja, otsikon yläpuoli).
-        //    Leikkaa välin ALAREUNASTA → uusi osio alkaa siististi uuden sivun alusta.
+        // 1) ORPO-OTSIKON ESTO: katso onko aivan sivun alaosassa (viim. ~12 %)
+        //    iso tyhjä väli jota seuraa tekstiä = otsikko alkamassa lähellä reunaa.
+        //    Jos on, leikkaa sen yläpuolelta → otsikko ei jää yksin sivun loppuun.
+        const orpoVyohyke=Math.floor(sivuPx*0.12);
+        const orpo=etsiOtsikkoraja(ihanne-orpoVyohyke, ihanne, minVali);
+        if(orpo!==-1) return orpo;
+
+        // 2) Muuten: etsi iso tyhjä väli (osioraja) ja leikkaa sen alareunasta.
         for(let y=ihanne;y>ihanne-maxHaku;y--){
           if(isoTyhjaVali(y-minVali,minVali)) return y;
         }
-        // 2) Vara: pienempi tyhjä rako (kuten ennen), ettei katkea keskeltä tekstiä.
+        // 3) Vara: pienempi tyhjä rako, ettei katkea keskeltä tekstiä.
         for(let y=ihanne;y>ihanne-maxHaku;y--){
           if(riviTyhja(y)&&riviTyhja(y-2)&&riviTyhja(y+2)) return y;
         }
