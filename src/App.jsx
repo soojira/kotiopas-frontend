@@ -988,15 +988,34 @@ function TabTaloyhtion({nakokulma="ostaja",onArviokaynti}){
       }
       // Etsi paras leikkauskohta: aloita ihanteellisesta (alku+sivuPx),
       // skannaa ylöspäin enintään 18% sivun verran tyhjää riviä etsien.
+      // Onko kohdassa y "iso tyhjä väli" — vähintään minVali peräkkäistä
+      // tyhjää riviä? Iso väli = osioiden raja (otsikon yläpuolinen tila),
+      // toisin kuin pieni väli tekstirivien välissä.
+      function isoTyhjaVali(y,minVali){
+        let m=0;
+        for(let yy=y; yy<y+minVali; yy++){
+          if(!riviTyhja(yy)) return false;
+          m++;
+        }
+        return m>=minVali;
+      }
       function etsiLeikkaus(alku){
         const ihanne=alku+sivuPx;
         if(ihanne>=canvas.height) return canvas.height; // viimeinen pala
-        const maxHaku=Math.floor(sivuPx*0.18); // kuinka paljon ylöspäin saa perääntyä
+        const maxHaku=Math.floor(sivuPx*0.28); // saa perääntyä ylöspäin enemmän
+        // minVali skaalautuu sivun korkeuteen (~2.2% sivusta ≈ otsikon yläväli)
+        const minVali=Math.max(8,Math.floor(sivuPx*0.022));
+
+        // 1) Ensisijaisesti: etsi ISO tyhjä väli (osioraja, otsikon yläpuoli).
+        //    Leikkaa välin ALAREUNASTA → uusi osio alkaa siististi uuden sivun alusta.
         for(let y=ihanne;y>ihanne-maxHaku;y--){
-          // vaadi muutama peräkkäinen tyhjä rivi (varmempi väli, ei sattuma)
+          if(isoTyhjaVali(y-minVali,minVali)) return y;
+        }
+        // 2) Vara: pienempi tyhjä rako (kuten ennen), ettei katkea keskeltä tekstiä.
+        for(let y=ihanne;y>ihanne-maxHaku;y--){
           if(riviTyhja(y)&&riviTyhja(y-2)&&riviTyhja(y+2)) return y;
         }
-        return ihanne; // ei löytynyt tyhjää → leikkaa ihanteesta (kuten ennen)
+        return ihanne; // ei löytynyt → leikkaa ihanteesta
       }
 
       const doc=new JsPDF({unit:"mm",format:"a4"});
